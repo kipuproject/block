@@ -1,4 +1,4 @@
-<?
+<?php
 include_once("core/manager/Configurador.class.php");
 include_once("core/auth/Sesion.class.php");
 include_once("plugin/filter/generadorFiltros.class.php");
@@ -14,23 +14,23 @@ class FronteracompanyManagement{
 	var $enlace;
 	var $miConfigurador;
 	var $companies;
-	 
+
 	function __construct()
 	{
-	
+
 		$this->miConfigurador=Configurador::singleton();
 		$this->enlace=$this->miConfigurador->getVariableConfiguracion("host").$this->miConfigurador->getVariableConfiguracion("site")."?".$this->miConfigurador->getVariableConfiguracion("enlace");
 		$this->miSesion=Sesion::singleton();
 		$conexion=$this->miSesion->getValorSesion('dbms');
-		$this->miRecursoDB=$this->miConfigurador->fabricaConexiones->getRecursoDB($conexion);		
+		$this->miRecursoDB=$this->miConfigurador->fabricaConexiones->getRecursoDB($conexion);
 		$this->idSesion=$this->miSesion->getValorSesion('idUsuario');
 		$this->commerce=$this->miSesion->getValorSesion('commerce');
-		$this->masterResource=$this->miConfigurador->fabricaConexiones->getRecursoDB("master");		
+		$this->masterResource=$this->miConfigurador->fabricaConexiones->getRecursoDB("master");
 
 		if($this->idSesion==""){
 			echo "Sesion cerrada<br/>";
 		}
-		
+
 	}
 
 	public function setRuta($unaRuta){
@@ -64,10 +64,10 @@ class FronteracompanyManagement{
 		$option="&option=edit";
 		$link['edit']=$this->miConfigurador->fabricaConexiones->crypto->codificar_url($formSaraData.$option,$this->enlace);
 
-	
+
 		$option="&option=view";
 		$link['view']=$this->miConfigurador->fabricaConexiones->crypto->codificar_url($formSaraData.$option,$this->enlace);
-		
+
 
 		$formSaraData="jxajax=main";
 		$formSaraData.="&action=companyManagement";
@@ -76,7 +76,7 @@ class FronteracompanyManagement{
 		$formSaraData.="&optionProcess=processDelete";
 		$formSaraData.="&optionValue=".$id;
 		$link['delete']=$this->miConfigurador->fabricaConexiones->crypto->codificar_url($formSaraData,$this->enlace);
-		
+
 
 		$formSaraData="pagina=companyManagement";
 		$formSaraData.="&bloque=companyManagement";
@@ -84,7 +84,7 @@ class FronteracompanyManagement{
 		$formSaraData.="&bloqueGrupo=people/back";
 		$formSaraData.="&optionProcess=list";
 		$link['postDelete']=$this->miConfigurador->fabricaConexiones->crypto->codificar_url($formSaraData,$this->enlace);
-		
+
 		return $link;
 	}
 
@@ -92,9 +92,9 @@ class FronteracompanyManagement{
 
 
 	function html(){
-		
+
 		include_once("core/builder/FormularioHtml.class.php");
-		
+
 		$this->ruta=$this->miConfigurador->getVariableConfiguracion("rutaBloque");
 
 		$this->miFormulario=new formularioHtml();
@@ -118,16 +118,16 @@ class FronteracompanyManagement{
 
 				$reload=isset($_REQUEST['reload'])?$_REQUEST['reload']:"";
 				$this->showNewCommerce($_REQUEST['idCompany'],$_REQUEST['commercetype'],$reload);
-				
-				
+
+
 				break;
 		}
-		
+
 	}
-	
+
 
 	/**
-	* Consulta el listado de establecimientos asociados a cada usuario tambien denominado nivel de acceos 
+	* Consulta el listado de establecimientos asociados a cada usuario tambien denominado nivel de acceos
 	*/
 	function companyByUser(){
 
@@ -138,8 +138,8 @@ class FronteracompanyManagement{
 		$allCompanies=$this->miRecursoDB->ejecutarAcceso($cadena_sql,"busqueda");
 
 
-		$this->companies=array();      
-		
+		$this->companies=array();
+
 
 		$i=0;
 		while(isset($result[$i]['IDCOMPANY'])){
@@ -154,7 +154,7 @@ class FronteracompanyManagement{
 
 
 	function companyByParent($parent,$allCompanies) {
-		
+
 		/*$cadena_sql=$this->sql->cadena_sql("companyList",$parent);
 		$result=$this->miRecursoDB->ejecutarAcceso($cadena_sql,"busqueda");*/
 		$allCompaniesOrderByParent=$this->orderArrayKeyBy($allCompanies,"IDPARENT");
@@ -165,7 +165,7 @@ class FronteracompanyManagement{
 			foreach($allCompaniesOrderByParent[$parent] as $key=>$value){
 				$this->companyByParent($value['IDCOMPANY'],$allCompanies);
 			}
-		
+
 		}
 		/*if(is_array($result)){
 
@@ -173,66 +173,66 @@ class FronteracompanyManagement{
 			while(isset($result[$i]['IDCOMPANY'])){
 
 				$this->companyByParent($result[$i]['IDCOMPANY'],$allCompanies);
-			
+
 				$i++;
 			}
-		
+
 		}*/else{
-		
-			//si el id no tiene hijos entonces lo agregamos a las empresas o establecimientos q pertenecen al usuario			
+
+			//si el id no tiene hijos entonces lo agregamos a las empresas o establecimientos q pertenecen al usuario
 			$this->companies[]=$parent;
-	
+
 		}
 
 
-	}	
-    
-    
-    
+	}
+
+
+
 	function loadFiltersByCommerce($type,$idcommerce) {
 
 		$filter=new generadorFiltros();
 		$component1=$filter->filterComponentList('GTR_HOTELES');
 		$component2=$filter->filterComponentList('GTR_UBICACION');
 		$component=array_merge($component1,$component2);
-		 
+
 		$component=$this->orderArrayKeyBy($component,"NOMBRE_COMPONENTE");
 
 		$cadena_sql=$this->sql->cadena_sql("commerceFilterList",$idcommerce);
 		$commerce=$this->masterResource->ejecutarAcceso($cadena_sql,"busqueda");
  		$commerce=$this->orderArrayKeyBy($commerce,"IDOPTION");
- 
+
 
 		//se rescatan las opciones listado principal  si la opcion la encontramos las opciones asociadas al comercio
-		//marcamos la opcion como true 
+		//marcamos la opcion como true
 
 		foreach($component as $keyComponent=>$option){
 			foreach($option as $keyOption=>$value){
 
 				if (array_key_exists($value["ID_OPCION"],$commerce)){
 
-				 	$component[$keyComponent][$keyOption]["CHECKED"]="true";	
+				 	$component[$keyComponent][$keyOption]["CHECKED"]="true";
 
 				}else{
 
-				 	$component[$keyComponent][$keyOption]["CHECKED"]="false";	
+				 	$component[$keyComponent][$keyOption]["CHECKED"]="false";
 
 				}
 			}
 		}
 	  return $component;
 
-	} 
+	}
 
 
 	function showEdit($id){
 
 		$imgs=new WidgetHtml();
-		
+
 		$cadena_sql=$this->sql->cadena_sql("commercebyID",$id);
-		$commerce=$this->masterResource->ejecutarAcceso($cadena_sql,"busqueda");  
-	     		
-		 
+		$commerce=$this->masterResource->ejecutarAcceso($cadena_sql,"busqueda");
+
+
 		$formSaraDataAddCommerce="bloque=companyManagement";
 		$formSaraDataAddCommerce.="&bloqueGrupo=host/back";
 		$formSaraDataAddCommerce.="&pagina=companyManagement";
@@ -240,16 +240,16 @@ class FronteracompanyManagement{
 		$formSaraDataAddCommerce.="&option=addCommerce";
 		$formSaraDataAddCommerce=$this->miConfigurador->fabricaConexiones->crypto->codificar_url($formSaraDataAddCommerce,$this->enlace);
 
-		
+
 		$formSaraDataCompany="bloque=companyManagement";
 		$formSaraDataCompany.="&pagina=companyManagement";
 		$formSaraDataCompany.="&bloqueGrupo=host/back";
 		$formSaraDataCompany.="&jxajax=main";
-		$formSaraDataCompany.="&saramodule=host"; 
+		$formSaraDataCompany.="&saramodule=host";
 		$formSaraDataCompany.="&action=companyManagement";
 		$formSaraDataCompany.="&optionProcess=processEditCompany";
 		$formSaraDataCompany=$this->miConfigurador->fabricaConexiones->crypto->codificar_url($formSaraDataCompany,$this->enlace);
-	       
+
 
 		$formSaraDataCommerce="bloque=companyManagement";
 		$formSaraDataCommerce.="&bloqueGrupo=host/back";
@@ -258,15 +258,15 @@ class FronteracompanyManagement{
 		$formSaraDataCommerce.="&action=companyManagement";
 		$formSaraDataCommerce.="&optionProcess=processEditCommerce";
 		$formSaraDataCommerce=$this->miConfigurador->fabricaConexiones->crypto->codificar_url($formSaraDataCommerce,$this->enlace);
-	        
+
 		$formSaraDataCommerceAction="bloque=companyManagement";
 		$formSaraDataCommerceAction.="&pagina=companyManagement";
 		$formSaraDataCommerceAction.="&bloqueGrupo=host/back";
-		$formSaraDataCommerceAction.="&saramodule=host"; 
+		$formSaraDataCommerceAction.="&saramodule=host";
 		$formSaraDataCommerceAction.="&action=companyManagement";
 		$formSaraDataCommerceAction.="&optionProcess=processEditCommerce";
 		$formSaraDataCommerceAction=$this->miConfigurador->fabricaConexiones->crypto->codificar($formSaraDataCommerceAction);
-	        
+
 
 		include_once($this->ruta."/html/edit.php");
 	}
@@ -281,7 +281,7 @@ class FronteracompanyManagement{
 
 		include_once($this->ruta."/html/view.php");
 	}
-	
+
 	function showNewCommerce($idCompany,$typeCommerce,$reload){
 
 		/*$cadena_sql=$this->sql->cadena_sql("companyListbyID",$id);
@@ -298,12 +298,12 @@ class FronteracompanyManagement{
 		$formSaraData=$this->miConfigurador->fabricaConexiones->crypto->codificar_url($formSaraData,$this->enlace);
 
 		$time=time();
-		
+
 		include_once($this->ruta."/html/newCommerce.php");
 
 	}
-	
-	
+
+
 	function showList(){
 
 		$cadena_sql=$this->sql->cadena_sql("companyListbyID",implode(",",$this->companies));
@@ -319,10 +319,10 @@ class FronteracompanyManagement{
 
 		$cadena_sql=$this->sql->cadena_sql("roleList");
 		$roleList=$this->miRecursoDB->ejecutarAcceso($cadena_sql,"busqueda");
-		
+
 		$cadena_sql=$this->sql->cadena_sql("categoryListCommerce");
-		$categoryListCommerce=$this->miRecursoDB->ejecutarAcceso($cadena_sql,"busqueda");		
-		
+		$categoryListCommerce=$this->miRecursoDB->ejecutarAcceso($cadena_sql,"busqueda");
+
 
 		$formSaraDataCompany="bloque=companyManagement";
 		$formSaraDataCompany.="&bloqueGrupo=people/back";
@@ -331,7 +331,7 @@ class FronteracompanyManagement{
 		$formSaraDataCompany.="&optionProcess=processNewCompany";
 		$formSaraDataCompany=$this->miConfigurador->fabricaConexiones->crypto->codificar_url($formSaraDataCompany,$this->enlace);
 
-		
+
 		$formSaraDataAddCommerce="bloque=companyManagement";
 		$formSaraDataAddCommerce.="&bloqueGrupo=people/back";
 		$formSaraDataAddCommerce.="&jxajax=companyManagement";
@@ -339,7 +339,7 @@ class FronteracompanyManagement{
 		$formSaraDataAddCommerce=$this->miConfigurador->fabricaConexiones->crypto->codificar_url($formSaraDataAddCommerce,$this->enlace);
 
 
-		
+
 		include_once($this->ruta."/html/new.php");
 	}
 

@@ -16,7 +16,7 @@ if(!isset($GLOBALS["autorizado"])){
 			}
 			$variable.="&opcionLogin=".$valor['OPCION'];
 			$variable.="&saramodule=".$valor['MODULE'];
-			
+
 		break;
 
 		case "index":
@@ -24,7 +24,7 @@ if(!isset($GLOBALS["autorizado"])){
 			$variable.="&mensaje=".$valor;
 
 		break;
-	
+
 		case "paginaPrincipal":
 			$variable="pagina=index";
 			$variable.="&usuario=".$valor;
@@ -39,6 +39,6 @@ if(!isset($GLOBALS["autorizado"])){
 	$enlace=$this->miConfigurador->getVariableConfiguracion("host").$this->miConfigurador->getVariableConfiguracion("site")."?".$this->miConfigurador->getVariableConfiguracion("enlace");
 	$variable=$this->miConfigurador->fabricaConexiones->crypto->codificar_url($variable,$enlace);
 
-	echo "<script>location.replace('".$variable."')</script>";  
+	echo "<script>location.replace('".$variable."')</script>";
 
 }

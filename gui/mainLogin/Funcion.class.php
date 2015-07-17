@@ -31,6 +31,8 @@ class FuncionmainLogin
 	var $miRecursoDB;
 	var $crypto;
 
+
+
 	function verificarCampos(){
 		include_once($this->ruta."/funcion/verificarCampos.php");
 		if($this->error==true){
@@ -38,26 +40,32 @@ class FuncionmainLogin
 		}else{
 			return true;
 		}
+
 	}
+
 
 	function login(){
 		include_once($this->ruta."/funcion/procesarLogin.php");
 	}
 
+
 	function redireccionar($opcion, $valor=""){
 		include_once($this->ruta."/funcion/redireccionar.php");
 	}
 
-	function action(){
-    
-		//$this->borrarSesionesExpiradas();  //funcion pendiente por hacer
+	function action()
+	{
+
+		$this->borrarSesionesExpiradas();
 
 		//Evitar que se ingrese codigo HTML y PHP en los campos de texto
 		//Campos que se quieren excluir de la limpieza de código. Formato: nombreCampo1|nombreCampo2|nombreCampo3
 		$excluir="";
 		$_REQUEST=$this->miInspectorHTML->limpiarPHPHTML($_REQUEST);
 
+
 		if(!isset($_REQUEST["opcionLogin"]) 	|| (isset($_REQUEST["opcionLogin"]) &&($_REQUEST["opcionLogin"]=="login"))){
+
 			//Realizar una validación específica para los campos de este formulario:
 			$validacion=$this->verificarCampos();
 
@@ -68,29 +76,43 @@ class FuncionmainLogin
 			}else{
 				//Validar las variables para evitar un tipo  insercion de SQL
 				$_REQUEST=$this->miInspectorHTML->limpiarSQL($_REQUEST);
+
 				if(!isset($_REQUEST['opcionLogin'])||$_REQUEST["opcionLogin"]=="login"){
+
 					$this->login();
-				}					
+				}
 
 			}
 		}elseif(isset($_REQUEST["opcionLogin"]) &&($_REQUEST["opcionLogin"]=="logout")){
+		   // echo "1";
 		    $this->miSesion->terminarSesion($_SESSION['aplicativo']);
 		    $valor['OPCION']="login";
 		    $_REQUEST=array();
 		    echo "<script>location.replace('".$this->miConfigurador->getVariableConfiguracion("host").$this->miConfigurador->getVariableConfiguracion("site")."')</script>";
 		}
+
 		return false;
 	}
 
-	function __construct(){
+
+	function __construct()
+	{
+
 		$this->miConfigurador=Configurador::singleton();
+
 		$this->miInspectorHTML=InspectorHTML::singleton();
+
 		$this->ruta=$this->miConfigurador->getVariableConfiguracion("rutaBloque");
+
 		$this->miMensaje=Mensaje::singleton();
+
 		$this->miSesion=Sesion::singleton();
+
 		$this->enlace=$this->miConfigurador->getVariableConfiguracion("host").$this->miConfigurador->getVariableConfiguracion("site")."?".$this->miConfigurador->getVariableConfiguracion("enlace");
+
 		$conexion="master";
 		$this->miRecursoDB=$this->miConfigurador->fabricaConexiones->getRecursoDB($conexion);
+
 	}
 
 	public function setRuta($unaRuta){
@@ -98,34 +120,45 @@ class FuncionmainLogin
 		//Incluir las funciones
 	}
 
-	function setSql($a){
+	function setSql($a)
+	{
 		$this->sql=$a;
 	}
 
-	function setFuncion($funcion){
+	function setFuncion($funcion)
+	{
 		$this->funcion=$funcion;
 	}
 
-	public function setLenguaje($lenguaje){
+	public function setLenguaje($lenguaje)
+	{
 		$this->lenguaje=$lenguaje;
 	}
 
 	public function setFormulario($formulario){
 		$this->formulario=$formulario;
 	}
-	
+
 
 	public function borrarSesionesExpiradas(){
-	
+
 		if(!$this->miConfigurador->getVariableConfiguracion("estaSesion")){
+
 			$miSesion["sesionId"]=time();
 			$this->miConfigurador->setVariableConfiguracion("estaSesion",$miSesion);
 		}
+
 		$estaSesion=$this->miConfigurador->getVariableConfiguracion("estaSesion");
 
-		$conexion="master";
+		$cadena_sql=$this->sql->cadena_sql("eliminarTemp",$estaSesion["sesionId"]);
+
+		/**
+		 * La conexión que se debe utilizar es la principal de SARA
+		*/
+		$conexion="configuracion";
 		$esteRecursoDB=$this->miConfigurador->fabricaConexiones->getRecursoDB($conexion);
 		$resultado=$esteRecursoDB->ejecutarAcceso($cadena_sql,"acceso");
 	}
 
 }
+?>

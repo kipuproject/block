@@ -10,30 +10,30 @@ include_once("core/connection/Sql.class.php");
 
 
 class SqlmainLogin extends sql {
-	
+
 	var $miConfigurador;
-		
+
 	function __construct(){
 		$this->miConfigurador=Configurador::singleton();
 	}
-	
+
 
 	function cadena_sql($tipo,$variable="") {
-		 
+
 		/**
 		 * 1. Revisar las variables para evitar SQL Injection
 		 *
 		 */
-		
+
 		$prefijo=$this->miConfigurador->getVariableConfiguracion("prefijo");
 		$idSesion=$this->miConfigurador->getVariableConfiguracion("id_sesion");
-		 
+
 		switch($tipo) {
-			 
+
 			/**
 			 * Clausulas específicas
 			 */
-			 
+
 			case "dataUserByID":
 				$cadena_sql="SELECT ";
 				$cadena_sql.="id_usuario USUARIOID, ";
@@ -43,7 +43,7 @@ class SqlmainLogin extends sql {
 				$cadena_sql.="WHERE ";
 				$cadena_sql.="id_usuario ='".$variable."'";
 				break;
-				
+
 			case "buscarUsuarioAplicativo":
 				$cadena_sql="SELECT ";
 				$cadena_sql.=$prefijo."user.id_usuario USUARIOID, ";
@@ -69,10 +69,10 @@ class SqlmainLogin extends sql {
 				$cadena_sql.=$prefijo."user_role.id_subsistema=".$prefijo."role.id_subsistema ";
         $cadena_sql.="AND ";
 				$cadena_sql.=$prefijo."page.id_pagina=".$prefijo."role.id_pagina ";
-				$cadena_sql.="AND "; 
+				$cadena_sql.="AND ";
 				$cadena_sql.=$prefijo."user_role.estado=1 ";
 				$cadena_sql.="AND ";
-				$cadena_sql.=$prefijo."user.id_usuario=".$prefijo."user_role.id_usuario ";	
+				$cadena_sql.=$prefijo."user.id_usuario=".$prefijo."user_role.id_usuario ";
 				break;
 
 			case "buscarIndexUsuario":
@@ -96,10 +96,10 @@ class SqlmainLogin extends sql {
 				$cadena_sql.="AND ";
 				$cadena_sql.=$prefijo."user_role.estado=1 ";
 				$cadena_sql.="AND ";
-				$cadena_sql.=$prefijo."user.id_usuario=".$prefijo."user_role.id_usuario ";	
+				$cadena_sql.=$prefijo."user.id_usuario=".$prefijo."user_role.id_usuario ";
 				break;
 
-				
+
 			case "iniciarTransaccion":
 				$cadena_sql="START TRANSACTION";
 				break;

@@ -8,15 +8,15 @@ class FronteramainLogin{
 	var $funcion;
 	var $lenguaje;
 	var $formulario;
-	
+
 	var $miConfigurador;
-	
+
 	function __construct()
 	{
 		$conexion="master";
 		$this->miSesion=Sesion::singleton();
 		$this->miConfigurador=Configurador::singleton();
-		$this->miRecursoDB=$this->miConfigurador->fabricaConexiones->getRecursoDB($conexion);		
+		$this->miRecursoDB=$this->miConfigurador->fabricaConexiones->getRecursoDB($conexion);
 	}
 
 	public function setRuta($unaRuta){
@@ -49,7 +49,7 @@ class FronteramainLogin{
 		include_once("core/builder/FormularioHtml.class.php");
 		$this->ruta=$this->miConfigurador->getVariableConfiguracion("rutaBloque");
 	  $this->miFormulario=new formularioHtml();
-    
+
     $esteBloque=$this->miConfigurador->getVariableConfiguracion("esteBloque");
     $valorCodificado="action=".$esteBloque["nombre"];
     $valorCodificado.="&bloque=".$esteBloque["nombre"];
@@ -62,7 +62,7 @@ class FronteramainLogin{
 
 			$cadena_sql=$this->sql->cadena_sql("buscarIndexUsuario",$variable);
 			$registro=$this->miRecursoDB->ejecutarAcceso($cadena_sql,"busqueda");
-			
+
 		  if(!is_array($registro)){
         include_once($this->ruta."html/login.php");
         exit;

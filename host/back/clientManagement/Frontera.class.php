@@ -140,6 +140,17 @@ class FronteraclientManagement{
 		include_once($this->ruta."/html/list.php");
 	}
 
+	function showNew(){
+
+		$formSaraData="bloque=clientManagement";
+		$formSaraData.="&bloqueGrupo=host/back";
+		$formSaraData.="&action=clientManagement";
+		$formSaraData.="&option=processNew";
+		$formSaraData=$this->miConfigurador->fabricaConexiones->crypto->codificar($formSaraData);
+
+		include_once($this->ruta."/html/new.php");
+	}
+	
 	function orderArrayKeyBy($array,$key){
 		$newArray=array();
 		foreach($array as $name=>$value){
