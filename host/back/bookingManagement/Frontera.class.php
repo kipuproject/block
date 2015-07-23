@@ -71,23 +71,18 @@ class FronterabookingManagement{
 			case "assignStatus":
 				$this->assignStatus($_REQUEST['status'],$this->commerce,$_REQUEST['booking']);
 				break;
-				
 			case "assignValue":
 				$this->assignValue($_REQUEST['value'],$this->commerce,$_REQUEST['booking']);
 				break;	
-				
 			case "assignPaymentValue":
 				$this->assignPaymentValue($_REQUEST['value'],$this->commerce,$_REQUEST['booking']);
 				break;
-			
 			case "assignOnlineValue":
 				$this->assignOnlineValue($_REQUEST['onlinepayment'],$_REQUEST['commerce'],$_REQUEST['booking']);
 				break;
-        
 			case "assignObservation":
 				$this->assignObservation($_REQUEST['value'],$this->commerce,$_REQUEST['booking']);
 				break;	
-				
 			case "assignStatusPayment":
 				$this->assignStatusPayment($_REQUEST['paymentstatus'],$this->commerce,$_REQUEST['booking']);
 				break;
@@ -100,7 +95,6 @@ class FronterabookingManagement{
 			case "assignDate":
 				$this->assignDate($_REQUEST['chekininput'],$_REQUEST['chekoutinput'],$this->commerce,$_REQUEST['booking']);
 				break;
-				
 			case "showDetails":
 				$this->paintBookingDetail($_REQUEST['bookings'],$this->commerce);
 				break;	
@@ -113,11 +107,9 @@ class FronterabookingManagement{
 			case "bookinglist":
 				$this->showViewBookingList();
 				break;	
-					
 			case "voucher":
 				$this->showVoucher($_REQUEST['idbooking']);
 				break;	
-				
 			default:
 				$this->showView();
 				break;
@@ -129,13 +121,10 @@ class FronterabookingManagement{
 	
 	function paintBookingDetail($bookings,$commerce){
 
-		//Solo se traen ls habitaciones q no se encuntran asignadas
-
-		
-		$cadena_sql=$this->sql->cadena_sql("typeRooms",$variable);
-		$typeRooms=$this->miRecursoDB->ejecutarAcceso($cadena_sql,"busqueda");
-		$typeRooms=$this->orderArrayKeyBy($typeRooms,"IDTYPEROOM");	
-
+    //Solo se traen las habitaciones q no se encuntran asignadas
+		$cadena_sql = $this->sql->cadena_sql("typeRooms",$variable);
+		$typeRooms = $this->miRecursoDB->ejecutarAcceso($cadena_sql,"busqueda");
+		$typeRooms = $this->orderArrayKeyBy($typeRooms,"IDTYPEROOM");	
 				
 		$bookings=explode(",",$bookings);
 		include_once($this->ruta."/html/detail.php");
@@ -146,7 +135,7 @@ class FronterabookingManagement{
 		$bookings=explode(",",$bookings);
 		
 		$variable['commerce']=1;
-		$variable['user']=$this->idSesion;
+		$variable['user'] = $this->idSesion;
 		
 		//insertar capacidad 999999999 //num maximo global
 		//insertar estado 5
@@ -164,8 +153,8 @@ class FronterabookingManagement{
 			//F. Inserto reservables correspondientes con la reserva
 			if($result){
 				
-				$variable['id_reserva']=$this->miRecursoDB->ultimo_insertado();
-				$variable['id_reservable']=$dataBooking[1];
+				$variable['id_reserva'] = $this->miRecursoDB->ultimo_insertado();
+				$variable['id_reservable'] = $dataBooking[1];
 				$cadena_sql=$this->sql->cadena_sql("insertBookingItems",$variable);
 				$registro=$this->miRecursoDB->ejecutarAcceso($cadena_sql,"");
 					
@@ -183,7 +172,7 @@ class FronterabookingManagement{
 		$bookings=explode(",",$bookings);
 		
 		$variable['commerce']=1;
-		$variable['user']=$this->idSesion;
+		$variable['user'] = $this->idSesion;
 		
 		//insertar capacidad 999999999 //num maximo global
 		//insertar estado 5
@@ -191,7 +180,7 @@ class FronterabookingManagement{
 		foreach($bookings as $booking){
 		
 			$dataBooking=explode("-",$booking);
-			$variable['timeStampIni']=$dataBooking[0];
+			$variable['timeStampIni'] = $dataBooking[0];
 			
 			$cadena_sql=$this->sql->cadena_sql("unblockBooking",$variable);
 			$result=$this->miRecursoDB->ejecutarAcceso($cadena_sql,"");
@@ -212,25 +201,25 @@ class FronterabookingManagement{
 		include_once("blocks/host/back/internalBooking/Funcion.class.php");
 		
 		
-		$variable['IDBOOKING']=$booking;
+		$variable['IDBOOKING'] = $booking;
 		$variable['COMMERCE']=1;
 		
 		$cadena_sql=$this->sql->cadena_sql("detailBooking",$variable);
 		$result=$this->miRecursoDB->ejecutarAcceso($cadena_sql,"busqueda");
 		$result=$result[0];
 		
-		$variable['dataRoomBooking']=$result['ROOMTYPE']."-".$result['ROOM'];
-		$variable['guestBooking']=$result['NUMGUEST'];
-		$variable['checkin']=$chekininput;
-		$variable['checkout']=$chekoutinput;
+		$variable['dataRoomBooking'] = $result['ROOMTYPE']."-".$result['ROOM'];
+		$variable['guestBooking'] = $result['NUMGUEST'];
+		$variable['checkin'] = $chekininput;
+		$variable['checkout'] = $chekoutinput;
 		$variable['no-users']="TRUE";
 		$variable['numRooms']="1";
-		$variable['medioBooking']=$result['MEDIO'];
-		$variable['valueBooking']=$result['VALUEBOOKING'];
-		$variable['numGuest']=$result['NUMGUEST'];
-		$variable['commerce']=$result['IDCOMMERCE'];
-		$variable['company']=$result['IDCOMMERCE'];
-		$variable['cliente']=$result['CLIENT'];
+		$variable['medioBooking'] = $result['MEDIO'];
+		$variable['valueBooking'] = $result['VALUEBOOKING'];
+		$variable['numGuest'] = $result['NUMGUEST'];
+		$variable['commerce'] = $result['IDCOMMERCE'];
+		$variable['company'] = $result['IDCOMMERCE'];
+		$variable['cliente'] = $result['CLIENT'];
 		
 		
 		$booking=new FuncioninternalBooking();
@@ -250,8 +239,8 @@ class FronterabookingManagement{
 			echo $booking->mensaje;
 			
 		}elseif($booking->status=="true"){ 
-			$variable['oldBooking']=$variable['IDBOOKING'];
-			$variable['newBooking']=$booking->id_reserva;
+			$variable['oldBooking'] = $variable['IDBOOKING'];
+			$variable['newBooking'] = $booking->id_reserva;
 			
 			$cadena_sql=$this->sql->cadena_sql("updateGuest",$variable);
 			$result=$this->miRecursoDB->ejecutarAcceso($cadena_sql,"");
@@ -269,8 +258,8 @@ class FronterabookingManagement{
 
 		
 		$variable['value']=filter_var($value,FILTER_SANITIZE_NUMBER_INT);
-		$variable['commerce']=$commerce;
-		$variable['booking']=$booking;
+		$variable['commerce'] = $commerce;
+		$variable['booking'] = $booking;
 				
 		$cadena_sql=$this->sql->cadena_sql("updateValue",$variable);
 		$result=$this->miRecursoDB->ejecutarAcceso($cadena_sql,"");
@@ -285,8 +274,8 @@ class FronterabookingManagement{
 	function assignPaymentValue($value,$commerce,$booking){
 
 		$variable['payment']=filter_var($value,FILTER_SANITIZE_NUMBER_INT);
-		$variable['commerce']=$commerce;
-		$variable['booking']=$booking;
+		$variable['commerce'] = $commerce;
+		$variable['booking'] = $booking;
 				
 		$cadena_sql=$this->sql->cadena_sql("updatePaymentValue",$variable);
 		$result=$this->miRecursoDB->ejecutarAcceso($cadena_sql,"");
@@ -301,8 +290,8 @@ class FronterabookingManagement{
 	function assignObservation($value,$commerce,$booking){
 
 		$variable['observation']=filter_var($value,FILTER_SANITIZE_STRING);
-		$variable['commerce']=$commerce;
-		$variable['booking']=$booking;
+		$variable['commerce'] = $commerce;
+		$variable['booking'] = $booking;
 				
 		$cadena_sql=$this->sql->cadena_sql("updateObservation",$variable);
 		$result=$this->miRecursoDB->ejecutarAcceso($cadena_sql,"");
@@ -316,14 +305,14 @@ class FronterabookingManagement{
 	
 	function assignStatus($status,$commerce,$booking){
 
-		$variable['status']=$status;
-		$variable['commerce']=$commerce;
-		$variable['booking']=$booking;
-		$variable['user']=$this->idSesion; 
+		$variable['status'] = $status;
+		$variable['commerce'] = $commerce;
+		$variable['booking'] = $booking;
+		$variable['user'] = $this->idSesion; 
 
 				
 		$log['event']="update-status";
-		$log['data']=$variable['status'];
+		$log['data'] = $variable['status'];
 		$variable['event']=json_encode($log);
 		$cadena_sql=$this->sql->cadena_sql("insertLog",$variable);
 		$result=$this->miRecursoDB->ejecutarAcceso($cadena_sql,"");
@@ -340,9 +329,9 @@ class FronterabookingManagement{
 	
 	function assignStatusPayment($paymentstatus,$commerce,$booking){
 
-		$variable['paymentstatus']=$paymentstatus;
-		$variable['commerce']=$commerce;
-		$variable['booking']=$booking;
+		$variable['paymentstatus'] = $paymentstatus;
+		$variable['commerce'] = $commerce;
+		$variable['booking'] = $booking;
 				
 		$cadena_sql=$this->sql->cadena_sql("assignStatusPayment",$variable);
 		$result=$this->miRecursoDB->ejecutarAcceso($cadena_sql,"");
@@ -356,10 +345,10 @@ class FronterabookingManagement{
 	
   function assignOnlineValue($paymentstatus,$commerce,$booking){
 
-		$variable['user']=$this->idSesion; 
+		$variable['user'] = $this->idSesion; 
 		$variable['onlinepayment']=filter_var($paymentstatus,FILTER_SANITIZE_NUMBER_INT);
-		$variable['commerce']=$commerce;
-		$variable['booking']=$booking;
+		$variable['commerce'] = $commerce;
+		$variable['booking'] = $booking;
 		$variable['description']="RESERVA";
 		$variable['currency']="COP";
 		$variable['answer']="REGISTRO MANUAL :".date('l jS \of F Y h:i:s A');
@@ -377,7 +366,7 @@ class FronterabookingManagement{
       
 		}else{
 			$log['event']="update-online-payment";
-			$log['data']=$result[0];
+			$log['data'] = $result[0];
 			$variable['event']=json_encode($log);
 			$cadena_sql=$this->sql->cadena_sql("insertLog",$variable);
 			$result=$this->miRecursoDB->ejecutarAcceso($cadena_sql,"");
@@ -396,9 +385,9 @@ class FronterabookingManagement{
   
 	function assignRoom($room,$commerce,$booking){
 
-		$variable['room']=$room;
-		$variable['commerce']=$commerce;
-		$variable['booking']=$booking;
+		$variable['room'] = $room;
+		$variable['commerce'] = $commerce;
+		$variable['booking'] = $booking;
 				
 		$cadena_sql=$this->sql->cadena_sql("assignRoom",$variable);
 		$result=$this->miRecursoDB->ejecutarAcceso($cadena_sql,"");
@@ -412,9 +401,9 @@ class FronterabookingManagement{
 	
 	function assignTypeRoom($typeroom,$commerce,$booking){
 
-		$variable['typeroom']=$typeroom;
-		$variable['commerce']=$commerce;
-		$variable['booking']=$booking;
+		$variable['typeroom'] = $typeroom;
+		$variable['commerce'] = $commerce;
+		$variable['booking'] = $booking;
 				
 		$cadena_sql=$this->sql->cadena_sql("assignTypeRoom",$variable);
 		$result=$this->miRecursoDB->ejecutarAcceso($cadena_sql,"");
@@ -428,30 +417,30 @@ class FronterabookingManagement{
 	
 	function getGuestBooking($booking,$commerce){
 	
-		$variable['IDBOOKING']=$booking;
-		$variable['COMMERCE']=$commerce;
+		$variable['IDBOOKING'] = $booking;
+		$variable['COMMERCE'] = $commerce;
 		
-		$cadena_sql=$this->sql->cadena_sql("detailBookingGuest",$variable);
-		$clients=$this->miRecursoDB->ejecutarAcceso($cadena_sql,"busqueda");
+		$cadena_sql = $this->sql->cadena_sql("detailBookingGuest",$variable);
+		$clients = $this->miRecursoDB->ejecutarAcceso($cadena_sql,"busqueda");
 		
 		return $clients;
 	}
 	
 	function getBookinsbyDate($booking,$commerce){
 	
-		$variable['IDCELL']=$booking;
-		$variable['COMMERCE']=$this->commerce;
+		$variable['IDCELL'] = $booking;
+		$variable['COMMERCE'] = $this->commerce;
 		
-		$cadena_sql=$this->sql->cadena_sql("detailBooking",$variable);
-		$clients=$this->miRecursoDB->ejecutarAcceso($cadena_sql,"busqueda");
+		$cadena_sql = $this->sql->cadena_sql("detailBooking",$variable);
+		$clients = $this->miRecursoDB->ejecutarAcceso($cadena_sql,"busqueda");
 	
 		return $clients;
 	}
 	
 	function getPayuPayment($booking){
 
-		$cadena_sql=$this->sql->cadena_sql("detailPayment",$booking);
-		$result=$this->miRecursoDB->ejecutarAcceso($cadena_sql,"busqueda");
+		$cadena_sql = $this->sql->cadena_sql("detailPayment",$booking);
+		$result = $this->miRecursoDB->ejecutarAcceso($cadena_sql,"busqueda");
 		if(is_array($result)){
 		
 		}else{
@@ -464,30 +453,30 @@ class FronterabookingManagement{
 	function getAvalaibleRooms($current,$start,$end,$commerce,$group){
 	
 		//consulto todas las habitaciones
-		$cadena_sql=$this->sql->cadena_sql("searchRooms",$this->commerce);
-		$Rooms=$this->miRecursoDB->ejecutarAcceso($cadena_sql,"busqueda");
-		$Rooms=$this->orderArrayKeyBy($Rooms,"IDROOM");
+		$cadena_sql = $this->sql->cadena_sql("searchRooms",$this->commerce);
+		$Rooms = $this->miRecursoDB->ejecutarAcceso($cadena_sql,"busqueda");
+		$Rooms = $this->orderArrayKeyBy($Rooms,"IDROOM");
 		
 		//almaceno la habitacion actual
 		$currentRoom=array();
 		
 		if($current<>"0"){
-			$currentRoom[$current]=$Rooms[$current];
+			$currentRoom[$current] = $Rooms[$current];
 		}
 		
-		$variable["timeStampStart"]=$start;
-		$variable["timeStampEnd"]=$end;
-		$variable["commerce"]=$commerce;
-		$variable["groupRoom"]=$group;
+		$variable["timeStampStart"] = $start;
+		$variable["timeStampEnd"] = $end;
+		$variable["commerce"] = $commerce;
+		$variable["groupRoom"] = $group;
 		
 		//consulto todas la habitaciones ocupadas
-		$cadena_sql=$this->sql->cadena_sql("searchBusyRooms",$variable);
-		$busyRooms=$this->miRecursoDB->ejecutarAcceso($cadena_sql,"busqueda");
+		$cadena_sql = $this->sql->cadena_sql("searchBusyRooms",$variable);
+		$busyRooms = $this->miRecursoDB->ejecutarAcceso($cadena_sql,"busqueda");
 	
-		$busyRooms=$this->orderArrayKeyBy($busyRooms,"IDROOM");
+		$busyRooms = $this->orderArrayKeyBy($busyRooms,"IDROOM");
 		
-		$avalaibleRooms=array_diff_key($Rooms,$busyRooms);
-		$avalaibleRooms=array_merge($avalaibleRooms,$currentRoom);
+		$avalaibleRooms = array_diff_key($Rooms,$busyRooms);
+		$avalaibleRooms = array_merge($avalaibleRooms,$currentRoom);
 		
 		return $avalaibleRooms;
 	}
@@ -507,7 +496,7 @@ class FronterabookingManagement{
 	
 			$ad=0; 
 			while(isset($valuesAdditional[$ad]['IDFIELD'])){ 
-					$valuesAdditional[$ad]['NAMEFIELD']=$fieldsAdditional[$valuesAdditional[$ad]['IDFIELD']][0]['NAMEFIELD'];
+					$valuesAdditional[$ad]['NAMEFIELD'] = $fieldsAdditional[$valuesAdditional[$ad]['IDFIELD']][0]['NAMEFIELD'];
 				$ad++;
 			}
 			return $valuesAdditional;
@@ -545,12 +534,12 @@ class FronterabookingManagement{
 	 	$formSaraDataService.="&optionBooking=addService";
 		$formSaraDataService=$this->miConfigurador->fabricaConexiones->crypto->codificar_url($formSaraDataService,$this->enlace);
 	
-		$booking['URLVOUCHER']=$formSaraDataURL;
-		$booking['DNI']=$users[$booking['CLIENT']][0]['DNI'];
-		$booking['NAMECLIENT']=$users[$booking['CLIENT']][0]['NAMECLIENT'];
-		$booking['COUNTRY']=$users[$booking['CLIENT']][0]['COUNTRY'];
-		$booking['EMAILCLIENT']=$users[$booking['CLIENT']][0]['EMAILCLIENT'];
-		$booking['PHONECLIENT']=$users[$booking['CLIENT']][0]['PHONECLIENT'];
+		$booking['URLVOUCHER'] = $formSaraDataURL;
+		$booking['DNI'] = $users[$booking['CLIENT']][0]['DNI'];
+		$booking['NAMECLIENT'] = $users[$booking['CLIENT']][0]['NAMECLIENT'];
+		$booking['COUNTRY'] = $users[$booking['CLIENT']][0]['COUNTRY'];
+		$booking['EMAILCLIENT'] = $users[$booking['CLIENT']][0]['EMAILCLIENT'];
+		$booking['PHONECLIENT'] = $users[$booking['CLIENT']][0]['PHONECLIENT'];
 		
 		include($this->ruta."/html/managementBooking.php");
 	}	
@@ -632,7 +621,7 @@ class FronterabookingManagement{
 		}
 		else{
 			//si el id no tiene hijos entonces lo agregamos a las empresas o establecimientos q pertenecen al usuario			
-			$this->companies[]=$parent;
+			$this->companies[] = $parent;
 		}
 	}
 	
@@ -645,7 +634,7 @@ class FronterabookingManagement{
 		//calculo los intervalos de inicio y fin de mes
 		$variable['firstDay']=mktime(0,0,0,$month,1,$year);
 		$variable['LastDay']=mktime(23,59,59, $month,$numDaysMonth,$year);
-		$variable['commerce']=$commerce;
+		$variable['commerce'] = $commerce;
 		
 		
 		$cadena_sql=$this->sql->cadena_sql("typeBookingCommerce",$variable['commerce']);
@@ -671,10 +660,10 @@ class FronterabookingManagement{
 					$position=count($bookings); //cuento el tamaño de las reservas para agregar al final las nuevas
 					
 					$bookings[$position]['IDCELL']=($bookings[$b]['DATESTART'])+($c*86400).'-'.$bookings[$b]['IDRESERVABLE'];
-					$bookings[$position]['INFOCELL']=$bookings[$b]['IDBOOKING'];
-					$bookings[$position]['DATESTART']=$bookings[$b]['DATESTART'];
-					$bookings[$position]['NUMGUEST']=$bookings[$b]['NUMGUEST'];
-					$bookings[$position]['NUMKIDS']=$bookings[$b]['NUMKIDS'];
+					$bookings[$position]['INFOCELL'] = $bookings[$b]['IDBOOKING'];
+					$bookings[$position]['DATESTART'] = $bookings[$b]['DATESTART'];
+					$bookings[$position]['NUMGUEST'] = $bookings[$b]['NUMGUEST'];
+					$bookings[$position]['NUMKIDS'] = $bookings[$b]['NUMKIDS'];
 				}
 				
 				$b++;
@@ -699,7 +688,7 @@ class FronterabookingManagement{
 			
 			while(isset($rooms[$i][0])){
 				$time=time();
-				$grid['LABELS'][$rooms[$i]['IDROOM']]=$rooms[$i]['NAME']; 
+				$grid['LABELS'][$rooms[$i]['IDROOM']] = $rooms[$i]['NAME']; 
 				$j=1;
 				for($j;$j<=$numDaysMonth;$j++){
 					$grid['BOOKING'][$j][]=mktime(0,0,0,$month,$j,$year)."-".$rooms[$i]['IDROOM'];
@@ -717,7 +706,7 @@ class FronterabookingManagement{
 		$newArray=array();
 
 		foreach($array as $name=>$value){
-			$newArray[$value[$key]][]=$array[$name];
+			$newArray[$value[$key]][] = $array[$name];
 		}
 		/*echo "<pre>";
 		var_dump($key);

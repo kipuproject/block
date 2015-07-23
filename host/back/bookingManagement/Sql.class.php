@@ -126,8 +126,9 @@ class SqlbookingManagement extends sql {
 				$cadena_sql.="fecha_inicio DATESTART, ";
 				$cadena_sql.="fecha_fin	DATEEND, ";
 				$cadena_sql.="cliente CUSTOMER, ";
-				$cadena_sql.="numero_personas NUMGUEST, ";
-				$cadena_sql.="numero_kids NUMKIDS, ";
+				$cadena_sql.="adults NUMGUEST, ";
+				$cadena_sql.="children NUMKIDS, ";
+				$cadena_sql.="infants INFANTS, ";
 				$cadena_sql.="estado_reserva STATEBOOKING, ";
 				$cadena_sql.="estado_pago STATEPAYMENT ";
 				$cadena_sql.="FROM ";
@@ -475,8 +476,9 @@ class SqlbookingManagement extends sql {
 				$cadena_sql.="r.observacion OBSERVATION, ";
 				$cadena_sql.="r.observacion_cliente OBSERVATION_CUSTOMER, ";
 				$cadena_sql.="r.valor_pagado VALUEPAYMENT, ";
-				$cadena_sql.="r.numero_personas NUMGUEST, ";
-				$cadena_sql.="r.numero_kids NUMKIDS, ";
+				$cadena_sql.="rr.adults NUMGUEST, ";
+				$cadena_sql.="rr.children NUMKIDS, ";
+				$cadena_sql.="rr.infants INFANTS, ";
 				$cadena_sql.="r.id_reserva IDBOOKING, ";
 				$cadena_sql.="r.estado_reserva STATUS, ";
 				$cadena_sql.="r.valor_total VALUEBOOKING, ";
