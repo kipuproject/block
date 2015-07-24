@@ -47,7 +47,7 @@
 											$i=0;
 											while(isset($dataItems[$i][0])):
                     ?>
-												<option value="<?=$dataItems[$i]['IDGROUP']?>-<?=$dataItems[$i]['IDRESERVABLE']?>" ><?=$dataItems[$i]['NAME']?></option>
+												<option value = "<?=$dataItems[$i]['IDGROUP']?>-<?=$dataItems[$i]['IDRESERVABLE']?>" ><?=$dataItems[$i]['NAME']?></option>
 										<?php
 												$i++;
 											endwhile;
