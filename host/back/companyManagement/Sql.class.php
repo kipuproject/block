@@ -185,7 +185,8 @@ class SqlcompanyManagement extends sql {
 				$cadena_sql.="SET ";
 				$cadena_sql.="politicas_pago='".$variable['ppago']."', ";
 				$cadena_sql.="hora_inicio='".$variable['horapertura']."', ";
-				$cadena_sql.="hora_cierre='".$variable['horacierre']."', ";
+				$cadena_sql.="hora_cierre='".$variable['horacierre']."', "; 
+				$cadena_sql.="link_comentarios='".$variable['linkcomments']."', ";
 				$cadena_sql.="politicas_especiales='".$variable['pespeciales']."' ";
 				$cadena_sql.="WHERE id_tipoReserva=".$variable['optionValue'];
 				break;
@@ -286,6 +287,7 @@ class SqlcompanyManagement extends sql {
 				$cadena_sql.="hora_cierre ENDTIME, ";
 				$cadena_sql.="politicas_pago PPAGO, ";
 				$cadena_sql.="politicas_especiales PESPECIALES, ";
+				$cadena_sql.="link_comentarios LINKCOMMENTS, ";
 				$cadena_sql.="descripcion DESCRIPTION, ";
 				$cadena_sql.="correo EMAIL, ";
 				$cadena_sql.="url URL, ";

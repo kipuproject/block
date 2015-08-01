@@ -107,7 +107,27 @@
 		});
 	}
 	
-	
+	function updateResponsible(form){
+		$.ajax({
+			type: 'GET',
+			url: '<?=$formSaraDataURL?>',
+			async: false,
+			data: { 
+				optionBooking : "updateResponsible",
+				dni :  $(form+" #u-main-dni").val(),
+				id :  $(form+" #u-value").val(),
+				name: $(form+" #u-main-name").val(),
+				country: $(form+" #u-main-country").val(),
+				uemail: $(form+" #u-main-email").val(),
+				phone: $(form+" #u-main-phone").val()
+				},
+			success: function(respuesta) {
+				alert(respuesta);
+			}
+		});
+
+	}
+
 	function assignPaymentValue(obj,booking){
 
 	   $.ajax({

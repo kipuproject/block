@@ -65,17 +65,14 @@ if(!isset($GLOBALS["autorizado"])){
 
 
 		if($variable['emailCustomer']<>""){
+    
 			$this->mensaje .= $cadena_sql = $this->sql->cadena_sql("dataUserByEmail",$variable['emailCustomer']);
 			$dataUser = $this->miRecursoDB->ejecutarAcceso($cadena_sql,"busqueda");
 			$dataUser = $dataUser[0];
+      
 		}
 
-
-
-		if(is_array($dataUser)){
-			$variable['cliente']=$dataUser['USUARIOID'];
-
-		}else{
+		if(!is_array($dataUser)){
 			//crear usuario
 			$cadena_sql = $this->sql->cadena_sql("insertUser",$variable);
 			$result = $this->masterResource->ejecutarAcceso($cadena_sql,"");
@@ -89,6 +86,7 @@ if(!isset($GLOBALS["autorizado"])){
 
 		}
 
+    
 		$friends=array();
 		foreach($variable as $key=>$value){
 			$friend=explode("_",$key);

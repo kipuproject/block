@@ -14,37 +14,55 @@
     <div for="textfield" class="labelSup" ><?=$i?></div>
     <?php 
       foreach($grid['BOOKING'][$i] as $value): 
-        $numBookings=count($bookings[$value]);
-        $totalAdults=0;
-        $totalChildren=0;
-        $Infants=0;
-        $bbc=0; //se recorren todas las reservas q pertenecen a la misma celda
-        while(isset($bookings[$value][$bbc]['IDCELL'])){
-          $totalAdults=$bookings[$value][$bbc]['NUMGUEST']+$totalAdults;	
-          $totalChildren=$bookings[$value][$bbc]['NUMKIDS']+$totalChildren;
-          $bbc++;
-        }
-        if($numBookings>0){
-          $infoCell=$bookings[$value][0]['INFOCELL'];
+
+        $totalAdults = 0;
+        $totalChildren = 0;
+        $Infants = 0;
+        $classColor = "";
+
+        if(isset($bookings[$value])){
+          $numBookings = count($bookings[$value]);
+          
+          $bbc = 0; //se recorren todas las reservas q pertenecen a la misma celda
+          while(isset($bookings[$value][$bbc]['IDCELL'])){
+            $totalAdults = $bookings[$value][$bbc]['NUMGUEST']+$totalAdults;	
+            $totalChildren = $bookings[$value][$bbc]['NUMKIDS']+$totalChildren;
+            $bbc++;
+          }
+          if($numBookings > 0){
+            $infoCell = $bookings[$value][0]['INFOCELL'];
+          }else{
+            $infoCell = "-";
+          }
+          $classColor = "";
+          if($numBookings > 0){
+            $classColor = "grey";
+          }
+
+          $state = $bookings[$value][0]['STATEBOOKING']; 
+
+          if($state == 5){
+
+            $classColor = "black";
+
+          }elseif($state == 6){
+
+            $classColor = "yellow";
+
+          }elseif($state == 2){
+
+            $classColor = "green";
+
+          }
         }else{
-          $infoCell="-";
-        }
-        $classColor="";
-        if($numBookings>0){
-          $classColor="grey";
-        }
-        if($bookings[$value][0]['STATEBOOKING']==5){
-          $classColor="black";
-        }elseif($bookings[$value][0]['STATEBOOKING']==6){
-          $classColor="yellow";
-        }elseif($bookings[$value][0]['STATEBOOKING']==2){
-          $classColor="green";
+          $numBookings = 0;
+          $state = "";
         }
       ?>
         <div style="width:95%; border:1px solid #FFFFFF" >
-          <div id='<?=$value?>-<?=$bookings[$value][0]['DATESTART']?>' title="Adultos:<?=$totalAdults?> Niños:<?=$totalChildren?>" class="clickableElement <?=$classColor?>"  id="">
+          <div id='<?php echo $value; ?>-<?php echo $bookings[$value][0]['DATESTART']; ?>' title="Adultos:<?=$totalAdults?> Niños:<?=$totalChildren?>" class="clickableElement <?=$classColor?>"  id="">
             <?php
-              if($bookings[$value][0]['STATEBOOKING']<>5){
+              if($state<>5){
                 echo $numBookings;
               }else{
                 echo "B";

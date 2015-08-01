@@ -199,6 +199,21 @@
 												<span class="help-block"></span>
 										</div>
 									</div>
+									<div class="control-group">
+										<label for="textfield" class="control-label">Link Comentarios:	</label>
+										<div class="controls">
+												<textarea name="linkcomments" class=""><?=$commerce[$i]['LINKCOMMENTS']?></textarea>
+												<span class="help-block"></span>
+										</div>
+									</div>
+									<!--div class="control-group">
+										<label for="textfield" class="control-label">Métodos de Pago:	</label>
+										<div class="controls">
+												<input type="checkbox" name="1" class="" />
+												<input type="checkbox" name="2" class="" />
+												<input type="checkbox" name="3" class="" />
+										</div>
+									</div-->
 									
 									<input type='hidden' name='optionValue' value="<?=$commerce[$i]['IDCOMMERCE']?>">
 									<input type='hidden' name='optionTab' value="time">

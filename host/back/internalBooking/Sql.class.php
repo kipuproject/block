@@ -401,7 +401,7 @@ class SqlinternalBooking extends sql {
 				$cadena_sql.="correo EMAIL, ";
 				$cadena_sql.="fecha_nacimiento BIRTHDAY ";
 				$cadena_sql.="FROM ";
-				$cadena_sql.=$prefijo."usuario ";
+				$cadena_sql.=$prefijo."user ";
 				$cadena_sql.="WHERE ";
 				$cadena_sql.="`correo` ='".$variable."' ";
 			break;
@@ -418,7 +418,7 @@ class SqlinternalBooking extends sql {
 				$cadena_sql.="pais_origen COUNTRY, ";
 				$cadena_sql.="fecha_nacimiento BIRTHDAY ";
 				$cadena_sql.="FROM ";
-				$cadena_sql.=$prefijo."usuario ";
+				$cadena_sql.=$prefijo."user ";
 				$cadena_sql.="WHERE ";
 				$cadena_sql.="`identificacion` ='".$variable."' ";
 			break;
@@ -473,7 +473,7 @@ class SqlinternalBooking extends sql {
 				$cadena_sql.="correo EMAIL, ";
 				$cadena_sql.="fecha_nacimiento BIRTHDAY ";
 				$cadena_sql.="FROM ";
-				$cadena_sql.=$prefijo."usuario ";
+				$cadena_sql.=$prefijo."user ";
 				$cadena_sql.="WHERE ";
 				$cadena_sql.="`id_usuario` ='".$variable."' ";
 			break;

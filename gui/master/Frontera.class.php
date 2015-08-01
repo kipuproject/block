@@ -12,8 +12,7 @@ class Fronteramaster{
 	var $enlace;
 	var $miConfigurador;
 
-	function __construct()
-	{
+	function __construct(){
 		$this->miSesion=Sesion::singleton();
 		$this->miConfigurador=Configurador::singleton();
 		$this->miRecursoDB=$this->miConfigurador->fabricaConexiones->getRecursoDB("master");

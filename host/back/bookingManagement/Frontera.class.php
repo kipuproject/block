@@ -16,14 +16,14 @@ class FronterabookingManagement{
 	
 	function __construct()
 	{
-		$this->miConfigurador=Configurador::singleton();
-		$this->enlace=$this->miConfigurador->getVariableConfiguracion("host").$this->miConfigurador->getVariableConfiguracion("site")."?".$this->miConfigurador->getVariableConfiguracion("enlace");
-		$this->miSesion=Sesion::singleton();
-		$conexion=$this->miSesion->getValorSesion('dbms');
-		$this->miRecursoDB=$this->miConfigurador->fabricaConexiones->getRecursoDB($conexion);		
-		$this->masterResource=$this->miConfigurador->fabricaConexiones->getRecursoDB("master");		
-		$this->commerce=$this->miSesion->getValorSesion('commerce');
-		$this->idSesion=$this->miSesion->getValorSesion('idUsuario');
+		$this->miConfigurador = Configurador::singleton();
+		$this->enlace = $this->miConfigurador->getVariableConfiguracion("host").$this->miConfigurador->getVariableConfiguracion("site")."?".$this->miConfigurador->getVariableConfiguracion("enlace");
+		$this->miSesion = Sesion::singleton();
+		$conexion = $this->miSesion->getValorSesion('dbms');
+		$this->miRecursoDB = $this->miConfigurador->fabricaConexiones->getRecursoDB($conexion);		
+		$this->masterResource = $this->miConfigurador->fabricaConexiones->getRecursoDB("master");		
+		$this->commerce = $this->miSesion->getValorSesion('commerce');
+		$this->idSesion = $this->miSesion->getValorSesion('idUsuario');
 	}
 
 	public function setRuta($unaRuta){
@@ -38,23 +38,18 @@ class FronterabookingManagement{
 		$this->formulario=$formulario;
 	}
 
-	function setSql($a)
-	{
+	function setSql($a) {
 		$this->sql=$a;
-
 	}
 
 	function setFuncion($funcion){
 		$this->funcion=$funcion;
-
 	}
 
 
 	function html(){
 		
-		include_once("core/builder/FormularioHtml.class.php");
-		$this->ruta=$this->miConfigurador->getVariableConfiguracion("rutaBloque");
-		$this->miFormulario=new formularioHtml();
+		$this->ruta = $this->miConfigurador->getVariableConfiguracion("rutaBloque");
 
 		$option=isset($_REQUEST['optionBooking'])?$_REQUEST['optionBooking']:"";
 		
@@ -109,6 +104,9 @@ class FronterabookingManagement{
 				break;	
 			case "voucher":
 				$this->showVoucher($_REQUEST['idbooking']);
+				break;		
+			case "updateResponsible":
+				$this->updateResponsible($_REQUEST);
 				break;	
 			default:
 				$this->showView();
@@ -130,6 +128,20 @@ class FronterabookingManagement{
 		include_once($this->ruta."/html/detail.php");
 		
 	}
+	
+	function updateResponsible($variable){
+		
+	  $cadena_sql=$this->sql->cadena_sql("updateUser",$variable);
+		$result=$this->masterResource->ejecutarAcceso($cadena_sql,"");
+		
+		if($result){
+			echo "El cliente se actualizo con exito";
+		}else{
+			echo "El cliente no se logro actualizar";
+		}	
+
+	}
+
 	
 	function blockBookingDetail($bookings,$commerce){
 		$bookings=explode(",",$bookings);
@@ -163,8 +175,6 @@ class FronterabookingManagement{
 		}
 		
 		echo "Bloqueo exitoso";
-
-		
 
 	}
 
@@ -540,6 +550,7 @@ class FronterabookingManagement{
 		$booking['COUNTRY'] = $users[$booking['CLIENT']][0]['COUNTRY'];
 		$booking['EMAILCLIENT'] = $users[$booking['CLIENT']][0]['EMAILCLIENT'];
 		$booking['PHONECLIENT'] = $users[$booking['CLIENT']][0]['PHONECLIENT'];
+		$booking['ID'] = $users[$booking['CLIENT']][0]['IDUUSER'];
 		
 		include($this->ruta."/html/managementBooking.php");
 	}	
@@ -566,10 +577,8 @@ class FronterabookingManagement{
 	}
 	
 	function showViewBookingList(){
-	
-		$companiesByUser=$this->companyByUser();
-		
-		$cadena_sql=$this->sql->cadena_sql("allBookingsByCompany","1");
+			
+		$cadena_sql=$this->sql->cadena_sql("allBookingsByCompany",$this->commerce);
 		$bookings=$this->miRecursoDB->ejecutarAcceso($cadena_sql,"busqueda");
 		
 		$cadena_sql=$this->sql->cadena_sql("allUsers","");
@@ -590,41 +599,6 @@ class FronterabookingManagement{
 	}
 	
 	
-	/**
-	* Consulta el listado de establecimientos asociados a cada usuario tambien denominado nivel de acceos 
-	*/
-	function companyByUser(){
-
-		$cadena_sql=$this->sql->cadena_sql("companyByUser",$this->idSesion);
-		$result=$this->miRecursoDB->ejecutarAcceso($cadena_sql,"busqueda");
-		$cadena_sql=$this->sql->cadena_sql("companyListAll");
-		$allCompanies=$this->miRecursoDB->ejecutarAcceso($cadena_sql,"busqueda");
-
-		$this->companies=array();      
-
-		$i=0;
-		while(isset($result[$i]['IDCOMPANY'])){
-			$this->companyByParent($result[$i]['IDCOMPANY'],$allCompanies);
-			$i++;
-		}
-		return $this->companies;
-	}
-
-	function companyByParent($parent,$allCompanies) {
-	
-		$allCompaniesOrderByParent=$this->orderArrayKeyBy($allCompanies,"IDPARENT");
-		//si el id tiene hijos asociados recorremos sus hijos
-		if(array_key_exists($parent,$allCompaniesOrderByParent)){
-			foreach($allCompaniesOrderByParent[$parent] as $key=>$value){
-				$this->companyByParent($value['IDCOMPANY'],$allCompanies);
-			}
-		}
-		else{
-			//si el id no tiene hijos entonces lo agregamos a las empresas o establecimientos q pertenecen al usuario			
-			$this->companies[] = $parent;
-		}
-	}
-	
 	function paintBookingForm($month,$year,$commerce){
 	
 		//calculo numero de dias del mes y tamaño del ancho de celda
@@ -632,46 +606,43 @@ class FronterabookingManagement{
 		$widthCell=(80/($numDaysMonth));
 		
 		//calculo los intervalos de inicio y fin de mes
-		$variable['firstDay']=mktime(0,0,0,$month,1,$year);
-		$variable['LastDay']=mktime(23,59,59, $month,$numDaysMonth,$year);
+		$variable['firstDay'] = mktime(0,0,0,$month,1,$year);
+		$variable['LastDay'] = mktime(23,59,59, $month,$numDaysMonth,$year);
 		$variable['commerce'] = $commerce;
 		
 		
-		$cadena_sql=$this->sql->cadena_sql("typeBookingCommerce",$variable['commerce']);
-		$type=$this->masterResource->ejecutarAcceso($cadena_sql,"busqueda");
+		$cadena_sql = $this->sql->cadena_sql("typeBookingCommerce",$variable['commerce']);
+		$type = $this->masterResource->ejecutarAcceso($cadena_sql,"busqueda");
 			
 		
 		//si la reserva es por Numero de Personas se consulta la tabla reservas 
 		
-			$cadena_sql=$this->sql->cadena_sql("bookingsByNP",$variable);
+			$cadena_sql = $this->sql->cadena_sql("bookingsByNP",$variable);
 			$bookings=$this->miRecursoDB->ejecutarAcceso($cadena_sql,"busqueda");		
 			
 			
 			//recorremos las reservas para calcular la duracion de cada una
 			if(is_array($bookings)){
 
-			$b=0;
-			while(isset($bookings[$b][0])){
-				$duration=($bookings[$b]['DATEEND'])-($bookings[$b]['DATESTART']);
-				$duration=$duration/86400;
-				$c=1;
-				for($c;$c<$duration;$c++){
-				
-					$position=count($bookings); //cuento el tamaño de las reservas para agregar al final las nuevas
+				$b=0;
+				while(isset($bookings[$b][0])){
+					$duration = ($bookings[$b]['DATEEND'])-($bookings[$b]['DATESTART']);
+					$duration = $duration/86400;
+					$c=1;
+					for($c;$c<$duration;$c++){
 					
-					$bookings[$position]['IDCELL']=($bookings[$b]['DATESTART'])+($c*86400).'-'.$bookings[$b]['IDRESERVABLE'];
-					$bookings[$position]['INFOCELL'] = $bookings[$b]['IDBOOKING'];
-					$bookings[$position]['DATESTART'] = $bookings[$b]['DATESTART'];
-					$bookings[$position]['NUMGUEST'] = $bookings[$b]['NUMGUEST'];
-					$bookings[$position]['NUMKIDS'] = $bookings[$b]['NUMKIDS'];
+						$position = count($bookings); //contar el tamaño de las reservas para agregar al final las nuevas
+						
+						$bookings[$position]['IDCELL'] = ($bookings[$b]['DATESTART'])+($c*86400).'-'.$bookings[$b]['IDRESERVABLE'];
+						$bookings[$position]['INFOCELL'] = $bookings[$b]['IDBOOKING'];
+						$bookings[$position]['DATESTART'] = $bookings[$b]['DATESTART'];
+						$bookings[$position]['NUMGUEST'] = $bookings[$b]['NUMGUEST'];
+						$bookings[$position]['NUMKIDS'] = $bookings[$b]['NUMKIDS'];
+					}
+					$b++;
 				}
-				
-				$b++;
-			}
-			
-			$bookings=$this->orderArrayKeyBy($bookings,'IDCELL');
+				$bookings = $this->orderArrayKeyBy($bookings,'IDCELL');
       }
-
 			//Se calculan el numero de intervalos
 			
 			$cadena_sql=$this->sql->cadena_sql("searchRooms",$variable['commerce']);

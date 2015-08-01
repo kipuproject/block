@@ -136,7 +136,6 @@ class Sqlmaster extends sql {
 				$cadena_sql.="c.id_tipoReserva IDCOMMERCE, "; 
 				$cadena_sql.="c.id_claTipoReserva TYPECOMMERCE, ";
 				$cadena_sql.="c.nombre NAME, ";
-				$cadena_sql.="c.nombre_sucursal NAMEBRANCH, ";
 				$cadena_sql.="c.dbms DBMS ";
 				$cadena_sql.="FROM ";
 				$cadena_sql.=$prefijo."user_commerce uc ";

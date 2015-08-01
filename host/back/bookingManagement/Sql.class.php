@@ -183,24 +183,6 @@ class SqlbookingManagement extends sql {
 				$cadena_sql.="WHERE tr.id_tipoReserva=".$variable;
 				break;
 				
-			case "companyByUser":
-				$cadena_sql="SELECT ";
-				$cadena_sql.="u.id_usuario IDUSER, ";
-				$cadena_sql.="e.id_establecimiento IDCOMPANY, ";
-				$cadena_sql.="e.id_parent IDPARENT ";
-				$cadena_sql.="FROM ";
-				$cadena_sql.=$prefijo."user u ";
-				$cadena_sql.="INNER JOIN ";
-				$cadena_sql.=$prefijo."usuario_establecimiento ue ";
-				$cadena_sql.="ON ";
-				$cadena_sql.="u.id_usuario = ue.id_usuario ";
-				$cadena_sql.="INNER JOIN ";
-				$cadena_sql.=$prefijo."establecimiento e ";
-				$cadena_sql.="ON ";
-				$cadena_sql.="ue.id_establecimiento = e.id_establecimiento ";
-				$cadena_sql.="WHERE u.id_usuario=".$variable;
-				break;
-
 			case "detailPayment":
 				$cadena_sql="SELECT ";
 				$cadena_sql.="value VALUE ";
@@ -582,7 +564,7 @@ class SqlbookingManagement extends sql {
 				$cadena_sql.="'".$variable['user']."', ";
 				$cadena_sql.="'0', ";
 				$cadena_sql.="'".time()."', ";
-			    $cadena_sql.="'999999999', ";
+			  $cadena_sql.="'999999999', ";
 				$cadena_sql.="'".$variable['user']."', ";
 				$cadena_sql.="' ', ";
 				$cadena_sql.="'0', "; //POR DEFECTO CADA RESERVA SE GUARDARA 15 MINUTOS SI NO SE FINALIZA CORRECTAMENTE
@@ -663,6 +645,18 @@ class SqlbookingManagement extends sql {
 				$cadena_sql.="valor='".$variable['vs']."' ";
 				$cadena_sql.="WHERE id_reserva=".$variable['idbooking'];
 				$cadena_sql.=" AND id_servicio=".$variable['is'];
+			break;			
+
+			case "updateUser":
+				$cadena_sql="UPDATE ";
+				$cadena_sql.=$prefijo."user ";
+				$cadena_sql.="SET ";
+				$cadena_sql.="nombre='".$variable['name']."', ";
+				$cadena_sql.="correo='".$variable['uemail']."', ";
+				$cadena_sql.="identificacion='".$variable['dni']."', ";
+				$cadena_sql.="telefono='".$variable['phone']."', ";
+				$cadena_sql.="pais_origen='".$variable['country']."' ";
+				$cadena_sql.="WHERE id_usuario=".$variable['id'];
 			break;
 			
 				

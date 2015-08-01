@@ -14,9 +14,9 @@
 							<?php endforeach; ?>
 						</select>
 
-						<input type="hidden" name="formSaraData" value="<?=$formSaraDataCommerce?>" />
+						<input type="hidden" name="formSaraData" value="<?php echo $formSaraDataCommerce; ?>" />
 						<input type="hidden" name="option" value="updateType" />
-						<input type="hidden" name="currentType" value="<?=$commerceList[0]['TYPECOMMERCE']?>" />
+						<input type="hidden" name="currentType" value="<?php echo $commerceList[0]['TYPECOMMERCE']; ?>" />
 
 					</form>
 				</a>
@@ -32,7 +32,7 @@
 						<select name="commerce" onchange="$('#fcommerce').submit()">
 							<?php foreach($commerceList as $key=>$value): ?>
 
-								<option <?=($commerce<>"" &&  $commerce==$value['IDCOMMERCE'])?"selected":""?>  value="<?=$value['IDCOMMERCE']?>" ><?=$value['NAME']?> <?=($value['NAMEBRANCH']<>"")?"(".$value['NAMEBRANCH'].")":""?></option>
+								<option <?=($commerce<>"" &&  $commerce==$value['IDCOMMERCE'])?"selected":""?>  value="<?=$value['IDCOMMERCE']?>" ><?=$value['NAME']?> </option>
 
 							<?php endforeach; ?>
 

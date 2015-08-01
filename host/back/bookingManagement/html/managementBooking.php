@@ -24,6 +24,9 @@ $additionaldata=$this->getAdditionalData($booking['IDBOOKING']);
 		top: 3px;
 		left: 76%;
 		}	
+	.user-edit input{
+		width:130px;
+	}	
 	</style>	
 	
 		
@@ -52,7 +55,7 @@ $additionaldata=$this->getAdditionalData($booking['IDBOOKING']);
 						<div class="controls">
 							<div class="input-prepend">
 								<input type="text"  onchange="assignDate($('#chekininput'),$('#chekoutinput'),'<?=$booking['IDBOOKING']?>')" disabled="true"  id="chekininput" value="<?=date("d/m/Y",strtotime($booking['FECHA_INICIO']))?>" /></span>
-								<span class="add-on"><a onclick="$('#chekininput').prop('disabled', false);" ><img src="http://www.agenda.acaracademia.com/images/edit.png"></a>
+								<span class="add-on"><a onclick="$('#chekininput').prop('disabled', false);" ><img src="http://www.assets.kipu.co/img/edit.png"></a>
 							</div>
 							<span class="help-block">Check In dd/mm/YYYY</span> 
 						</div>
@@ -83,7 +86,7 @@ $additionaldata=$this->getAdditionalData($booking['IDBOOKING']);
 								
 								<? } ?>
 								</SELECT>
-								<span class="add-on"><a onclick="$('#typeroominput').prop('disabled', false);" ><img src="http://www.agenda.acaracademia.com/images/edit.png"></a></span>
+								<span class="add-on"><a onclick="$('#typeroominput').prop('disabled', false);" ><img src="http://www.assets.kipu.co/img/edit.png"></a></span>
 							</span>
 						</div>
 					</div>
@@ -121,7 +124,7 @@ $additionaldata=$this->getAdditionalData($booking['IDBOOKING']);
 						<div class="controls">
 							<div class="input-prepend">
 									<input type="text"  onchange="assignDate($('#chekininput'),$('#chekoutinput'),'<?=$booking['IDBOOKING']?>'); $('#chekoutinput').prop('disabled',true);" disabled="true"  id="chekoutinput" value="<?=date("d/m/Y",strtotime($booking['FECHA_FIN']))?>" />
-									<span class="add-on"><a onclick="$('#chekoutinput').prop('disabled', false);" ><img src="http://www.agenda.acaracademia.com/images/edit.png"></a></span>
+									<span class="add-on"><a onclick="$('#chekoutinput').prop('disabled', false);" ><img src="http://www.assets.kipu.co/img/edit.png"></a></span>
 							</div>
 							<span class="help-block">Check Out dd/mm/YYYY</span>
 						</div>
@@ -175,7 +178,7 @@ $additionaldata=$this->getAdditionalData($booking['IDBOOKING']);
 								<div class="input-prepend">
 									<span class="add-on">$</span>
 									<input type="text" style="width:70px"  onchange="assignValue($(this),'<?=$booking['IDBOOKING']?>')" disabled="true"  id="valueinput" value="<?=$booking['VALUEBOOKING']?>" />
-									<span class="add-on"><a onclick="$('#valueinput').prop('disabled', false);" ><img src="http://www.agenda.acaracademia.com/images/edit.png"></a></span>
+									<span class="add-on"><a onclick="$('#valueinput').prop('disabled', false);" ><img src="http://www.assets.kipu.co/img/edit.png"></a></span>
 								</div>
                 <span class="help-block">
 								VALOR POR NOCHE:  <?=round(($booking['VALUEBOOKING'])/(round((($booking['FECHA_FIN_UNIX'])*1-($booking['FECHA_INICIO_UNIX'])*1)/86400)))?>
@@ -219,13 +222,13 @@ $additionaldata=$this->getAdditionalData($booking['IDBOOKING']);
 									<input type="text" style="width:70px" onchange="assignOnlineValue($(this),'<?=$booking['IDBOOKING']?>')" disabled="true" id="payupaymentinput" value="<?=$payuPayment['VALUE']?>" />
 									<span class="add-on">PAGO EN LINEA</span>
 									<span class="add-on"><?=$payuPayment['VALUE']*100/$booking['VALUEBOOKING']?>%</span>
-									<span class="add-on"><a onclick="$('#payupaymentinput').prop('disabled', false);" ><img src="http://www.agenda.acaracademia.com/images/edit.png"></a></span>
+									<span class="add-on"><a onclick="$('#payupaymentinput').prop('disabled', false);" ><img src="http://www.assets.kipu.co/img/edit.png"></a></span>
 
 									<br/>
 									<span class="add-on">$</span>
 									<input type="text" style="width:70px"  onchange="assignPaymentValue($(this),'<?=$booking['IDBOOKING']?>')" disabled="true"  id="paymentvalueinput" value="<?=$booking['VALUEPAYMENT']?>" />
 									<span class="add-on">PAGO DIRECTO</span>
-									<span class="add-on"><a onclick="$('#paymentvalueinput').prop('disabled', false);" ><img src="http://www.agenda.acaracademia.com/images/edit.png"></a></span>
+									<span class="add-on"><a onclick="$('#paymentvalueinput').prop('disabled', false);" ><img src="http://www.assets.kipu.co/img/edit.png"></a></span>
 								</div>
 							</div>
 						</div>
@@ -306,18 +309,42 @@ $additionaldata=$this->getAdditionalData($booking['IDBOOKING']);
 						<td style="font-weight:bold"><b>NACIONALIDAD</b></td>
 						<td style="font-weight:bold"><b>EMAIL</b></td>
 						<td style="font-weight:bold"><b>TELEFONO</b></td>			
-
-					</tr>
-					<tr style="background:rgb(252, 252, 252);">
+          </tr>
 					
+					<?php
+						$mvu = "main-view".$booking['IDBOOKING'];
+						$meu = "main-edit".$booking['IDBOOKING'];
+					?>
+
+          <!-- View -->
+          <tr id="<?=$mvu?>" style="background:rgb(252, 252, 252);">
 						<td>RESPONSABLE</td>
 						<td><?=$booking['DNI']?></td>
 						<td><?=$booking['NAMECLIENT']?></td>
 						<td><?=$booking['COUNTRY']?></td>
 						<td><?=$booking['EMAILCLIENT']?></td>
 						<td><?=$booking['PHONECLIENT']?></td>			
-
+						<td><img onclick="$('#<?=$mvu?>').hide(); $('#<?=$meu?>').show();" src="http://www.assets.kipu.co/img/user.png"></td>			
+						<td><a hfer="">Enviar Encuesta</a></td>			
 					</tr>
+          
+          <!-- Edit -->
+          
+						<tr id="<?=$meu?>" class="user-edit" style="display:none; background:rgb(252, 252, 252);">
+							<td>RESPONSABLE</td>
+							<td><input id = "u-main-dni" value = "<?=$booking['DNI']?>" /></td>
+							<td><input id = "u-main-name" value = "<?=$booking['NAMECLIENT']?>" /></td>
+							<td><input id = "u-main-country" value = "<?=$booking['COUNTRY']?>" /></td>
+							<td><input id = "u-main-email" value = "<?=$booking['EMAILCLIENT']?>" /></td>
+							<td><input id = "u-main-phone" value = "<?=$booking['PHONECLIENT']?>" /></td>
+	            <td colspan = "2" >
+	            		<input id="u-value" type="hidden" value = "<?=$booking['ID']?>" />
+	            		<img onclick="updateResponsible('#<?=$meu?>'); $('#uecancel').hide();" src="http://www.assets.kipu.co/img/check.png">
+	            		<img id="uecancel" onclick="$('#<?=$mvu?>').show(); $('#<?=$meu?>').hide();" src="http://www.assets.kipu.co/img/uncheck.png">
+	            </td>	
+						</tr>
+					
+
 			<?PHP
 				$g=0;
 				while(isset($guestBooking[$g][0])){ ?>
