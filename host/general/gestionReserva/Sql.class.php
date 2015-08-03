@@ -157,6 +157,7 @@ class SqlgestionReserva extends sql {
 				$cadena_sql.="`fecha_registro`, ";
 				$cadena_sql.="`usuario_registro`, ";
 				$cadena_sql.="`sesion_temp`, ";
+				$cadena_sql.="`plugin`, ";
 				$cadena_sql.="`tiempo_expira_temp`, ";
 				$cadena_sql.="`estado_reserva`, ";
 				$cadena_sql.="`estado_pago` ";
@@ -172,6 +173,7 @@ class SqlgestionReserva extends sql {
 				$cadena_sql.="'".time()."', ";
 				$cadena_sql.="'".$variable['user']."', ";
 				$cadena_sql.="'".$variable['session']."', ";
+				$cadena_sql.="'".$variable['plugin']."', ";
 				$cadena_sql.="'".((time())+1800)."', "; //POR DEFECTO CADA RESERVA SE GUARDARA 30 MINUTOS SI NO SE FINALIZA CORRECTAMENTE
 				$cadena_sql.="'1', ";
 				$cadena_sql.="'0' ";

@@ -44,7 +44,32 @@ class SqlPayu extends sql {
 				$cadena_sql.="AND api_key='".$variable."'";
 				break;
 								
-
+      			 
+			case "insertTransaction":
+				$cadena_sql="INSERT INTO ";
+				$cadena_sql.=$prefijo."payu_payment ";
+				$cadena_sql.="( ";
+				$cadena_sql.="`id_user`, ";
+				$cadena_sql.="`id_commerce`, ";
+				$cadena_sql.="`system_reference`, ";
+				$cadena_sql.="`value`, ";
+				$cadena_sql.="`currency`, ";
+				$cadena_sql.="`description`, ";
+				$cadena_sql.="`date_start`, ";
+				$cadena_sql.="`status` ";
+				$cadena_sql.=") ";
+				$cadena_sql.="VALUES ";
+				$cadena_sql.="( ";
+				$cadena_sql.="'".$variable['customer']."', ";
+				$cadena_sql.="'".$variable['idCommerce']."', ";
+				$cadena_sql.="'".$variable['referenceCode']."', ";
+				$cadena_sql.="'".$variable['value']."', ";
+				$cadena_sql.="'".$variable['currency']."', ";
+				$cadena_sql.="'".$variable['description']."', ";
+				$cadena_sql.="now(), ";
+				$cadena_sql.="'0' ";
+				$cadena_sql.=")";
+				break;  
 			
 			case "iniciarTransaccion":
 				$cadena_sql="START TRANSACTION";
@@ -60,26 +85,34 @@ class SqlPayu extends sql {
 
 			case "searchTransaction":
 				$cadena_sql="SELECT  ";
-				$cadena_sql.="pc.merchant_id MERCHANTID, ";
-				$cadena_sql.="pc.account_id ACCOUNTID, ";
 				$cadena_sql.="pp.system_reference SYSTEMREFERENCE, ";
 				$cadena_sql.="pp.description DESCRIPTION, ";
 				$cadena_sql.="pp.id_payu_reference IDPAYMENT, ";
 				$cadena_sql.="pp.value VALUE, ";
 				$cadena_sql.="pp.id_commerce IDCOMMERCE, ";
-				$cadena_sql.="pp.currency CURRENCY, ";
-				$cadena_sql.="pc.confirmationURL CONFIRMATIONURL, ";
-				$cadena_sql.="pc.responseURL RESPONSEURL, ";
-				$cadena_sql.="pc.api_key APIKEY ";
+				$cadena_sql.="pp.currency CURRENCY ";
 				$cadena_sql.="FROM ";
 				$cadena_sql.=$prefijo."payu_payment pp ";
-				$cadena_sql.="INNER JOIN ";
-				$cadena_sql.=$prefijo."payu_config pc ";
-				$cadena_sql.="ON (pp.id_commerce = pc.id_commerce) ";
 				$cadena_sql.="WHERE ";
-				$cadena_sql.="pp.id_payu_reference='".$variable."' ";
+				$cadena_sql.="pp.id_payu_reference='".$variable['idPayment']."' ";
+				$cadena_sql.="AND ";
+				$cadena_sql.="pp.id_commerce='".$variable['commerce']."' ";
 				$cadena_sql.="AND ";
 				$cadena_sql.="pp.status=0 ";
+				break;     
+        
+			case "dataCommerce":
+				$cadena_sql="SELECT  ";
+				$cadena_sql.="pc.merchant_id MERCHANTID, ";
+				$cadena_sql.="pc.account_id ACCOUNTID, ";
+				$cadena_sql.="pc.confirmationURL CONFIRMATIONURL, ";
+				$cadena_sql.="pc.responseURL RESPONSEURL, ";
+				$cadena_sql.="pc.api_key APIKEY, ";
+				$cadena_sql.="pc.api_login APILOGIN ";
+				$cadena_sql.="FROM ";
+				$cadena_sql.=$prefijo."payu_config pc ";
+				$cadena_sql.="WHERE "; 
+				$cadena_sql.="pc.id_commerce='".$variable."' ";
 				break;        
   
 				
@@ -109,7 +142,45 @@ class SqlPayu extends sql {
 				$cadena_sql.="WHERE ";
 				$cadena_sql.=$prefijo."commerce.id_tipoReserva ='".$variable."' ";
 				break;	
-   
+      
+      case "dataBookingByID":
+				$cadena_sql="SELECT ";
+				$cadena_sql.="r.id_reserva IDBOOKING, ";
+				$cadena_sql.="DATE_FORMAT(FROM_UNIXTIME(r.fecha_inicio),'%m/%d/%Y') CHECKIN, ";
+				$cadena_sql.="DATE_FORMAT(FROM_UNIXTIME((r.fecha_fin)+2),'%m/%d/%Y') CHECKOUT, ";
+				$cadena_sql.="r.fecha_inicio CHECKIN_UNIXTIME, ";
+				$cadena_sql.="r.fecha_fin CHECKOUT_UNIXTIME, ";	
+				$cadena_sql.="r.observacion_cliente OBSERVATION_CLIENT, ";
+				$cadena_sql.="'0' INFANTS, ";
+				$cadena_sql.="r.cliente CLIENT, ";
+				$cadena_sql.="r.tipo_reserva COMMERCE, ";
+				$cadena_sql.="r.valor_total VALUE ";
+				$cadena_sql.="FROM "; 
+				$cadena_sql.=$prefijo."reserva r ";
+				$cadena_sql.="WHERE ";
+				$cadena_sql.="r.id_reserva ='".$variable."' ";
+			break;
+      
+      case "dataRoomBookingbyID":
+				$cadena_sql="SELECT ";
+				$cadena_sql.="rg.nombre NAME, ";
+        $cadena_sql.="r.cliente CLIENT, ";
+				$cadena_sql.="r.tipo_reserva COMMERCE, ";
+				$cadena_sql.="r.valor_total VALUE ";
+				$cadena_sql.="FROM "; 
+				$cadena_sql.=$prefijo."reserva r ";
+				$cadena_sql.="INNER JOIN ";
+				$cadena_sql.=$prefijo."reserva_reservable rr ";
+				$cadena_sql.="ON ";
+				$cadena_sql.="rr.id_reserva = r.id_reserva ";				
+				$cadena_sql.="INNER JOIN ";
+				$cadena_sql.=$prefijo."reservable_grupo rg ";
+				$cadena_sql.="ON ";
+				$cadena_sql.="rr.id_reservable_grupo = rg.id_reservable_grupo ";
+				$cadena_sql.="WHERE ";
+				$cadena_sql.="r.id_reserva ='".$variable."' ";
+			break;
+      
 		}
 		//echo "<br/>".$tipo."=".$cadena_sql;
 		return $cadena_sql;

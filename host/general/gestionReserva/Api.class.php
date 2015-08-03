@@ -131,6 +131,12 @@ class ApigestionReserva{
 	}
 
 	private function confirmBooking($variable){
+  
+    /*$response->status_code = 200;
+    $response->status = "true";
+    $response->id = '5971'; 
+    return $response;  */
+      
 		$response = $this->sessionValidate($variable);
 		if($response->status_code == 205){
 			return $response;
@@ -145,14 +151,16 @@ class ApigestionReserva{
 		}
 		$cadena_sql = $this->sql->cadena_sql("dataBookingBySession",$variable['session']);
 		$book = $this->miRecursoDB->ejecutarAcceso($cadena_sql,"busqueda");
-
+   
 		$cadena_sql = $this->sql->cadena_sql("confirmBooking",$variable);
 		$result = $this->miRecursoDB->ejecutarAcceso($cadena_sql,"");
 
 		if($this->miRecursoDB->registros_afectados()>0){
 			$response->status_code = 200;
 			$response->status = "true";
-			$this->sendEmail($book[0]['IDBOOKING']);
+      $response->id = $book[0]['IDBOOKING'];
+      $response->customer = $book[0]['CLIENT']; 
+			$this->sendEmail($response->id);
 		}else{
 			$response->message = "Sesión expirada";
 			$response->status_code = 201;
@@ -780,10 +788,10 @@ class ApigestionReserva{
 			unset($rooms[$key][2]);
 			unset($rooms[$key][3]);
 			unset($rooms[$key][4]);
-
-			$folder=opendir($this->miConfigurador->getVariableConfiguracion("raizDocumento")."/".$this->commerce_folder."/".$key);
-			$images=array();
-
+       
+			$folder = opendir($this->miConfigurador->getVariableConfiguracion("raizDocumento")."/".$this->commerce_folder."/".$key);
+			$images = array();
+      $rooms[$key]['IMAGES'] = array();
 			while($file=readdir($folder)){
 				if (!is_dir($file)){
 					$rooms[$key]['IMAGES'][] = $this->miConfigurador->getVariableConfiguracion("host").$this->miConfigurador->getVariableConfiguracion("site")."/".$this->commerce_folder."/".$key."/".$file;
@@ -842,14 +850,9 @@ class ApigestionReserva{
 	}
 
 	private function saveGuest($variable){
-
-
     /* revisar campos adicionales */
-
-        $this->saveOthersFields($variable);
-
+    $this->saveOthersFields($variable);
     /* fin revisar campos adicionales */
-
 		//temporal
 		foreach($variable as $key=>$value){
 			$tmp=explode("@",$key);
@@ -858,7 +861,7 @@ class ApigestionReserva{
 				unset($variable[$key]);
 			}
 		}
-
+ 
 		$cadena_sql = $this->sql->cadena_sql("getAllSession",$variable['session']);
 		$session = $this->master_resource->ejecutarAcceso($cadena_sql,"busqueda");
 		if(!is_array($session)){
@@ -897,7 +900,7 @@ class ApigestionReserva{
 	}
 
 	private function orderArrayKeyBy($array,$key,$second_key = ""){
-		$newArray=array();
+		$newArray = array();
 		if($second_key<>""){
 			foreach($array as $name=>$value){
 				$newArray[$value[$key]][$value[$second_key]] = $array[$name];
