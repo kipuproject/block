@@ -183,118 +183,24 @@
 			}
 		});
 	}
-	
-	
-	function showDetail(){
-	
-	   var my_books = $('.activeBook');
-	   var array_id=[];
-	   my_books.each(function(){
-			   var $this = $(this); 
-			   array_id.push($this.attr('id'));
-				
-	   }); 
 
-	   $.ajax({
-			type: 'GET',
-			url: '<?=$formSaraDataURL?>',
-			async: false,
-			data: { 
-				optionBooking : "showDetails",
-				bookings:array_id.toString(),
-				commerce:$("#booking-commerce").val()
-				},
-			success: function(respuesta) {
-				$("#booking-calendar").html(respuesta);
-				$(".btn-calendar").hide();
-				$(".return-btn").show();
-			}
-		});
-	}
-	
-	function unselect(){
-	   var my_books = $('.activeBook');
-	   var array_id=[];
-	   my_books.each(function(){
-			   var $this = $(this); 
-			   $this.removeClass("activeBook");
-			   $this.css({"border":"1px solid #FFFFFF"});
-				
-	   }); 
-	}	
-	
-	function block(){
-	   var my_books = $('.activeBook');
-	   var array_id=[];
-	   my_books.each(function(){
-			   var $this = $(this); 
-			   $this.css({"background":"#000000"});
-			   array_id.push($this.attr('id'));
-				
-	   }); 
-	   
-	   $.ajax({
-			type: 'GET',
-			url: '<?=$formSaraDataURL?>',
-			async: false,
-			data: { 
-				optionBooking : "blockBooking",
-				bookings:array_id.toString(),
-				commerce:$("#booking-commerce").val()
-				},
-			success: function(respuesta) {
-				alert(respuesta);
-			}
-		});
-	}		
-
-	function unblock(){
-	   var my_books = $('.activeBook');
-	   var array_id=[];
-	   my_books.each(function(){
-			   var $this = $(this); 
-			   $this.css({"background":"#FFFFFF"});
-			   array_id.push($this.attr('id'));
-				
-	   }); 
-	   
-	   $.ajax({
-			type: 'GET',
-			url: '<?=$formSaraDataURL?>',
-			async: false,
-			data: { 
-				optionBooking : "unblockBooking",
-				bookings:array_id.toString(),
-				commerce:$("#booking-commerce").val()
-				},
-			success: function(respuesta) {
-				alert(respuesta);
-			}
-		});
-	}
 	
 	$(document).ready(function(){
-
 		  var isDown = false;   // Tracks status of mouse button
-
 			$(function() {
 				$( document ).tooltip();
 			});
-  
-		  $(document).mousedown(function() {
-			isDown = true;      // When mouse goes down, set isDown to true
+ 		  $(document).mousedown(function() {
+        isDown = true;      // When mouse goes down, set isDown to true
 		  })
 		  .mouseup(function() {
-			isDown = false;    // When mouse goes up, set isDown to false
+        isDown = false;    // When mouse goes up, set isDown to false
 		  });
-
 		  $(".clickableElement").live('mouseover', function() {
 			if(isDown) {        // Only change css if mouse is down
 			  selection($(this));
 			}
 		  });
-		  
-		  
 		  $(".clickableElement").live('mousedown', function() {
 			   selection($(this));
 		  });
@@ -394,19 +300,19 @@
 		<input type="hidden" id="booking-commerce"  value="<?=$this->commerce?>"/> 
 		<ul class="main-nav menu_calendar">
 			<li class="btn-calendar">
-				<a onclick="showDetail()"><span>VER</span></a>
+				<a onclick="showDetail('<?php echo $formSaraDataURL; ?>')"><span>VER</span></a>
 			</li>
 			<li  class="btn-calendar">
-				<a  onclick="block()" ><span>BLOQUEAR</span></a>
+				<a  onclick="block('<?php echo $formSaraDataURL; ?>')" ><span>BLOQUEAR</span></a>
 			</li>
 			<li  class="btn-calendar">
-				<a  onclick="unblock()" ><span>DESBLOQUEAR</span></a>
+				<a  onclick="unblock('<?php echo $formSaraDataURL; ?>')" ><span>DESBLOQUEAR</span></a>
 			</li>
 			<li class="btn-calendar">
-				<a  onclick="unselect()"><span>QUITAR SELECCION</span></a>
+				<a  onclick="unselect('<?php echo $formSaraDataURL; ?>')"><span>QUITAR SELECCION</span></a>
 			</li>
 			<li class="return-btn">
-				<a  onclick="unselect()"><span>REGRESAR</span></a>
+				<a  onclick="unselect('<?php echo $formSaraDataURL; ?>')"><span>REGRESAR</span></a>
 			</li>
 		</ul>
 	</div>		

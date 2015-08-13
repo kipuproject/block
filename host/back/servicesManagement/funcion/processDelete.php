@@ -1,4 +1,4 @@
-<?
+<?php
 if(!isset($GLOBALS["autorizado"]))
 {
 	include("index.php");
@@ -10,6 +10,7 @@ if(!isset($GLOBALS["autorizado"]))
 
 	$formSaraData="pagina=servicesManagement";
 	$formSaraData.="&option=list";
+  $formSaraData.="&saramodule=host";
 	$formSaraData=$this->miConfigurador->fabricaConexiones->crypto->codificar_url($formSaraData,$this->enlace);
 	
 	echo "<script>location.replace('".$formSaraData."')</script>";

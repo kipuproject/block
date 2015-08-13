@@ -90,6 +90,7 @@ class SqlPayu extends sql {
 				$cadena_sql.="pp.id_payu_reference IDPAYMENT, ";
 				$cadena_sql.="pp.value VALUE, ";
 				$cadena_sql.="pp.id_commerce IDCOMMERCE, ";
+				$cadena_sql.="pp.answer ANSWER, ";
 				$cadena_sql.="pp.currency CURRENCY ";
 				$cadena_sql.="FROM ";
 				$cadena_sql.=$prefijo."payu_payment pp ";
@@ -99,6 +100,23 @@ class SqlPayu extends sql {
 				$cadena_sql.="pp.id_commerce='".$variable['commerce']."' ";
 				$cadena_sql.="AND ";
 				$cadena_sql.="pp.status=0 ";
+				break;   
+        
+			case "searchTransactionbyBooking":
+				$cadena_sql="SELECT  ";
+				$cadena_sql.="pp.system_reference SYSTEMREFERENCE, ";
+				$cadena_sql.="pp.description DESCRIPTION, ";
+				$cadena_sql.="pp.id_payu_reference IDPAYMENT, ";
+				$cadena_sql.="pp.value VALUE, ";
+				$cadena_sql.="pp.id_commerce IDCOMMERCE, ";
+				$cadena_sql.="pp.answer ANSWER, ";
+				$cadena_sql.="pp.currency CURRENCY ";
+				$cadena_sql.="FROM ";
+				$cadena_sql.=$prefijo."payu_payment pp ";
+				$cadena_sql.="WHERE ";
+				$cadena_sql.="pp.system_reference='".$variable['booking']."' ";
+				$cadena_sql.="AND ";
+				$cadena_sql.="pp.id_commerce='".$variable['commerce']."' ";
 				break;     
         
 			case "dataCommerce":

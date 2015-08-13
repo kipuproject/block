@@ -1,12 +1,9 @@
-<?
-if(!isset($GLOBALS["autorizado"]))
-{
+<?php
+if(!isset($GLOBALS["autorizado"])){
 	include("index.php");
 	exit;
-	
 }else{
-	
-	
+	   
 	$cadena_sql=$this->sql->cadena_sql("createService",$variable);
 	$result=$this->miRecursoDB->ejecutarAcceso($cadena_sql,"");
 	
@@ -19,11 +16,11 @@ if(!isset($GLOBALS["autorizado"]))
 	}
 
 	$formSaraData="pagina=servicesManagement";
+  $formSaraData.="&saramodule=host";
 	$formSaraData.="&option=list";
 	$formSaraData=$this->miConfigurador->fabricaConexiones->crypto->codificar_url($formSaraData,$this->enlace);
 	
 	echo "<script>location.replace('".$formSaraData."')</script>";
-	
-	
+
 }
 ?>

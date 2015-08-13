@@ -47,6 +47,84 @@ function saveService(obj,formSaraData,id,opSave){
 	});
 }
 
+function block(formSaraDataURL){
+  var my_books = $('.activeBook');
+  var array_id=[];
+  my_books.each(function(){
+     var $this = $(this); 
+     $this.css({"background":"#000000"});
+     array_id.push($this.attr('id'));
+  }); 
+  $.ajax({
+  type: 'GET',
+  url: formSaraDataURL,
+  async: false,
+  data: { 
+    optionBooking : "blockBooking",
+    bookings:array_id.toString(),
+    commerce:$("#booking-commerce").val()
+    },
+  success: function(respuesta) {
+    alert(respuesta);
+  }
+  });
+}
 
+function showDetail(formSaraDataURL){
+   var my_books = $('.activeBook');
+   var array_id=[];
+   my_books.each(function(){
+       var $this = $(this); 
+       array_id.push($this.attr('id'));
+   }); 
+   $.ajax({
+    type: 'GET',
+    url: formSaraDataURL,
+    async: false,
+    data: { 
+      optionBooking : "showDetails",
+      bookings:array_id.toString(),
+      commerce:$("#booking-commerce").val()
+      },
+    success: function(respuesta) {
+      $("#booking-calendar").html(respuesta);
+      $(".btn-calendar").hide();
+      $(".return-btn").show();
+    }
+  });
+}
 
+function unselect(formSaraDataURL){
+   var my_books = $('.activeBook');
+   var array_id=[];
+   my_books.each(function(){
+       var $this = $(this); 
+       $this.removeClass("activeBook");
+       $this.css({"border":"1px solid #FFFFFF"});
+      
+   }); 
+}	
+
+function unblock(formSaraDataURL){
+   var my_books = $('.activeBook');
+   var array_id=[];
+   my_books.each(function(){
+       var $this = $(this); 
+       $this.css({"background":"#FFFFFF"});
+       array_id.push($this.attr('id'));
+   }); 
+   $.ajax({
+    type: 'GET',
+    url: formSaraDataURL,
+    async: false,
+    data: { 
+      optionBooking : "unblockBooking",
+      bookings:array_id.toString(),
+      commerce:$("#booking-commerce").val()
+      },
+    success: function(respuesta) {
+      alert(respuesta);
+    }
+  });
+}
 

@@ -1,4 +1,4 @@
-	<?
+<?php
 include_once("core/manager/Configurador.class.php");
 include_once("core/auth/Sesion.class.php");
 include_once("plugin/filter/generadorFiltros.class.php");
@@ -14,18 +14,14 @@ class FronteraservicesManagement{
 	var $miConfigurador;
 	var $companies;
 	
-	function __construct()
-	{
-	
-		$this->miConfigurador=Configurador::singleton();
-		$this->miRecursoDB=$this->miConfigurador->fabricaConexiones->getRecursoDB("aplicativo");
-		$this->enlace=$this->miConfigurador->getVariableConfiguracion("host").$this->miConfigurador->getVariableConfiguracion("site")."?".$this->miConfigurador->getVariableConfiguracion("enlace");
+	function __construct(){	
+    $this->miConfigurador=Configurador::singleton();
 		$this->miSesion=Sesion::singleton();
-		$this->idSesion=$this->miSesion->getValorSesion('idUsuario');
-		if($this->idSesion==""){
-			echo "Sesion cerrada<br/>";
-		}
-		
+		$conexion=$this->miSesion->getValorSesion('dbms');
+		$this->miRecursoDB=$this->miConfigurador->fabricaConexiones->getRecursoDB($conexion);		
+		$this->masterResource=$this->miConfigurador->fabricaConexiones->getRecursoDB("master");		
+		$this->commerce=$this->miSesion->getValorSesion('commerce');
+		$this->enlace=$this->miConfigurador->getVariableConfiguracion("host").$this->miConfigurador->getVariableConfiguracion("site")."?".$this->miConfigurador->getVariableConfiguracion("enlace");
 	}
 
 	public function setRuta($unaRuta){
@@ -40,31 +36,18 @@ class FronteraservicesManagement{
 		$this->formulario=$formulario;
 	}
 
-	function setSql($a)
-	{
+	function setSql($a){
 		$this->sql=$a;
-
 	}
 
 	function setFuncion($funcion){
 		$this->funcion=$funcion;
-
 	}
-
-	
-
-
 
 	function html(){
 		
-		include_once("core/builder/FormularioHtml.class.php");
-		
 		$this->ruta=$this->miConfigurador->getVariableConfiguracion("rutaBloque");
-
-		$this->miFormulario=new formularioHtml();
-
 		$option=isset($_REQUEST['option'])?$_REQUEST['option']:"list";
-
 
 		switch($option){
 			case "list":
@@ -84,99 +67,43 @@ class FronteraservicesManagement{
 		
 	}
 	
-
-
-	function showListRooms($commerce="1",$currency="COP"){
+	function showList($currency="COP"){
 	
-		$variable["commerce"]=$commerce;//Le envio 1 provisionalmente asumiendo q el sistema solo esta funcionando para un comercio
-		$variable["currency"]=$currency;//Le envio COP por defecto mientras se paramtriza
+		$variable["commerce"] = $commerce = $this->commerce;
+		$variable["currency"] = $currency;//Le envio COP por defecto mientras se paramtriza
 
-		$cadena_sql=$this->sql->cadena_sql("serviceListbyCommerce",$variable);
-		$serviceList=$this->miRecursoDB->ejecutarAcceso($cadena_sql,"busqueda");
-		
-		$cadena_sql=$this->sql->cadena_sql("priceList");
-		$priceList=$this->miRecursoDB->ejecutarAcceso($cadena_sql,"busqueda");
-		
-		$cadena_sql=$this->sql->cadena_sql("typeListRoom");
-		$typeListRoom=$this->miRecursoDB->ejecutarAcceso($cadena_sql,"busqueda");
-		
-		$priceList=$this->orderArrayKeyBy($priceList,"IDRESERVABLE","SEASON");
-		
-		$formSaraData="jxajax=main";
-		$formSaraData.="&action=servicesManagement";
-		$formSaraData.="&bloque=servicesManagement";
-		$formSaraData.="&idcommerce=".$commerce;
-	   	$formSaraData.="&bloqueGrupo=host/back";
-		
-		$formSaraDataEdit=$formSaraData."&optionProcess=processEdit";
-		$formSaraDataEdit=$this->miConfigurador->fabricaConexiones->crypto->codificar_url($formSaraDataEdit,$this->enlace);
-
-		$formSaraDataNew.="action=servicesManagement";
-		$formSaraDataNew.="&bloque=servicesManagement";
-		$formSaraDataNew.="&idcommerce=".$commerce;
-	   	$formSaraDataNew.="&bloqueGrupo=host/back";
-		$formSaraDataNew.="&optionProcess=processNew";
-		$formSaraDataNew=$this->miConfigurador->fabricaConexiones->crypto->codificar_url($formSaraDataNew,$this->enlace);
-		
-		$formSaraDataTypeRooms.="pagina=servicesManagement";
-		$formSaraDataTypeRooms.="&bloque=servicesManagement";
-		$formSaraDataTypeRooms.="&idcommerce=".$commerce;
-	   	$formSaraDataTypeRooms.="&bloqueGrupo=host/back";
-		$formSaraDataTypeRooms.="&option=listTypeRooms";
-		$formSaraDataTypeRooms.="&tema=admin";
-		$formSaraDataTypeRooms=$this->miConfigurador->fabricaConexiones->crypto->codificar_url($formSaraDataTypeRooms,$this->enlace);
-		
-		$formSaraDataDelete.="action=servicesManagement";
-		$formSaraDataDelete.="&bloque=servicesManagement";
-		$formSaraDataDelete.="&idcommerce=".$commerce;
-	   	$formSaraDataDelete.="&bloqueGrupo=host/back";
-		$formSaraDataDelete.="&optionProcess=processDelete";
-		$formSaraDataDelete=$this->miConfigurador->fabricaConexiones->crypto->codificar_url($formSaraDataDelete,$this->enlace);
-				
-		include_once($this->ruta."/html/listRooms.php");
-	}	
-	
-	
-	function showList($commerce="1",$currency="COP"){
-	
-		$variable["commerce"]=$commerce;//Le envio 1 provisionalmente asumiendo q el sistema solo esta funcionando para un comercio
-		$variable["currency"]=$currency;//Le envio COP por defecto mientras se paramtriza
-
-		$cadena_sql=$this->sql->cadena_sql("serviceListbyCommerce",$variable);
-		$serviceList=$this->miRecursoDB->ejecutarAcceso($cadena_sql,"busqueda");
+		$cadena_sql = $this->sql->cadena_sql("serviceListbyCommerce",$variable);
+		$serviceList = $this->miRecursoDB->ejecutarAcceso($cadena_sql,"busqueda");
 		  
-		$cadena_sql=$this->sql->cadena_sql("priceList");
-		$priceList=$this->miRecursoDB->ejecutarAcceso($cadena_sql,"busqueda");
-		
-		$priceList=$this->orderArrayKeyBy($priceList,"IDSERVICE","SEASON");
-		 
-		 
+    if(is_array($serviceList)){
+      $cadena_sql=$this->sql->cadena_sql("priceList");
+      $priceList=$this->miRecursoDB->ejecutarAcceso($cadena_sql,"busqueda");
+      $priceList=$this->orderArrayKeyBy($priceList,"IDSERVICE","SEASON");
+    }
+     
 		$formSaraData="jxajax=main";
 		$formSaraData.="&action=servicesManagement";
 		$formSaraData.="&bloque=servicesManagement";
 		$formSaraData.="&idcommerce=".$commerce;
-	   	$formSaraData.="&bloqueGrupo=host/back";
+	  $formSaraData.="&bloqueGrupo=host/back";
 		
 		$formSaraDataEdit=$formSaraData."&optionProcess=processEdit"; 
 		$formSaraDataEdit=$this->miConfigurador->fabricaConexiones->crypto->codificar_url($formSaraDataEdit,$this->enlace);
-		
-				
+					
 		$formSaraDataCapacity=$formSaraData."&optionProcess=processUpdateCapacity";
 		$formSaraDataCapacity=$this->miConfigurador->fabricaConexiones->crypto->codificar_url($formSaraDataCapacity,$this->enlace);
-		
-		
-		
+
 		$formSaraDataNew.="action=servicesManagement";
 		$formSaraDataNew.="&bloque=servicesManagement";
 		$formSaraDataNew.="&idcommerce=".$commerce;
-	   	$formSaraDataNew.="&bloqueGrupo=host/back";
+    $formSaraDataNew.="&bloqueGrupo=host/back";
 		$formSaraDataNew.="&optionProcess=processNew";  
 		$formSaraDataNew=$this->miConfigurador->fabricaConexiones->crypto->codificar_url($formSaraDataNew,$this->enlace);
 		
 		$formSaraDataRooms.="pagina=servicesManagement";
 		$formSaraDataRooms.="&bloque=servicesManagement";
 		$formSaraDataRooms.="&idcommerce=".$commerce;
-	   	$formSaraDataRooms.="&bloqueGrupo=host/back";
+    $formSaraDataRooms.="&bloqueGrupo=host/back";
 		$formSaraDataRooms.="&option=listRooms";
 		$formSaraDataRooms.="&tema=admin";
 		$formSaraDataRooms=$this->miConfigurador->fabricaConexiones->crypto->codificar_url($formSaraDataRooms,$this->enlace);
@@ -184,7 +111,7 @@ class FronteraservicesManagement{
 		$formSaraDataDelete.="action=servicesManagement";
 		$formSaraDataDelete.="&bloque=servicesManagement";
 		$formSaraDataDelete.="&idcommerce=".$commerce;
-	   	$formSaraDataDelete.="&bloqueGrupo=host/back";
+    $formSaraDataDelete.="&bloqueGrupo=host/back";
 		$formSaraDataDelete.="&optionProcess=processDelete";
 		$formSaraDataDelete=$this->miConfigurador->fabricaConexiones->crypto->codificar_url($formSaraDataDelete,$this->enlace);
 				

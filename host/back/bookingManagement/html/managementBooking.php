@@ -5,6 +5,7 @@ $payuPayment=$this->getPayuPayment($booking['IDBOOKING']);
 $additionaldata=$this->getAdditionalData($booking['IDBOOKING']);
 
 ?>
+<link rel="stylesheet" type="text/css" href="https://code.jquery.com/ui/1.11.4/themes/smoothness/jquery-ui.css">
 <style>
 	.span6{
 		width:48% !important;
@@ -29,7 +30,11 @@ $additionaldata=$this->getAdditionalData($booking['IDBOOKING']);
 	}	
 	</style>	
 	
-		
+<div id="dialog<?php echo $booking['IDBOOKING']; ?>" title="Informacion Pago" style="display:none"> 
+  <p>This is the default dialog which is useful for displaying information. The dialog window can be moved, resized and closed with the 'x' icon.</p>
+</div>
+ 
+ 
 <div class="detailBookingBox">
    <h1>C&Oacute;DIGO DE RESERVA: <?php echo $booking['IDBOOKING']; ?></h1>
 	<ul class="tabs tabs-inline ">
@@ -64,28 +69,23 @@ $additionaldata=$this->getAdditionalData($booking['IDBOOKING']);
 						<label class="control-label" for="textfield">HABITACION:</label>
 						<div class="controls">
 							<div class="input-prepend">
-							
-							
 								<select onchange="assignRoom($(this),'<?=$booking['IDBOOKING']?>')"  id="assignRoomObj" >
 									<option <?=($booking['ROOM']=="0")?"selected":""?> value="0">SIN ASIGNAR</option>
-									<?PHP
-									
-										foreach($avalaibleRooms as $key=>$value){ ?>
+									<?php
+										foreach($avalaibleRooms as $key=>$value): ?>
 											<option <?=($booking['ROOM']==$value[0]['IDROOM'])?"selected":""?>  value="<?=$value[0]['IDROOM']?>" ><?=$value[0]['NAME']?></option>
-									<?PHP
-										
-										}
+									<?php
+										endforeach;
 									?>
 								</select>
 							</div>
 							<span class="help-block">
 								TIPO DE HABITACION: 
-								<SELECT  id="typeroominput" disabled="true"  onchange="assignTypeRoom($(this),'<?=$booking['IDBOOKING']?>')">
-								<? foreach($typeRooms as $key=>$value){ ?> 
-										<OPTION <?=($booking['ROOMTYPE']==$value[0]['IDTYPEROOM'])?"selected":""?> value="<?=$value[0]['IDTYPEROOM']?>" ><?=$value[0]['NAME']?></OPTION>
-								
-								<? } ?>
-								</SELECT>
+								<select  id="typeroominput" disabled="true"  onchange="assignTypeRoom($(this),'<?=$booking['IDBOOKING']?>')">
+								<? foreach($typeRooms as $key=>$value): ?> 
+										<option <?=($booking['ROOMTYPE']==$value[0]['IDTYPEROOM'])?"selected":""?> value="<?=$value[0]['IDTYPEROOM']?>" ><?=$value[0]['NAME']?></OPTION>
+								<? endforeach; ?>
+								</select>
 								<span class="add-on"><a onclick="$('#typeroominput').prop('disabled', false);" ><img src="http://www.assets.kipu.co/img/edit.png"></a></span>
 							</span>
 						</div>
@@ -99,25 +99,22 @@ $additionaldata=$this->getAdditionalData($booking['IDBOOKING']);
 									<br/>
 									CLIENTE: <?=$booking['OBSERVATION_CUSTOMER']?>
 							</div>
-							
 							<span class="help-block"> 
 									<?
-										if(is_array($additionaldata)){
+										if(is_array($additionaldata)):
 											$ad=0;
-											while(isset($additionaldata[$ad][0])){
+											while(isset($additionaldata[$ad][0])):
 												?>
 													[ <?=$additionaldata[$ad]['NAMEFIELD']?>: <?=$additionaldata[$ad]['VALUE']?> ] 
 												<?
 												$ad++;
-											}
-										}
+											endwhile;
+										endif;
 									?>
-							
 							</span>
 						</div>
 					</div>
 				</div>
-				
 				<div class="span6">
 					<div class="control-group">
 						<label class="control-label"  for="textfield">SALIDA:</label>
@@ -145,7 +142,6 @@ $additionaldata=$this->getAdditionalData($booking['IDBOOKING']);
 					</div>
 					<div class="control-group">
 						<label class="control-label"  for="textfield">ORIGEN:</label>
-						
 						<div class="controls">
 							<div class="input-prepend">
 									<span class="add-on" id="origen"><?=$booking['MEDIO']?></span>
@@ -155,20 +151,13 @@ $additionaldata=$this->getAdditionalData($booking['IDBOOKING']);
 						</div>
 					</div>
 				</div>
-
-				
 			</form>
 		</div>
-		
 		</div>
-		
-		
 		<div class="tab-pane" id="financiera<?=$booking['IDBOOKING']?>">
-      
       <div class="box-title" style="background: #fff !important; margin-top: 3px;">
         <h3>HOSPEDAJE</h3>
       </div>  
-    
 			<div class="box-content nopadding">
 				<form class="form-horizontal form-column form-bordered" method="POST" action="#">
 					<div class="span6">
@@ -197,23 +186,19 @@ $additionaldata=$this->getAdditionalData($booking['IDBOOKING']);
 							</div>
 						</div>
 					</div>
-					
 					<div class="span6">
 						<div class="control-group">
 							<label class="control-label" for="textfield">ESTADO PAGO:</label>
 							<div class="controls">
 								<div class="input-prepend">
 										<select name="assignStatusPaymentObj" id="assignStatusPaymentObj" onchange="assignStatusPayment($(this),'<?=$booking['IDBOOKING']?>')" >
-										
 											<option <?=($booking['PAYMENT']=="1")?"selected":""?> value="1">PAGO REALIZADO</option>
 											<option <?=($booking['PAYMENT']=="0")?"selected":""?> value="0">NO SE REPORTA PAGO</option>
 											<option <?=($booking['PAYMENT']=="2")?"selected":""?> value="2">PAGO PARCIAL</option>
 										</select>
 								</div>
-								
 							</div>
 						</div>
-						
 						<div class="control-group">
 							<label class="control-label" for="textfield">TOTAL ABONADO:</label>
 							<div class="controls">
@@ -222,8 +207,17 @@ $additionaldata=$this->getAdditionalData($booking['IDBOOKING']);
 									<input type="text" style="width:70px" onchange="assignOnlineValue($(this),'<?=$booking['IDBOOKING']?>')" disabled="true" id="payupaymentinput" value="<?=$payuPayment['VALUE']?>" />
 									<span class="add-on">PAGO EN LINEA</span>
 									<span class="add-on"><?=$payuPayment['VALUE']*100/$booking['VALUEBOOKING']?>%</span>
-									<span class="add-on"><a onclick="$('#payupaymentinput').prop('disabled', false);" ><img src="http://www.assets.kipu.co/img/edit.png"></a></span>
-
+									<span class="add-on">
+                    <a onclick="$('#payupaymentinput').prop('disabled', false);" >
+                      <img src="http://www.assets.kipu.co/img/kate32.png">
+                    </a>
+                    <a onclick="$('#dialog<?php echo $booking['IDBOOKING']; ?>').dialog();" >
+                      <img src="http://www.assets.kipu.co/img/info32.png">
+                    </a>
+                    <a onclick="" >
+                      <img src="http://www.assets.kipu.co/img/refresh32.png">
+                    </a>
+                  </span>
 									<br/>
 									<span class="add-on">$</span>
 									<input type="text" style="width:70px"  onchange="assignPaymentValue($(this),'<?=$booking['IDBOOKING']?>')" disabled="true"  id="paymentvalueinput" value="<?=$booking['VALUEPAYMENT']?>" />
@@ -232,32 +226,30 @@ $additionaldata=$this->getAdditionalData($booking['IDBOOKING']);
 								</div>
 							</div>
 						</div>
-						
 					</div>
+      </div> 
+      <div class="box-title" style="background: #fff !important; margin-top: 3px;">
+        <h3>SERVICIOS ADICIONALES</h3>  
+      </div> 
+      <div class="box-content nopadding">
 					<div  style="display:block" class="span12">  
 						<div class="control-group">
-							<label class="control-label" for="textfield">SERVICIOS ADICIONALES: </label>
-							<div class="controls">
-								<div class=""> 
-									<div class="additional-service" style="border: 1px solid #CCC; padding: 3px;">
-										<select id="selector-service-<?=$booking['IDBOOKING']?>" name="service[]" onchange="" >
-											<? foreach($serviceList as $key=>$value){ ?> 
-												<OPTION value="<?=$value[0]['IDSERVICE']?>" ><?=$value[0]['NAME']?></OPTION>
-											<? } ?>
-										</select>
-										<a onclick="newService('<?=$booking['IDBOOKING']?>');" class="red-button">Agregar</a> 
-										Estos valores no se sumarán automáticamente al valor de la reserva.
-									</div>
-								</div>
-								
-							</div>
+							<div class="additional-service">
+                <select id="selector-service-<?=$booking['IDBOOKING']?>" name="service[]" onchange="" >
+                  <?php foreach($serviceList as $key=>$value): ?> 
+                    <option value="<?=$value[0]['IDSERVICE']?>" ><?=$value[0]['NAME']?></option>
+                  <?php endforeach; ?>
+                </select>
+                <a onclick="newService('<?=$booking['IDBOOKING']?>');" class="red-button">Agregar</a> 
+              </div>
 							 
 							<div class="list-services-<?=$booking['IDBOOKING']?>">
-								<?$bs=0;
-								while(isset($bookingServiceList[$bs]['ID'])){
+								<?php 
+                $bs=0;
+								while(isset($bookingServiceList[$bs]['ID'])):
 								?>
-									<div  style="display:block" class="controls">
-										<div class="" style="border: 1px solid #CCC; padding: 3px;">
+									<div style="display:block" class="controls">
+										<div class="" >
 											<span class="title-service"><?=$serviceList[$bookingServiceList[$bs]['ID']][0]['NAME']?>: </span>
 											Cantidad: 
 											<input style="width:50px" type="text" class="cs" id="textfield" value="<?=$bookingServiceList[$bs]['CANT']?>" class="spinner input-mini">
@@ -267,14 +259,13 @@ $additionaldata=$this->getAdditionalData($booking['IDBOOKING']);
 											<a onclick="if (confirm('Estas seguro de eliminar este registro')){ saveService($(this),'<?=$formSaraDataService?>','<?=$booking['IDBOOKING']?>','delete'); }" class="red-button" >X</a>
 										</div>
 									</div>
-								
-								<?
+								<?php
 								$bs++;
-								}
+								endwhile;
 								?>
 						
 								<div  style="display:none" class="template-service<?=$booking['IDBOOKING']?> controls">
-									<div class="" style="border: 1px solid #CCC; padding: 3px;">
+									<div class="">
 										<span class="title-service"></span>
 										Cantidad: 
 										<input style="width:50px" type="text" class="cs" id="textfield" value="1" class="spinner input-mini">
@@ -325,7 +316,7 @@ $additionaldata=$this->getAdditionalData($booking['IDBOOKING']);
 						<td><?=$booking['EMAILCLIENT']?></td>
 						<td><?=$booking['PHONECLIENT']?></td>			
 						<td><img onclick="$('#<?=$mvu?>').hide(); $('#<?=$meu?>').show();" src="http://www.assets.kipu.co/img/user.png"></td>			
-						<td><a hfer="">Enviar Encuesta</a></td>			
+						<td><a href="">Enviar Encuesta</a></td>			
 					</tr>
           
           <!-- Edit -->
@@ -343,11 +334,9 @@ $additionaldata=$this->getAdditionalData($booking['IDBOOKING']);
 	            		<img id="uecancel" onclick="$('#<?=$mvu?>').show(); $('#<?=$meu?>').hide();" src="http://www.assets.kipu.co/img/uncheck.png">
 	            </td>	
 						</tr>
-					
-
-			<?PHP
+			<?php
 				$g=0;
-				while(isset($guestBooking[$g][0])){ ?>
+				while(isset($guestBooking[$g][0])): ?>
 					<tr>
 						<td>INVITADO</td> 
 						<td><?=$guestBooking[$g]['DNI']?></td>
@@ -355,19 +344,13 @@ $additionaldata=$this->getAdditionalData($booking['IDBOOKING']);
 						<td><?=$guestBooking[$g]['COUNTRY']?></td>
 						<td><?=$guestBooking[$g]['EMAILCLIENT']?></td>
 						<td><?=$guestBooking[$g]['PHONECLIENT']?></td>			
-
 					</tr>
-				
-				
-			<?PHP
+			<?php
 				$g++;
-				}
+				endwhile;
 			?>
 				</table>
 		</div>
-
 	</div>
-
-	
 </div>
 <br/><br/>

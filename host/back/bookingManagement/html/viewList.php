@@ -1,9 +1,5 @@
 <?php
-
 $indice=0;
-
-
-
 $funcion[$indice++]="datatable/jquery.dataTables.min.js";
 $funcion[$indice++]="datatable/TableTools.min.js";
 $funcion[$indice++]="datatable/ColReorderWithResize.js";
@@ -14,10 +10,6 @@ $funcion[$indice++]="chosen/chosen.jquery.min.js";
 $funcion[$indice++]="eakroko.min.js";
 $funcion[$indice++]="application.min.js";
 $funcion[$indice++]="demonstration.min.js";
-
-
-
-
 
 foreach ($funcion as $clave=>$nombre){
   echo "\n<script type='text/javascript' src='".$this->miConfigurador->getVariableConfiguracion("rutaUrlBloque")."/script/".$nombre."'>\n</script>\n";
@@ -38,11 +30,7 @@ foreach ($funcion as $clave=>$nombre){
     position: relative;
 }
 
-
 </style>
-
-
-
 <link rel="stylesheet" href="//code.jquery.com/ui/1.11.2/themes/smoothness/jquery-ui.css">
 
 <br/>
@@ -52,17 +40,11 @@ foreach ($funcion as $clave=>$nombre){
 			</li>
 	</ul>
 	<br/><br/><br/>
-	
 <div class="titulob">
 	<div class="tituloimg">
 		<h1>LISTADO GENERAL DE RESERVAS</h1>
-			
 	</div>
-	
-
 </div>
-
-
 <div class="row-fluid">
 	<div class="span12">
 		<div class="box box-bordered">
@@ -96,13 +78,10 @@ foreach ($funcion as $clave=>$nombre){
 						</tr>
 					</thead>
 					<tbody>
-					
-					<?PHP
-					 setlocale(LC_ALL,"es_ES"); 
-					 $i=0;
-					 while(isset($bookings[$i][0])){
-					
-						//$link=$this->getUrlLinksbyId($companyList[$i]['IDCOMPANY']);
+					<?php
+					setlocale(LC_ALL,"es_ES"); 
+					$i=0;
+					while(isset($bookings[$i][0])):
 					?>
 						<tr>
 							<td><?=strftime("%d-%b-%Y",strtotime($bookings[$i]['DATEREGISTER']))?></td>
@@ -114,24 +93,14 @@ foreach ($funcion as $clave=>$nombre){
 							<td class='hidden-480'><?=$bookings[$i]['PAYMENT']?></td>
 							<td class='hidden-480'><?=$bookings[$i]['STATUS']?></td>
 							<td class='hidden-480'><?=($bookings[$i]['STATEPAYMENT']=='1')?'SI':'NO'?></td>
-							<!--td class='hidden-480'>
-								<a style="cursor:pointer" href="<?=$link['edit']?>" class="btn" rel="tooltip" title="Edit"><i class="icon-search"></i></a>
-							</td-->
 						</tr>
-					<?PHP
-					
-					$i++;
-					}
-					
+					<?php
+          $i++;
+          endwhile;
 					?>
-					
 					</tbody>
 				</table>
 			</div>
-			
-			
-			
 		</div>
 	</div>
 </div>
-	

@@ -146,7 +146,7 @@ class FronterabookingManagement{
 	function blockBookingDetail($bookings,$commerce){
 		$bookings=explode(",",$bookings);
 		
-		$variable['commerce']=1;
+		$variable['commerce'] = $commerce;
 		$variable['user'] = $this->idSesion;
 		
 		//insertar capacidad 999999999 //num maximo global
@@ -158,30 +158,41 @@ class FronterabookingManagement{
 			
 			$variable['timeStampIni']=(($dataBooking[0])*1);
 			$variable['timeStampFin']=(($dataBooking[0])*1)+86399;
+      $variable['id_reservable'] = $dataBooking[1]; 
 			
-			$cadena_sql=$this->sql->cadena_sql("blockBooking",$variable);
-			$result=$this->miRecursoDB->ejecutarAcceso($cadena_sql,"");
+      //Consultar si existe una reserva para ese dia
+      
+      $cadena_sql=$this->sql->cadena_sql("bookingByCheckIn",$variable);
+			$result=$this->miRecursoDB->ejecutarAcceso($cadena_sql,"busqueda");
 			
-			//F. Inserto reservables correspondientes con la reserva
-			if($result){
-				
-				$variable['id_reserva'] = $this->miRecursoDB->ultimo_insertado();
-				$variable['id_reservable'] = $dataBooking[1];
-				$cadena_sql=$this->sql->cadena_sql("insertBookingItems",$variable);
-				$registro=$this->miRecursoDB->ejecutarAcceso($cadena_sql,"");
-					
-			}
-			
+      if(is_array($result)){
+        $error[] = "No es posible bloquear la reserva del dia ".$result[0]['DATESTART'];
+      }else{
+      
+        $cadena_sql=$this->sql->cadena_sql("blockBooking",$variable);
+        $result=$this->miRecursoDB->ejecutarAcceso($cadena_sql,"");
+        
+        //F. Inserto reservables correspondientes con la reserva
+        if($result){
+          $variable['id_reserva'] = $this->miRecursoDB->ultimo_insertado();
+          $cadena_sql=$this->sql->cadena_sql("insertBookingItems",$variable);
+          $registro=$this->miRecursoDB->ejecutarAcceso($cadena_sql,"");
+        }
+      }
 		}
 		
-		echo "Bloqueo exitoso";
+    if(count($error)>0){
+      echo implode('/n',$error);
+    }else{
+      echo "Bloqueo exitoso";
+    }  
 
 	}
 
 	function unblockBookingDetail($bookings,$commerce){
-		$bookings=explode(",",$bookings);
-		
-		$variable['commerce']=1;
+  
+		$bookings = explode(",",$bookings);
+		$variable['commerce'] = $commerce;
 		$variable['user'] = $this->idSesion;
 		
 		//insertar capacidad 999999999 //num maximo global
@@ -189,8 +200,14 @@ class FronterabookingManagement{
 		
 		foreach($bookings as $booking){
 		
-			$dataBooking=explode("-",$booking);
-			$variable['timeStampIni'] = $dataBooking[0];
+      $dataBooking=explode("-",$booking);
+			$variable['id_reservable']=$dataBooking[1];
+			$variable['timeStampIni']=$dataBooking[0]; 
+			
+			$cadena_sql=$this->sql->cadena_sql("bookingsByReservable",$variable);
+			$result=$this->miRecursoDB->ejecutarAcceso($cadena_sql,"busqueda");
+		
+			$variable['id_reserva']=$result[0]['IDBOOKING'];
 			
 			$cadena_sql=$this->sql->cadena_sql("unblockBooking",$variable);
 			$result=$this->miRecursoDB->ejecutarAcceso($cadena_sql,"");
@@ -561,11 +578,13 @@ class FronterabookingManagement{
 		$formSaraDataURL="jxajax=main";
 		$formSaraDataURL.="&pagina=bookingManagement";
 		$formSaraDataURL.="&bloque=bookingManagement";
+		$formSaraDataURL.="&saramodule=host";
 	 	$formSaraDataURL.="&bloqueGrupo=host/back";
 		$formSaraDataURL=$this->miConfigurador->fabricaConexiones->crypto->codificar_url($formSaraDataURL,$this->enlace);
 	
 		$formSaraDataBookingList="pagina=bookingManagement";
 	 	$formSaraDataBookingList.="&optionBooking=bookinglist";
+	 	$formSaraDataBookingList.="&saramodule=host";
 		$formSaraDataBookingList=$this->miConfigurador->fabricaConexiones->crypto->codificar_url($formSaraDataBookingList,$this->enlace);
 		
 		$month=date("m"); //LEER CURRENT
@@ -589,10 +608,12 @@ class FronterabookingManagement{
 		$formSaraDataURL.="&pagina=bookingManagement";
 		$formSaraDataURL.="&bloque=bookingManagement";
 	  $formSaraDataURL.="&bloqueGrupo=host/back";
+	  $formSaraDataURL.="&saramodule=host";
 		$formSaraDataURL=$this->miConfigurador->fabricaConexiones->crypto->codificar_url($formSaraDataURL,$this->enlace);
 	
 		$formSaraDataBookingList="pagina=bookingManagement";
 	 	$formSaraDataBookingList.="&opcion=bookinglist";
+	 	$formSaraDataBookingList.="&saramodule=host";
 		$formSaraDataBookingList=$this->miConfigurador->fabricaConexiones->crypto->codificar_url($formSaraDataBookingList,$this->enlace);
 	
 		include_once($this->ruta."/html/viewList.php");

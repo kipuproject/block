@@ -87,6 +87,9 @@ class ApiPayu{
 				case 'payu-action-url': 
 					$result = $this->getActionUrl();
 				break;
+				case 'payu-data': 
+					$result = $this->getDataPaymentByBookingID($_REQUEST['value']);
+				break;
 				case 'payu-order-verify': 
 					$result = $this->orderVerify($_REQUEST['value']);
 				break;
@@ -103,7 +106,38 @@ class ApiPayu{
 		}
 	}
 	
-
+  private function getDataPaymentByBookingID($booking){
+    $response = new stdClass();
+  
+    $variable['booking'] = $booking; 
+    $variable['commerce'] = $this->commerce;
+    
+    $string_sql = $this->sql->cadena_sql("searchTransactionbyBooking",$variable);
+    $result = $this->miRecursoDB->ejecutarAcceso($string_sql,"busqueda");
+    
+    if(is_array($result)){
+      
+      $result = $result[0];
+      $result['ANSWER'] = json_decode($result['ANSWER']);
+      
+      //Si no tiene merchanti id no es la primer respuesta recibida
+      if(empty($result['ANSWER']->merchantId)){
+        echo "NO TIENE";
+        var_dump($result['ANSWER']->merchantId);
+      }else{
+        echo "SI TIENE";
+        var_dump($result['ANSWER']->merchantId);
+      } 
+      //$response->data = $result;
+    
+      $response->status_code = 200;
+    }else{
+      $response->status_code = 201;
+    }
+    return $response;
+  }
+  
+  
   /**
   * Funcion que establece los datos que serán enviados a payu
   * @param idPayment identificador del registro de pago 
@@ -127,9 +161,13 @@ class ApiPayu{
       return $response; 
     }
     
+    $result['APIKEY'] = $commerce->data['APIKEY'];
+    $result['MERCHANTID'] = $commerce->data['MERCHANTID'];
+    $result['ACCOUNTID'] = $commerce->data['ACCOUNTID']; 
+    
     $data = array(
-        'merchantId' => $commerce->data['MERCHANTID'],
-        'accountId' => $commerce->data['ACCOUNTID'],
+        'merchantId' => $result['MERCHANTID'],
+        'accountId' => $result['ACCOUNTID'],
         'description' => $result['DESCRIPTION'],
         'referenceCode' => $result['IDPAYMENT'],
         'amount' => $result['VALUE'],
@@ -258,9 +296,9 @@ class ApiPayu{
     Environment::setSubscriptionsCustomUrl("https://api.payulatam.com/payments-api/rest/v4.3/"); 
     
     $commerce = $this->getDataCommerce();
-     
+
     PayU::$apiKey = $commerce->data['APIKEY']; // apiKey.
-    PayU::$apiLogin = $commerce->data['APILOGN']; // apiLogin.
+    PayU::$apiLogin = $commerce->data['APILOGIN']; // apiLogin.
     PayU::$merchantId = $commerce->data['MERCHANTID']; // Id de Comercio.
     PayU::$language = SupportedLanguages::ES; //Seleccione el idioma.
     PayU::$isTest = true; //Dejarlo True cuando sean pruebas.
