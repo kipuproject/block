@@ -1,6 +1,6 @@
-<?php 
-				
-$avalaibleRooms=$this->getAvalaibleRooms($booking['ROOM'],strtotime($booking['FECHA_INICIO']),strtotime($booking['FECHA_FIN']),$booking['IDCOMMERCE'],$booking['ROOMTYPE']); 
+<?php
+
+$avalaibleRooms=$this->getAvalaibleRooms($booking['ROOM'],strtotime($booking['FECHA_INICIO']),strtotime($booking['FECHA_FIN']),$booking['IDCOMMERCE'],$booking['ROOMTYPE']);
 $payuPayment=$this->getPayuPayment($booking['IDBOOKING']);
 $additionaldata=$this->getAdditionalData($booking['IDBOOKING']);
 
@@ -24,17 +24,17 @@ $additionaldata=$this->getAdditionalData($booking['IDBOOKING']);
 		position: relative;
 		top: 3px;
 		left: 76%;
-		}	
+		}
 	.user-edit input{
 		width:130px;
-	}	
-	</style>	
-	
-<div id="dialog<?php echo $booking['IDBOOKING']; ?>" title="Informacion Pago" style="display:none"> 
+	}
+	</style>
+
+<div id="dialog<?php echo $booking['IDBOOKING']; ?>" title="Informacion Pago" style="display:none">
   <p>This is the default dialog which is useful for displaying information. The dialog window can be moved, resized and closed with the 'x' icon.</p>
 </div>
- 
- 
+
+
 <div class="detailBookingBox">
    <h1>C&Oacute;DIGO DE RESERVA: <?php echo $booking['IDBOOKING']; ?></h1>
 	<ul class="tabs tabs-inline ">
@@ -46,12 +46,12 @@ $additionaldata=$this->getAdditionalData($booking['IDBOOKING']);
 				<img title="Imprimir Voucher" src="http://www.hoteles.kipu.co/blocks/host/back/bookingManagement/html/voucher/imagenes/pdf.png" >
 			</a>
 		</li-->
-	</ul> 
-	
+	</ul>
+
 	<div class="tab-content padding tab-content-inline tab-content-bottom">
-	
+
 		<div class="tab-pane active" id="general<?=$booking['IDBOOKING']?>">
-		
+
 		<div class="box-content nopadding">
 			<form id="form-15" class="form-horizontal form-column form-bordered" method="POST" action="#">
 				<div class="span6">
@@ -62,7 +62,7 @@ $additionaldata=$this->getAdditionalData($booking['IDBOOKING']);
 								<input type="text"  onchange="assignDate($('#chekininput'),$('#chekoutinput'),'<?=$booking['IDBOOKING']?>')" disabled="true"  id="chekininput" value="<?=date("d/m/Y",strtotime($booking['FECHA_INICIO']))?>" /></span>
 								<span class="add-on"><a onclick="$('#chekininput').prop('disabled', false);" ><img src="http://www.assets.kipu.co/img/edit.png"></a>
 							</div>
-							<span class="help-block">Check In dd/mm/YYYY</span> 
+							<span class="help-block">Check In dd/mm/YYYY</span>
 						</div>
 					</div>
 					<div class="control-group">
@@ -80,9 +80,9 @@ $additionaldata=$this->getAdditionalData($booking['IDBOOKING']);
 								</select>
 							</div>
 							<span class="help-block">
-								TIPO DE HABITACION: 
+								TIPO DE HABITACION:
 								<select  id="typeroominput" disabled="true"  onchange="assignTypeRoom($(this),'<?=$booking['IDBOOKING']?>')">
-								<? foreach($typeRooms as $key=>$value): ?> 
+								<? foreach($typeRooms as $key=>$value): ?>
 										<option <?=($booking['ROOMTYPE']==$value[0]['IDTYPEROOM'])?"selected":""?> value="<?=$value[0]['IDTYPEROOM']?>" ><?=$value[0]['NAME']?></OPTION>
 								<? endforeach; ?>
 								</select>
@@ -99,13 +99,13 @@ $additionaldata=$this->getAdditionalData($booking['IDBOOKING']);
 									<br/>
 									CLIENTE: <?=$booking['OBSERVATION_CUSTOMER']?>
 							</div>
-							<span class="help-block"> 
+							<span class="help-block">
 									<?
 										if(is_array($additionaldata)):
 											$ad=0;
 											while(isset($additionaldata[$ad][0])):
 												?>
-													[ <?=$additionaldata[$ad]['NAMEFIELD']?>: <?=$additionaldata[$ad]['VALUE']?> ] 
+													[ <?=$additionaldata[$ad]['NAMEFIELD']?>: <?=$additionaldata[$ad]['VALUE']?> ]
 												<?
 												$ad++;
 											endwhile;
@@ -126,7 +126,7 @@ $additionaldata=$this->getAdditionalData($booking['IDBOOKING']);
 							<span class="help-block">Check Out dd/mm/YYYY</span>
 						</div>
 					</div>
-					
+
 					<div class="control-group"  >
 						<label class="control-label" for="textfield">ESTADO RESERVA:</label>
 						<div class="controls">
@@ -157,7 +157,7 @@ $additionaldata=$this->getAdditionalData($booking['IDBOOKING']);
 		<div class="tab-pane" id="financiera<?=$booking['IDBOOKING']?>">
       <div class="box-title" style="background: #fff !important; margin-top: 3px;">
         <h3>HOSPEDAJE</h3>
-      </div>  
+      </div>
 			<div class="box-content nopadding">
 				<form class="form-horizontal form-column form-bordered" method="POST" action="#">
 					<div class="span6">
@@ -181,7 +181,7 @@ $additionaldata=$this->getAdditionalData($booking['IDBOOKING']);
 							<div class="controls">
 								<div class="input-prepend">
 									<span class="add-on">$</span>
-									<input class="input-small" style="width:70px" type="text"  disabled="true" id="valuenightinput" value="<?=($booking['VALUEBOOKING'])-($payuPayment['VALUE'])-($booking['VALUEPAYMENT'])?>" />  
+									<input class="input-small" style="width:70px" type="text"  disabled="true" id="valuenightinput" value="<?=($booking['VALUEBOOKING'])-($payuPayment['VALUE'])-($booking['VALUEPAYMENT'])?>" />
 								</div>
 							</div>
 						</div>
@@ -211,7 +211,7 @@ $additionaldata=$this->getAdditionalData($booking['IDBOOKING']);
                     <a onclick="$('#payupaymentinput').prop('disabled', false);" >
                       <img src="http://www.assets.kipu.co/img/kate32.png">
                     </a>
-                    <a onclick="$('#dialog<?php echo $booking['IDBOOKING']; ?>').dialog();" >
+                    <a onclick="getPayuData('<?php echo $booking['LINK']; ?>','<?php echo $booking['KEY']; ?>','<?php echo $booking['IDBOOKING']; ?>')" >
                       <img src="http://www.assets.kipu.co/img/info32.png">
                     </a>
                     <a onclick="" >
@@ -227,31 +227,31 @@ $additionaldata=$this->getAdditionalData($booking['IDBOOKING']);
 							</div>
 						</div>
 					</div>
-      </div> 
+      </div>
       <div class="box-title" style="background: #fff !important; margin-top: 3px;">
-        <h3>SERVICIOS ADICIONALES</h3>  
-      </div> 
+        <h3>SERVICIOS ADICIONALES</h3>
+      </div>
       <div class="box-content nopadding">
-					<div  style="display:block" class="span12">  
+					<div  style="display:block" class="span12">
 						<div class="control-group">
 							<div class="additional-service">
                 <select id="selector-service-<?=$booking['IDBOOKING']?>" name="service[]" onchange="" >
-                  <?php foreach($serviceList as $key=>$value): ?> 
+                  <?php foreach($serviceList as $key=>$value): ?>
                     <option value="<?=$value[0]['IDSERVICE']?>" ><?=$value[0]['NAME']?></option>
                   <?php endforeach; ?>
                 </select>
-                <a onclick="newService('<?=$booking['IDBOOKING']?>');" class="red-button">Agregar</a> 
+                <a onclick="newService('<?=$booking['IDBOOKING']?>');" class="red-button">Agregar</a>
               </div>
-							 
+
 							<div class="list-services-<?=$booking['IDBOOKING']?>">
-								<?php 
+								<?php
                 $bs=0;
 								while(isset($bookingServiceList[$bs]['ID'])):
 								?>
 									<div style="display:block" class="controls">
 										<div class="" >
 											<span class="title-service"><?=$serviceList[$bookingServiceList[$bs]['ID']][0]['NAME']?>: </span>
-											Cantidad: 
+											Cantidad:
 											<input style="width:50px" type="text" class="cs" id="textfield" value="<?=$bookingServiceList[$bs]['CANT']?>" class="spinner input-mini">
 											Valor: <input type="text" class="vs" value="<?=$bookingServiceList[$bs]['VALUE']?>" >
 											<input type='hidden' class='is' value="<?=$bookingServiceList[$bs]['ID']?>">
@@ -263,11 +263,11 @@ $additionaldata=$this->getAdditionalData($booking['IDBOOKING']);
 								$bs++;
 								endwhile;
 								?>
-						
+
 								<div  style="display:none" class="template-service<?=$booking['IDBOOKING']?> controls">
 									<div class="">
 										<span class="title-service"></span>
-										Cantidad: 
+										Cantidad:
 										<input style="width:50px" type="text" class="cs" id="textfield" value="1" class="spinner input-mini">
 										Valor: <input type="text" class="vs">
 										<input type='hidden' class='is'>
@@ -278,19 +278,19 @@ $additionaldata=$this->getAdditionalData($booking['IDBOOKING']);
 								</div>
 							</div>
 						</div>
-						
-					</div> 
+
+					</div>
 				</form>
 			</div>
 			<div class="clear"></div>
 		</div>
-		<div class="tab-pane" id="huespedes<?=$booking['IDBOOKING']?>"> 
+		<div class="tab-pane" id="huespedes<?=$booking['IDBOOKING']?>">
 			<div class="box-title" style="background:#DDD !important; color:#000 !important; border:none !important; margin-top:5px;">
 				<h3>INFORMACION HUESPEDES - ADULTOS: <?=$booking['NUMGUEST']?> NIÑOS: <?=$booking['NUMKIDS']?>
 				</h3>
 			</div>
 
-			<?php $guestBooking=$this->getGuestBooking($booking['IDBOOKING'],$booking['IDCOMMERCE']); ?>		
+			<?php $guestBooking=$this->getGuestBooking($booking['IDBOOKING'],$booking['IDCOMMERCE']); ?>
 
 				<table class="table table-hover table-nomargin table-bordered " >
 					<tr >
@@ -299,9 +299,9 @@ $additionaldata=$this->getAdditionalData($booking['IDBOOKING']);
 						<td style="font-weight:bold"><b>NOMBRE</b></td>
 						<td style="font-weight:bold"><b>NACIONALIDAD</b></td>
 						<td style="font-weight:bold"><b>EMAIL</b></td>
-						<td style="font-weight:bold"><b>TELEFONO</b></td>			
+						<td style="font-weight:bold"><b>TELEFONO</b></td>
           </tr>
-					
+
 					<?php
 						$mvu = "main-view".$booking['IDBOOKING'];
 						$meu = "main-edit".$booking['IDBOOKING'];
@@ -314,13 +314,13 @@ $additionaldata=$this->getAdditionalData($booking['IDBOOKING']);
 						<td><?=$booking['NAMECLIENT']?></td>
 						<td><?=$booking['COUNTRY']?></td>
 						<td><?=$booking['EMAILCLIENT']?></td>
-						<td><?=$booking['PHONECLIENT']?></td>			
-						<td><img onclick="$('#<?=$mvu?>').hide(); $('#<?=$meu?>').show();" src="http://www.assets.kipu.co/img/user.png"></td>			
-						<td><a href="">Enviar Encuesta</a></td>			
+						<td><?=$booking['PHONECLIENT']?></td>
+						<td><img onclick="$('#<?=$mvu?>').hide(); $('#<?=$meu?>').show();" src="http://www.assets.kipu.co/img/user.png"></td>
+						<td><a href="">Enviar Encuesta</a></td>
 					</tr>
-          
+
           <!-- Edit -->
-          
+
 						<tr id="<?=$meu?>" class="user-edit" style="display:none; background:rgb(252, 252, 252);">
 							<td>RESPONSABLE</td>
 							<td><input id = "u-main-dni" value = "<?=$booking['DNI']?>" /></td>
@@ -332,18 +332,18 @@ $additionaldata=$this->getAdditionalData($booking['IDBOOKING']);
 	            		<input id="u-value" type="hidden" value = "<?=$booking['ID']?>" />
 	            		<img onclick="updateResponsible('#<?=$meu?>'); $('#uecancel').hide();" src="http://www.assets.kipu.co/img/check.png">
 	            		<img id="uecancel" onclick="$('#<?=$mvu?>').show(); $('#<?=$meu?>').hide();" src="http://www.assets.kipu.co/img/uncheck.png">
-	            </td>	
+	            </td>
 						</tr>
 			<?php
 				$g=0;
 				while(isset($guestBooking[$g][0])): ?>
 					<tr>
-						<td>INVITADO</td> 
+						<td>INVITADO</td>
 						<td><?=$guestBooking[$g]['DNI']?></td>
 						<td><?=$guestBooking[$g]['NAMECLIENT']?></td>
 						<td><?=$guestBooking[$g]['COUNTRY']?></td>
 						<td><?=$guestBooking[$g]['EMAILCLIENT']?></td>
-						<td><?=$guestBooking[$g]['PHONECLIENT']?></td>			
+						<td><?=$guestBooking[$g]['PHONECLIENT']?></td>
 					</tr>
 			<?php
 				$g++;

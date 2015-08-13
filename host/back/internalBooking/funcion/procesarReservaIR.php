@@ -65,11 +65,11 @@ if(!isset($GLOBALS["autorizado"])){
 
 
 		if($variable['emailCustomer']<>""){
-    
+
 			$this->mensaje .= $cadena_sql = $this->sql->cadena_sql("dataUserByEmail",$variable['emailCustomer']);
 			$dataUser = $this->miRecursoDB->ejecutarAcceso($cadena_sql,"busqueda");
 			$dataUser = $dataUser[0];
-      
+
 		}
 
 		if(!is_array($dataUser)){
@@ -86,7 +86,7 @@ if(!isset($GLOBALS["autorizado"])){
 
 		}
 
-    
+
 		$friends=array();
 		foreach($variable as $key=>$value){
 			$friend=explode("_",$key);

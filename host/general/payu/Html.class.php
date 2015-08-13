@@ -10,17 +10,16 @@ class FronteraPayu{
 	var $funcion;
 	var $lenguaje;
 	var $formulario;
-	
+
 	var $miConfigurador;
-	
+
 	function __construct(){
-	
+
 		$this->miConfigurador=Configurador::singleton();
 		$this->miSesion=Sesion::singleton();
 		$this->ruta=$this->miConfigurador->getVariableConfiguracion("rutaBloque");
 		$this->rutaBloque=$this->miConfigurador->getVariableConfiguracion("host");
 		$this->rutaBloque.=$this->miConfigurador->getVariableConfiguracion("site");
-		$this->rutaTema.=$this->rutaBloque."/theme/default";
 		$this->rutaBloque.="/blocks/host/general/payu";
 		$this->miInspectorHTML=InspectorHTML::singleton();
 		$this->masterResource=$this->miConfigurador->fabricaConexiones->getRecursoDB("master");
@@ -50,7 +49,7 @@ class FronteraPayu{
 
 	function html(){
 			$_REQUEST=$this->miInspectorHTML->limpiarPHPHTML($_REQUEST);
-			
+
 			if(isset($_REQUEST['extra2']) && $_REQUEST['extra2']=='payu-check-in'){
 				$this->payuResponse($_REQUEST);
 			}
@@ -61,6 +60,6 @@ class FronteraPayu{
 		$payment= new payuLatam();
 		echo "<br/><h1>".$payment->payuResponse($variable)."</h1></br>";
 		//include_once($this->ruta."/html/payuResponse.php");
-	}	
+	}
 
 }

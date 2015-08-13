@@ -54,117 +54,120 @@ class ApiPayu{
 	public function setFormulario($formulario){
 		$this->formulario = $formulario;
 	}
-	
+
 	public function process(){
-	
+
 		if(!isset($_REQUEST['key'])){
 			echo "error";
 			exit;
-		}else{ 
+		}else{
 			$cadena_sql = $this->sql->cadena_sql("api_key",$_REQUEST['key']);
 			$commerce = $this->master_resource->ejecutarAcceso($cadena_sql,"busqueda");
 			$this->miRecursoDB = $this->miConfigurador->fabricaConexiones->getRecursoDB($commerce[0]['DBMS']);
-		  $this->commerce = $commerce[0]['IDCOMMERCE'];   
-			$this->commerce_folder = $commerce[0]['FOLDER']; 
+		  $this->commerce = $commerce[0]['IDCOMMERCE'];
+			$this->commerce_folder = $commerce[0]['FOLDER'];
 		}
-		
+
 		$_REQUEST=$this->miInspectorHTML->limpiarPHPHTML($_REQUEST);
 		$_REQUEST=$this->miInspectorHTML->limpiarSQL($_REQUEST);
-		
+
 		unset($_REQUEST['aplicativo']);
 		unset($_REQUEST['PHPSESSID']);
-		
+
 		foreach($_REQUEST as $key=>$value){
 			$_REQUEST[urldecode($key)]=urldecode($value);
 		}
-		
+
 		if(isset($_REQUEST['method'])){
-			
+
 			switch($_REQUEST['method']){
-				case 'payugo': 
+				case 'payugo':
 					$result = $this->payuGO($_REQUEST['value']);
 				break;
-				case 'payu-action-url': 
+				case 'payu-action-url':
 					$result = $this->getActionUrl();
 				break;
-				case 'payu-data': 
+				case 'payu-data':
 					$result = $this->getDataPaymentByBookingID($_REQUEST['value']);
 				break;
-				case 'payu-order-verify': 
+				case 'payu-order-verify':
 					$result = $this->orderVerify($_REQUEST['value']);
 				break;
 			}
-			
+
 			$json=json_encode($result);
 			if(isset($_GET['callback'])){
 				echo "{$_GET['callback']}($json)";
 			}else{
 				echo $json;
 			}
- 		}else{ 
+ 		}else{
 				echo "no data";
 		}
 	}
-	
+
   private function getDataPaymentByBookingID($booking){
     $response = new stdClass();
-  
-    $variable['booking'] = $booking; 
+
+    $variable['booking'] = $booking;
     $variable['commerce'] = $this->commerce;
-    
+
     $string_sql = $this->sql->cadena_sql("searchTransactionbyBooking",$variable);
     $result = $this->miRecursoDB->ejecutarAcceso($string_sql,"busqueda");
-    
+
     if(is_array($result)){
-      
+
       $result = $result[0];
       $result['ANSWER'] = json_decode($result['ANSWER']);
-      
-      //Si no tiene merchanti id no es la primer respuesta recibida
+
+      //Si no tiene merchantid no es la primer respuesta recibida
       if(empty($result['ANSWER']->merchantId)){
-        echo "NO TIENE";
-        var_dump($result['ANSWER']->merchantId);
+        //echo "NO TIENE";
+        //var_dump($result['ANSWER']->merchantId);
+        $response->status = "Sin verificar pago online";
       }else{
-        echo "SI TIENE";
-        var_dump($result['ANSWER']->merchantId);
-      } 
+        //echo "SI TIENE";
+        $response->status = "Pago online verificado";
+        //var_dump($result['ANSWER']->merchantId);
+      }
       //$response->data = $result;
-    
+
       $response->status_code = 200;
     }else{
+      $response->status = "No existe información de pago online";
       $response->status_code = 201;
     }
     return $response;
   }
-  
-  
+
+
   /**
   * Funcion que establece los datos que serán enviados a payu
-  * @param idPayment identificador del registro de pago 
-  */		
+  * @param idPayment identificador del registro de pago
+  */
   private function getDataPayment($idPayment){
-    
+
     $response = new stdClass();
-    
+
     $variable['idPayment'] = $idPayment;
     $variable['commerce'] = $this->commerce;
-    
+
     $commerce = $this->getDataCommerce();
-    
+
     $string_sql = $this->sql->cadena_sql("searchTransaction",$variable);
     $result = $this->miRecursoDB->ejecutarAcceso($string_sql,"busqueda");
-    
+
     if(is_array($result)){
       $result = $result[0];
     }else{
       $response->status_code = 201;
-      return $response; 
+      return $response;
     }
-    
+
     $result['APIKEY'] = $commerce->data['APIKEY'];
     $result['MERCHANTID'] = $commerce->data['MERCHANTID'];
-    $result['ACCOUNTID'] = $commerce->data['ACCOUNTID']; 
-    
+    $result['ACCOUNTID'] = $commerce->data['ACCOUNTID'];
+
     $data = array(
         'merchantId' => $result['MERCHANTID'],
         'accountId' => $result['ACCOUNTID'],
@@ -187,22 +190,22 @@ class ApiPayu{
     foreach ($data as $name => $value) {
       $response->data[$name]=$value;
     }
-    
+
     $url = $this->getActionUrl();
-    $response->url = $url->url;     
+    $response->url = $url->url;
     $response->status_code = 200;
-    
+
     return $response;
   }
-    
+
   private function payuGO($value){
     $response = new stdClass();
     $booking = $this->getDataBooking($value);
     $valueBooking = $booking->data['VALUE']*0.5;
     $create = $this->createPayment($this->commerce,$booking->data['CLIENT'],$valueBooking,'COP',"Reserva ".$booking->data['NAME'],$value);
-    
+
     if($create->status_code = 200){
-      $response->id = $create->id; 
+      $response->id = $create->id;
       $response->status_code = 200;
       $payment = $this->getDataPayment($response->id);
       $response->url = $payment->url;
@@ -211,12 +214,12 @@ class ApiPayu{
       $response->status = "Reservable Invalido";
       $response->status_code = 201;
     }
-    
+
     return $response;
-    
+
   }
-  
-  
+
+
   private function getFirm($settings) {
     $params = array(
       $settings['APIKEY'],
@@ -226,53 +229,53 @@ class ApiPayu{
       $settings['CURRENCY']
     );
     return md5(implode('~',$params));
-  }  
-  
+  }
+
   private function getActionUrl() {
     $response= new stdClass();
     $response->url = "https://gateway.payulatam.com/ppp-web-gateway/";
     $response->enviroment = "production";
-    return $response; 
-  }   
+    return $response;
+  }
 
   private function getDataCommerce() {
     $response= new stdClass();
-    
+
     $string_sql = $this->sql->cadena_sql("dataCommerce",$this->commerce);
     $result = $this->master_resource->ejecutarAcceso($string_sql,"busqueda");
-    
+
     if(is_array($result)){
       $response->data = $result[0];
     }else{
       $response->status_code = 201;
-    } 
-    
-    return $response; 
-  }   
-  
+    }
+
+    return $response;
+  }
+
   /**
   * Esta funcion es el primer paso, inserta los datos en la tabla de pagos
   * y establece el incio de la transaccion e 0
   */
   private function createPayment($idCommerce,$customer,$value,$currency,$description,$referenceCode){
-    
+
     $response= new stdClass();
     $variable=compact("idCommerce","customer","value","currency","description","referenceCode");
-    
+
     $string_sql=$this->sql->cadena_sql("insertTransaction",$variable);
     $result=$this->miRecursoDB->ejecutarAcceso($string_sql,"");
-    
+
     if($result){
       $response->id=$this->miRecursoDB->ultimo_insertado();
       $response->status_code = 200;
     }else{
       $response->status_code = 201;
     }
-    
+
     return $response;
-  
+
   }
- 
+
   private function getDataBooking($idbooking){
     $response=new stdClass();
     $string_sql = $this->sql->cadena_sql("dataRoomBookingbyID",$idbooking);
@@ -285,16 +288,16 @@ class ApiPayu{
     }
     return $response;
   }
-  
-    
+
+
   private function orderVerify($value) {
-  
-    require_once 'plugin/payu_sdk/PayU.php'; 
-    
-    Environment::setPaymentsCustomUrl("https://api.payulatam.com/payments-api/4.0/service.cgi"); 
-    Environment::setReportsCustomUrl("https://api.payulatam.com/reports-api/4.0/service.cgi"); 
-    Environment::setSubscriptionsCustomUrl("https://api.payulatam.com/payments-api/rest/v4.3/"); 
-    
+
+    require_once 'plugin/payu_sdk/PayU.php';
+
+    Environment::setPaymentsCustomUrl("https://api.payulatam.com/payments-api/4.0/service.cgi");
+    Environment::setReportsCustomUrl("https://api.payulatam.com/reports-api/4.0/service.cgi");
+    Environment::setSubscriptionsCustomUrl("https://api.payulatam.com/payments-api/rest/v4.3/");
+
     $commerce = $this->getDataCommerce();
 
     PayU::$apiKey = $commerce->data['APIKEY']; // apiKey.
@@ -302,15 +305,15 @@ class ApiPayu{
     PayU::$merchantId = $commerce->data['MERCHANTID']; // Id de Comercio.
     PayU::$language = SupportedLanguages::ES; //Seleccione el idioma.
     PayU::$isTest = true; //Dejarlo True cuando sean pruebas.
-    
+
     $transaction= new stdClass();
-    
+
     // Ingresa aquí el código de referencia de la orden.
     $parameters = array(PayUParameters::REFERENCE_CODE => $value);
 
     $response = PayUReports::getOrderDetailByReferenceCode($parameters);
 
-    foreach ($response as $order) {	
+    foreach ($response as $order) {
       $order->accountId;
       $order->status;
       $order->referenceCode;
@@ -321,7 +324,7 @@ class ApiPayu{
         $order->buyer->emailAddress;
         $order->buyer->fullName;
       }
-      
+
       $transactions=$order->transactions;
       foreach ($transactions as $transaction) {
         $transaction->type;
@@ -334,7 +337,7 @@ class ApiPayu{
           $transaction->payer->emailAddress;
         }
       }
-    } 
-    return $transaction; 
-  }  
+    }
+    return $transaction;
+  }
 }

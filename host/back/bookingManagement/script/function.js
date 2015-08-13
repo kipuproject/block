@@ -9,7 +9,7 @@ function updateForm(formSaraData,form){
 
 		}
 	});
-}	
+}
 
 function newService(id){
 	$new=$('.template-service'+id).clone();
@@ -21,7 +21,7 @@ function newService(id){
 	$('.list-services-'+id).append($new);
 	$('.list-services-'+id+' #'+$newid).show();
 }
-	
+
 function saveService(obj,formSaraData,id,opSave){
 	is=obj.parent().children('.is').val();
 	cs=obj.parent().children('.cs').val();
@@ -38,7 +38,7 @@ function saveService(obj,formSaraData,id,opSave){
 				if(opSave=="add"){
 					obj.parent().children('.save').hide();
 					obj.parent().children('.update').show();
-				}				
+				}
 				if(opSave=="delete"){
 					obj.parent().remove();
 				}
@@ -51,15 +51,15 @@ function block(formSaraDataURL){
   var my_books = $('.activeBook');
   var array_id=[];
   my_books.each(function(){
-     var $this = $(this); 
+     var $this = $(this);
      $this.css({"background":"#000000"});
      array_id.push($this.attr('id'));
-  }); 
+  });
   $.ajax({
   type: 'GET',
   url: formSaraDataURL,
   async: false,
-  data: { 
+  data: {
     optionBooking : "blockBooking",
     bookings:array_id.toString(),
     commerce:$("#booking-commerce").val()
@@ -74,14 +74,14 @@ function showDetail(formSaraDataURL){
    var my_books = $('.activeBook');
    var array_id=[];
    my_books.each(function(){
-       var $this = $(this); 
+       var $this = $(this);
        array_id.push($this.attr('id'));
-   }); 
+   });
    $.ajax({
     type: 'GET',
     url: formSaraDataURL,
     async: false,
-    data: { 
+    data: {
       optionBooking : "showDetails",
       bookings:array_id.toString(),
       commerce:$("#booking-commerce").val()
@@ -98,32 +98,52 @@ function unselect(formSaraDataURL){
    var my_books = $('.activeBook');
    var array_id=[];
    my_books.each(function(){
-       var $this = $(this); 
+       var $this = $(this);
        $this.removeClass("activeBook");
        $this.css({"border":"1px solid #FFFFFF"});
-      
-   }); 
-}	
+
+   });
+}
 
 function unblock(formSaraDataURL){
    var my_books = $('.activeBook');
    var array_id=[];
    my_books.each(function(){
-       var $this = $(this); 
+       var $this = $(this);
        $this.css({"background":"#FFFFFF"});
        array_id.push($this.attr('id'));
-   }); 
+   });
    $.ajax({
     type: 'GET',
     url: formSaraDataURL,
     async: false,
-    data: { 
+    data: {
       optionBooking : "unblockBooking",
       bookings:array_id.toString(),
       commerce:$("#booking-commerce").val()
       },
     success: function(respuesta) {
       alert(respuesta);
+    }
+  });
+}
+
+function getPayuData(formSaraDataURL,key,value){
+
+   $.ajax({
+    type: 'GET',
+    url: formSaraDataURL,
+    async: false,
+    data: {
+      api : "payu",
+      method : "payu-data",
+      value:value,
+      key:key
+      },
+    success: function(response) {
+      json = jQuery.parseJSON(response);
+      $('#dialog'+value).html(json.status);
+      $('#dialog'+value).dialog();
     }
   });
 }
