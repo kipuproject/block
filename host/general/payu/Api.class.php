@@ -123,16 +123,37 @@ class ApiPayu{
       //Si no tiene merchantid no es la primer respuesta recibida
       if(empty($result['ANSWER']->merchantId)){
         //echo "NO TIENE";
-        //var_dump($result['ANSWER']->merchantId);
-        $response->status = "Sin verificar pago online";
-      }else{
-        //echo "SI TIENE";
-        $response->status = "Pago online verificado";
-        //var_dump($result['ANSWER']->merchantId);
-      }
-      //$response->data = $result;
+       // echo "<pre>"; var_dump($result['ANSWER']); echo "<pre>";
+       // $payData = '<br/>Telefono Comprador: '.$result['ANSWER']->telephone;
+       // $payData .= '<br/>Referencia de Pago: '.$result['ANSWER']->description;
+        $payData .= '<br/>Metodo de pago: '.$result['ANSWER']->paymentMethod;
+       // $payData .= '<br/>Tipo de pago: '.$result['ANSWER']->lapPaymentMethodType;
+        $payData .= '<br/>Valor: '.$result['ANSWER']->additionalValues->TX_VALUE->value;
+        $payData .= '<br/>Moneda: '. $result['ANSWER']->additionalValues->TX_VALUE->currency;
+        $payData .= '<br/>Estado Actual: '.$result['ANSWER']->transactionResponse->pendingReason;
 
+        $result['ANSWER'] = $payData;
+
+        $response->status = "true";
+
+      }else{
+
+        $payData = '<br/>Telefono Comprador: '.$result['ANSWER']->telephone;
+        $payData .= '<br/>Referencia de Pago: '.$result['ANSWER']->description;
+        $payData .= '<br/>Metodo de pago: '.$result['ANSWER']->lapPaymentMethod;
+        $payData .= '<br/>Tipo de pago: '.$result['ANSWER']->lapPaymentMethodType;
+        $payData .= '<br/>Valor: '.$result['ANSWER']->TX_VALUE;
+        $payData .= '<br/>Moneda: '. $result['ANSWER']->currency;
+        $payData .= '<br/>Estado Actual: '.$this->getpolResponseCode($result['ANSWER']->polResponseCode);
+
+        $result['ANSWER'] = $payData;
+
+        $response->status = "true";
+      }
+
+      $response->data = $result;
       $response->status_code = 200;
+
     }else{
       $response->status = "No existe información de pago online";
       $response->status_code = 201;
@@ -308,7 +329,7 @@ class ApiPayu{
 
     $transaction= new stdClass();
 
-    // Ingresa aquí el código de referencia de la orden.
+    // Código de referencia de la orden.
     $parameters = array(PayUParameters::REFERENCE_CODE => $value);
 
     $response = PayUReports::getOrderDetailByReferenceCode($parameters);
@@ -340,4 +361,45 @@ class ApiPayu{
     }
     return $transaction;
   }
+
+
+  private function getpolResponseCode($cod){
+
+    $polResponseCode=array();
+    $polResponseCode['1']="Transacci&oacute;n Aprobada.";
+    $polResponseCode['4']="Transacci&oacute;n rechazada por la entidad.";
+    $polResponseCode['5']="Transacci&oacute;n declinada por la entidad financiera.";
+    $polResponseCode['6']="Fondos insuficientes.";
+    $polResponseCode['7']="Tarjeta inv&aacute;lida.";
+    $polResponseCode['8']="Es necesario contactar a la entidad.";
+    $polResponseCode['9']="Tarjeta vencida.";
+    $polResponseCode['10']="Tarjeta restringida.";
+    $polResponseCode['12']="Fecha de expiraci&oacute;n o campo seg. Inv&aacute;lidos.";
+    $polResponseCode['13']="Repita transacci&oacute;n.";
+    $polResponseCode['14']="Transacci&oacute;n inv&aacute;lida.";
+    $polResponseCode['15']="Transacci&oacute;n enviada a Validaci&oacute;n Manual.";
+    $polResponseCode['17']="Monto excede m&aacute;ximo permitido por entidad.";
+    $polResponseCode['22']="Tarjeta no autorizada para realizar compras por internet.";
+    $polResponseCode['23']="Transacci&oacute;n Rechazada por el Modulo Antifraude.";
+    $polResponseCode['25']="Transacci&oacute;n esta pendiente de aprobacion.";
+    $polResponseCode['50']="Transacci&oacute;n Expirada, antes de ser enviada a la red del medio de pago.";
+    $polResponseCode['51']="Ocurri&oacute; un error en el procesamiento por parte de la Red del Medio de Pago.";
+    $polResponseCode['52']="El medio de Pago no se encuentra Activo. No se env? la solicitud a la red del mismo.";
+    $polResponseCode['53 ']="Banco no disponible.";
+    $polResponseCode['54']="El proveedor del Medio de Pago notifica que no fue aceptada la transacci&oacute;n.";
+    $polResponseCode['55 ']="Error convirtiendo el monto de la transacci&oacute;n.";
+    $polResponseCode['56']="Error convirtiendo montos del deposito.";
+    $polResponseCode['9994']="Transacci&oacute;n pendiente por confirmar.";
+    $polResponseCode['9995']="Certificado digital no encontrado.";
+    $polResponseCode['9997']="Error de mensajer? con la entidad financiera.";
+    $polResponseCode['10000']="Ajustado Autom&aacute;ticamente.";
+    $polResponseCode['10001']="Ajuste Autom&aacute;tico y Reversi&oacute;n Exitosa.";
+    $polResponseCode['10002']="Ajuste Autom&aacute;tico y Reversi&oacute;n Fallida.";
+    $polResponseCode['10003']="Ajuste autom&aacute;tico no soportado.";
+    $polResponseCode['10004']="Error en el Ajuste.";
+    $polResponseCode['10005']="Error en el ajuste y reversi&oacute;n.";
+
+    return $polResponseCode[$cod];
+  }
+
 }
