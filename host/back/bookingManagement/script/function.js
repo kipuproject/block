@@ -142,7 +142,11 @@ function getPayuData(formSaraDataURL,key,value){
       },
     success: function(response) {
       json = jQuery.parseJSON(response);
-      $('#dialog'+value).html(json.data.ANSWER);
+      if(json.status_code == 200){
+        $('#dialog'+value).html(json.data.ANSWER);
+      }else{
+        $('#dialog'+value).html(json.status);
+      }
       $('#dialog'+value).dialog();
     }
   });

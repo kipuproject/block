@@ -56,10 +56,8 @@ class FuncioncompanyManagement
 		include_once($this->ruta."/funcion/redireccionar.php");
 	}
 
-	function action()
-	{
-			
-		//Evitar que se ingrese codigo HTML y PHP en los campos de texto
+	function action(){
+      //Evitar que se ingrese codigo HTML y PHP en los campos de texto
 		//Campos que se quieren excluir de la limpieza de código. Formato: nombreCampo1|nombreCampo2|nombreCampo3
 		$excluir="";
 		$_REQUEST=$this->miInspectorHTML->limpiarPHPHTML($_REQUEST);

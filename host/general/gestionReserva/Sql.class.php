@@ -518,12 +518,17 @@ class SqlgestionReserva extends sql {
 				$cadena_sql.="r.fecha_inicio CHECKIN_UNIXTIME, ";
 				$cadena_sql.="r.fecha_fin CHECKOUT_UNIXTIME, ";	
 				$cadena_sql.="r.observacion_cliente OBSERVATION_CLIENT, ";
-				$cadena_sql.="'0' INFANTS, ";
+				$cadena_sql.="rr.adults ADULTS, ";
+				$cadena_sql.="rr.children CHILDREN, ";
+				$cadena_sql.="rr.infants INFANTS, ";
 				$cadena_sql.="r.cliente CLIENT, ";
 				$cadena_sql.="r.tipo_reserva COMMERCE, ";
 				$cadena_sql.="r.valor_total VALUE ";
 				$cadena_sql.="FROM "; 
 				$cadena_sql.=$prefijo."reserva r ";
+				$cadena_sql.="INNER JOIN ";
+				$cadena_sql.=$prefijo."reserva_reservable rr ";
+				$cadena_sql.="ON r.id_reserva = rr.id_reserva ";
 				$cadena_sql.="WHERE ";
 				$cadena_sql.="r.id_reserva ='".$variable."' ";
 			break;

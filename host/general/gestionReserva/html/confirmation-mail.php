@@ -94,7 +94,13 @@
                                       <center><p style="margin:0px!important;padding:10px 0 10px 0;color:#a9a9a9;"><?=round((($response->booking['CHECKOUT_UNIXTIME'])*1-($response->booking['CHECKIN_UNIXTIME'])*1)/86400)?></p></center>
                                      </td>
                                      <td style="border-right:1px solid #c3c3c3;font-size:12px;width:60px;background-color:#f5f5f5">
-                                      <center><p style="margin:0px!important;padding:10px 0 10px 0">Adultos:<?=$response->booking['NUMGUEST']?><br/>Niños:<?=$response->booking['NUMKIDS']?></p></center>
+                                      <center>
+                                        <p style="margin:0px!important;padding:10px 0 10px 0">
+                                        Adultos:<?=$response->booking['ADULTS']?>
+                                        <br/>Niños:<?=$response->booking['CHILDREN']?>
+                                        <br/>Infantes:<?=$response->booking['INFANTS']?>
+                                        </p>
+                                      </center>
                                      </td>
                                   </tr>
                                   </tbody>

@@ -8,9 +8,6 @@ function updateForm(formSaraData,form){
 		success: function(respuesta) {
 			//$(form+" #status").html(respuesta);
 			alert(respuesta);
-			
-			
-
 		}
 	});
 }

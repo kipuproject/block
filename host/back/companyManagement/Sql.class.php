@@ -142,7 +142,6 @@ class SqlcompanyManagement extends sql {
 				$cadena_sql="UPDATE ";
 				$cadena_sql.=$prefijo."commerce ";
 				$cadena_sql.="SET ";
-				$cadena_sql.="id_claTipoReserva='".$variable['commercetype']."',";
 				$cadena_sql.="nombre='".$variable['nombre']."',";
 				$cadena_sql.="descripcion='".$variable['descripcion']."',";
 				$cadena_sql.="capacidad='".$variable['capacidad']."',";

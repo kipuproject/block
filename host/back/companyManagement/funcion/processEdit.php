@@ -62,6 +62,7 @@ if(!isset($GLOBALS["autorizado"]))
 						echo "<script>location.replace('".$formSaraData."')</script>";
 										  
 					}else{
+            
 						$cadena_sql=$this->sql->cadena_sql("updateDataCommerceBasic",$_REQUEST);
 						$result=$this->masterResource->ejecutarAcceso($cadena_sql,"");
 						$this->mensaje="Datos Basicos Actualizados Correctamente";

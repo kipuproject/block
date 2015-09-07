@@ -272,7 +272,7 @@ class FronteracompanyManagement{
 	}
 
 
-	function showView($id){
+	function showView($id){ 
 
 		$cadena_sql=$this->sql->cadena_sql("companyListbyID",$id);
 		$company=$this->miRecursoDB->ejecutarAcceso($cadena_sql,"busqueda");
