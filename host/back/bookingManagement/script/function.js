@@ -152,3 +152,41 @@ function getPayuData(formSaraDataURL,key,value){
   });
 }
 
+function editDate(){
+  checkin = $('#chekininput');
+  checkout = $('#chekoutinput');
+  editbutton = $('#editbutton');
+  savebutton = $('#savebutton');
+  editbutton.hide();
+  savebutton.show();
+  checkin.prop('disabled',false);
+  checkout.prop('disabled',false);
+}
+
+function setDate(form){
+  
+  checkin = $('#chekininput');
+  checkout = $('#chekoutinput');
+  editbutton = $('#editbutton');
+  savebutton = $('#savebutton');
+  
+  $.ajax({
+    type: 'GET',
+    url: form,
+    async: false,
+    data: { 
+      optionBooking : "assignDate",
+      chekininput:checkin.val(),
+      chekoutinput:checkout.val(),
+      commerce:$("#booking-commerce").val()
+      },
+    success: function(respuesta) {
+      alert(respuesta);
+      editbutton.show();
+      savebutton.hide();
+      checkin.prop('disabled',true);
+      checkout.prop('disabled',true); 
+    }
+  });
+}
+

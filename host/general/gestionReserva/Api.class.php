@@ -516,19 +516,20 @@ class ApigestionReserva{
 			if(isset($variable['numRooms']) && $variable['numRooms']<>""){
 				$variable['numRooms'] = $variable['numRooms'];
 			}else{
-				$variable['numRooms']=1;
+				$variable['numRooms'] = 1;
 			}
 
-			$variable['idRoom']=0;
+			$variable['idRoom'] = 0;
+      
 			if(isset($variable['room']) && $variable['room']<>""){
 				$variable['idRoom'] = $variable['room'];
 			}
 
 			$checkin=explode("/",$variable['checkin']);
 
+      $dia  = $checkin[0];
+      $mes  = $checkin[1];
 			$anio = $checkin[2];
-			$mes = $checkin[1];
-			$dia = $checkin[0];
 
 			//la uso para validar la reserva aumento un segundo
 			$variable['timeStampStart']=(mktime(0,0,0,$mes,$dia,$anio)); //+1
@@ -538,9 +539,9 @@ class ApigestionReserva{
 
 			$checkout=explode("/",$variable['checkout']);
 
+      $dia  = $checkout[0];
+      $mes  = $checkout[1];
 			$anio = $checkout[2];
-			$mes = $checkout[1];
-			$dia = $checkout[0];
 
 			//tiempo q voy a utilizar para crear la reserva
 
@@ -557,9 +558,7 @@ class ApigestionReserva{
 			if((($timeStampEnd)*1)<=(($variable['timeStampStart'])*1)){
 				$output['message'][] = "la fecha final no puede ser menor a la fecha inicial";
 				$output['status'] = "false"; return $output;
-
 			}
-
 
 			//A. Se eliminan todas las reservas que tenga el usuario actual si aun no han sido confirmadas
 			// ( Si las reservas estan confirmadas no deben tener el indicador de sesion temporal)
@@ -570,11 +569,9 @@ class ApigestionReserva{
 			$cadena_sql = $this->sql->cadena_sql("deleteUnconfirmedSession",$variable['session']);
 			$result = $this->miRecursoDB->ejecutarAcceso($cadena_sql,"");
 
-
 			//b. Se eliminan todas las reservas que no hayan sido confirmadas y que hallan expirado
 			$cadena_sql = $this->sql->cadena_sql("deleteUnconfirmedBookingAll");
 			$result = $this->miRecursoDB->ejecutarAcceso($cadena_sql,"");
-
 			//D. Se valida si la reserva presenta cruce con otra reserva /////////////
 
 
@@ -588,27 +585,24 @@ class ApigestionReserva{
 
 						$cadena_sql = $this->sql->cadena_sql("countRoomsByGroup",$variable);
 						$result = $this->miRecursoDB->ejecutarAcceso($cadena_sql,"busqueda");
-						$maxRooms = $result[0][0]; //total habitaciones
+            $maxRooms = $result[0][0]; //total habitaciones
 
 						//* Consulto el numero de habitaciones reservadas para la fecha
 						//* filtrando por grupo independientemete si tienen o no habitacion asignada
 
 						$cadena_sql = $this->sql->cadena_sql("buscarReservablesOcupados",$variable);
-						$result = $this->miRecursoDB->ejecutarAcceso($cadena_sql,"busqueda");
+						$resultRooms = $this->miRecursoDB->ejecutarAcceso($cadena_sql,"busqueda");
 
-						if(is_array($result)){
-							$busyRooms=count($result); //total habitaciones ocupadas
+						if(is_array($resultRooms)){
+							$busyRooms=count($resultRooms); //total habitaciones ocupadas
 						}else{
 							$busyRooms=0;
 						}
-
-						//$output['message'][]=print_r($result,TRUE);
 						//$output['message'][] = "Habilitadas: {$maxRooms} Ocupadas: {$busyRooms} ";
 						//$output['message'][] = "\nDisponibles:".($maxRooms-$busyRooms);
 						//$output['status'] = "false"; return $output;
 
 						$avalaibleRooms = $maxRooms-$busyRooms;
-
 
 						if($avalaibleRooms<=0){
 							$output['message'][] = "\n No tenemos disponibilidad para esta fecha";
@@ -633,9 +627,7 @@ class ApigestionReserva{
 
 					}
 
-
 			//-------Fin Validacion Cruce--------//
-
 
 			//E. Inserto reserva anonima
 

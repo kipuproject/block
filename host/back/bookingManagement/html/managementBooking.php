@@ -6,29 +6,6 @@ $additionaldata=$this->getAdditionalData($booking['IDBOOKING']);
 
 ?>
 <link rel="stylesheet" type="text/css" href="https://code.jquery.com/ui/1.11.4/themes/smoothness/jquery-ui.css">
-<style>
-	.span6{
-		width:48% !important;
-	}
-	.detailBookingBox img{
-		width:25px;
-	}
-	.detailBookingBox h1{
-		  text-align: right;
-      padding-right: 5%;
-	}
-	.control-label{
-		width: 0 !important;
-	}
-	.pdf{
-		position: relative;
-		top: 3px;
-		left: 76%;
-		}
-	.user-edit input{
-		width:130px;
-	}
-	</style>
 
 <div id="dialog<?php echo $booking['IDBOOKING']; ?>" title="Informacion Pago" style="display:none">
   <p>This is the default dialog which is useful for displaying information. The dialog window can be moved, resized and closed with the 'x' icon.</p>
@@ -54,17 +31,75 @@ $additionaldata=$this->getAdditionalData($booking['IDBOOKING']);
 
 		<div class="box-content nopadding">
 			<form id="form-15" class="form-horizontal form-column form-bordered" method="POST" action="#">
-				<div class="span6">
+				<div class="span12">
 					<div class="control-group" >
-						<label class="control-label" for="textfield">ENTRADA:</label>
+						<label class="control-label" for="textfield">FECHA:</label>
 						<div class="controls">
+              Check In :
 							<div class="input-prepend">
-								<input type="text"  onchange="assignDate($('#chekininput'),$('#chekoutinput'),'<?=$booking['IDBOOKING']?>')" disabled="true"  id="chekininput" value="<?=date("d/m/Y",strtotime($booking['FECHA_INICIO']))?>" /></span>
-								<span class="add-on"><a onclick="$('#chekininput').prop('disabled', false);" ><img src="http://www.assets.kipu.co/img/edit.png"></a>
+								<input type="text" disabled="true"  id="chekininput" value="<?=date("d/m/Y",strtotime($booking['FECHA_INICIO']))?>" />
 							</div>
-							<span class="help-block">Check In dd/mm/YYYY</span>
+              <div class="input-prepend"> Check Out:
+									<input type="text" disabled="true"  id="chekoutinput" value="<?=date("d/m/Y",strtotime($booking['FECHA_FIN']))?>" />
+							</div>
+              
+              <span class="add-on">
+                <a id="editbutton" onclick="editDate()" >
+                  Editar fechas
+                </a>
+                <a id="savebutton" style="display:none" onclick="setDate('<?php echo $formSaraDataURL; ?>')" >
+                  Guardar cambios
+                </a>
+              </span>
 						</div>
 					</div>
+
+				</div>
+        <div class="span6">
+          <div class="control-group">
+						<label class="control-label" for="textfield">OBSERVACIONES:</label>
+						<div class="controls">
+							<div class="">
+									HOTEL:
+									<textarea onchange="assignObservation($(this),'<?=$booking['IDBOOKING']?>')" id="observationvalueinput"><?=$booking['OBSERVATION']?></textarea>
+									<br/>
+									CLIENTE: <?php echo $booking['OBSERVATION_CUSTOMER']; ?>
+							</div>
+							<span class="help-block">
+									<?php
+										if(is_array($additionaldata)):
+											$ad=0;
+											while(isset($additionaldata[$ad][0])):
+												?>
+													[ <?=$additionaldata[$ad]['NAMEFIELD']?>: <?=$additionaldata[$ad]['VALUE']?> ]
+												<?php
+												$ad++;
+											endwhile;
+										endif;
+									?>
+							</span>
+						</div>
+					</div>
+        </div>
+        <div class="span6">
+        
+					<div class="control-group"  >
+						<label class="control-label" for="textfield">ESTADO RESERVA:</label>
+						<div class="controls">
+							<div class="input-prepend">
+									<select name="assignStatusObj" id="assignStatusObj" onchange="assignStatus($(this),'<?=$booking['IDBOOKING']?>')" >
+										<option <?=($booking['STATUS']=="6")?"selected":""?> value="6">PENDIENTE</option>
+										<option <?=($booking['STATUS']=="2")?"selected":""?> value="2">CONFIRMADA</option>
+										<option <?=($booking['STATUS']=="3")?"selected":""?> value="3">CANCELADA</option>
+									</select>
+							</div>
+							<span class="help-block">
+                Procedencia de la Reserva: <?php echo $booking['MEDIO']; ?>
+              </span>
+						</div>
+					</div>        
+        </div>
+				<div class="span6">
 					<div class="control-group">
 						<label class="control-label" for="textfield">HABITACION:</label>
 						<div class="controls">
@@ -88,66 +123,6 @@ $additionaldata=$this->getAdditionalData($booking['IDBOOKING']);
 								</select>
 								<span class="add-on"><a onclick="$('#typeroominput').prop('disabled', false);" ><img src="http://www.assets.kipu.co/img/edit.png"></a></span>
 							</span>
-						</div>
-					</div>
-					<div class="control-group">
-						<label class="control-label" for="textfield">OBSERVACIONES:</label>
-						<div class="controls">
-							<div class="">
-									HOTEL:
-									<textarea onchange="assignObservation($(this),'<?=$booking['IDBOOKING']?>')" id="observationvalueinput"><?=$booking['OBSERVATION']?></textarea>
-									<br/>
-									CLIENTE: <?=$booking['OBSERVATION_CUSTOMER']?>
-							</div>
-							<span class="help-block">
-									<?
-										if(is_array($additionaldata)):
-											$ad=0;
-											while(isset($additionaldata[$ad][0])):
-												?>
-													[ <?=$additionaldata[$ad]['NAMEFIELD']?>: <?=$additionaldata[$ad]['VALUE']?> ]
-												<?
-												$ad++;
-											endwhile;
-										endif;
-									?>
-							</span>
-						</div>
-					</div>
-				</div>
-				<div class="span6">
-					<div class="control-group">
-						<label class="control-label"  for="textfield">SALIDA:</label>
-						<div class="controls">
-							<div class="input-prepend">
-									<input type="text"  onchange="assignDate($('#chekininput'),$('#chekoutinput'),'<?=$booking['IDBOOKING']?>'); $('#chekoutinput').prop('disabled',true);" disabled="true"  id="chekoutinput" value="<?=date("d/m/Y",strtotime($booking['FECHA_FIN']))?>" />
-									<span class="add-on"><a onclick="$('#chekoutinput').prop('disabled', false);" ><img src="http://www.assets.kipu.co/img/edit.png"></a></span>
-							</div>
-							<span class="help-block">Check Out dd/mm/YYYY</span>
-						</div>
-					</div>
-
-					<div class="control-group"  >
-						<label class="control-label" for="textfield">ESTADO RESERVA:</label>
-						<div class="controls">
-							<div class="input-prepend">
-									<select name="assignStatusObj" id="assignStatusObj" onchange="assignStatus($(this),'<?=$booking['IDBOOKING']?>')" >
-										<option <?=($booking['STATUS']=="6")?"selected":""?> value="6">PENDIENTE</option>
-										<option <?=($booking['STATUS']=="2")?"selected":""?> value="2">CONFIRMADA</option>
-										<option <?=($booking['STATUS']=="3")?"selected":""?> value="3">CANCELADA</option>
-									</select>
-							</div>
-							<span class="help-block">estado actual</span>
-						</div>
-					</div>
-					<div class="control-group">
-						<label class="control-label"  for="textfield">ORIGEN:</label>
-						<div class="controls">
-							<div class="input-prepend">
-									<span class="add-on" id="origen"><?=$booking['MEDIO']?></span>
-							</div>
-							<br/><br/>
-							<span class="help-block">Procedencia de la Reserva</span>
 						</div>
 					</div>
 				</div>

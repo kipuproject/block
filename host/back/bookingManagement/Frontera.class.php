@@ -3,8 +3,6 @@ include_once("core/manager/Configurador.class.php");
 include_once("core/auth/Sesion.class.php");
 
 class FronterabookingManagement{
-
-
 	var $ruta;
 	var $sql;
 	var $funcion;
@@ -226,54 +224,45 @@ class FronterabookingManagement{
 			return false;
 		}
 
-		include_once("blocks/host/back/internalBooking/Funcion.class.php");
-
-
 		$variable['IDBOOKING'] = $booking;
-		$variable['COMMERCE']=1;
+		$variable['COMMERCE']=$this->commerce;
+
+    $cadena_sql=$this->sql->cadena_sql("commerceByID",$this->commerce);
+		$commerce=$this->masterResource->ejecutarAcceso($cadena_sql,"busqueda");
 
 		$cadena_sql=$this->sql->cadena_sql("detailBooking",$variable);
 		$result=$this->miRecursoDB->ejecutarAcceso($cadena_sql,"busqueda");
 		$result=$result[0];
 
-		$variable['dataRoomBooking'] = $result['ROOMTYPE']."-".$result['ROOM'];
-		$variable['guestBooking'] = $result['NUMGUEST'];
-		$variable['checkin'] = $chekininput;
-		$variable['checkout'] = $chekoutinput;
-		$variable['no-users']="TRUE";
-		$variable['numRooms']="1";
-		$variable['medioBooking'] = $result['MEDIO'];
-		$variable['valueBooking'] = $result['VALUEBOOKING'];
-		$variable['numGuest'] = $result['NUMGUEST'];
-		$variable['commerce'] = $result['IDCOMMERCE'];
-		$variable['company'] = $result['IDCOMMERCE'];
-		$variable['cliente'] = $result['CLIENT'];
+    $param['api'] = "hbooking";
+		$param['method'] = "validate";
+		$param['key'] = $commerce[0]['APIKEY'];
+		$param['session']=$this->miSesion->getSesionId();
+		$param['adults'] = $result['NUMGUEST'];
+		$param['checkin'] = $chekininput;
+		$param['checkout'] = $chekoutinput;
+		$param['commerce'] = $this->commerce;
+		$param['groupRoom'] = $result['ROOMTYPE'];
+		$param['room'] = $result['ROOM'];
+		$param['kids'] = $result['NUMKIDS'];
+		$site=$this->miConfigurador->getVariableConfiguracion("host").$this->miConfigurador->getVariableConfiguracion("site")."?";
+		$url=$site.http_build_query($param,'','&');
+		$data=file_get_contents($url);
+    $data=json_decode($data);
 
+		if($data->status=="false"){
+    
+			echo $data->message;
+      
+		}elseif($data->status=="true"){
+    
+			$variable['oldBooking'] = $result['IDBOOKING'];
+			$variable['newBooking'] = $data->idbooking;
 
-		$booking=new FuncioninternalBooking();
-		$booking->ruta="blocks/host/back/internalBooking/";
-
-		include_once($booking->ruta."Sql.class.php");
-		$booking->setSql(new SqlinternalBooking);
-
-		$cadena_sql=$this->sql->cadena_sql("inactiveBooking",$variable);
-		$result=$this->miRecursoDB->ejecutarAcceso($cadena_sql,"");
-
-		$booking->procesarReservaItemReservable($variable);
-
-		if($booking->status=="false"){
-			$cadena_sql=$this->sql->cadena_sql("activeBooking",$variable);
-			$result=$this->miRecursoDB->ejecutarAcceso($cadena_sql,"");
-			echo $booking->mensaje;
-
-		}elseif($booking->status=="true"){
-			$variable['oldBooking'] = $variable['IDBOOKING'];
-			$variable['newBooking'] = $booking->id_reserva;
-
-			$cadena_sql=$this->sql->cadena_sql("updateGuest",$variable);
+			$cadena_sql=$this->sql->cadena_sql("updateBookingDates",$variable);
 			$result=$this->miRecursoDB->ejecutarAcceso($cadena_sql,"");
 
-			$cadena_sql=$this->sql->cadena_sql("updatePayment",$variable);
+			$cadena_sql=$this->sql->cadena_sql("inactiveBooking",$variable['newBooking']); 
 			$result=$this->miRecursoDB->ejecutarAcceso($cadena_sql,"");
 
 			echo "Las fechas se actualizaron correctamente \n No olvides verificar el valor de la Reserva";
@@ -283,8 +272,6 @@ class FronterabookingManagement{
 	}
 
 	function assignValue($value,$commerce,$booking){
-
-
 		$variable['value']=filter_var($value,FILTER_SANITIZE_NUMBER_INT);
 		$variable['commerce'] = $commerce;
 		$variable['booking'] = $booking;
@@ -403,7 +390,6 @@ class FronterabookingManagement{
 			$result=$this->miRecursoDB->ejecutarAcceso($cadena_sql,"");
 		}
 
-
 		if($result){
 			echo "El pago se actualizo correctamente";
 		}else{
@@ -477,7 +463,6 @@ class FronterabookingManagement{
 		return $result[0];
 	}
 
-
 	function getAvalaibleRooms($current,$start,$end,$commerce,$group){
 
 		//consulto todas las habitaciones
@@ -509,7 +494,6 @@ class FronterabookingManagement{
 		return $avalaibleRooms;
 	}
 
-
 	function getAdditionalData($booking){
 
 			$variable["commerce"]=1;
@@ -530,7 +514,6 @@ class FronterabookingManagement{
 			return $valuesAdditional;
 	}
 
-
 	function managementBooking($booking,$typeRooms){
 
 		$cadena_sql=$this->sql->cadena_sql("allUsers","");
@@ -548,12 +531,12 @@ class FronterabookingManagement{
 
 		$users=$this->orderArrayKeyBy($users,"IDUUSER");
 
-		$formSaraDataURL.="pagina=bookingManagement";
+    $formSaraDataURL="jxajax=main";
+		$formSaraDataURL.="&pagina=bookingManagement";
 		$formSaraDataURL.="&bloque=bookingManagement";
-		$formSaraDataURL.="&action=bookingManagement";
+		$formSaraDataURL.="&saramodule=host";
 		$formSaraDataURL.="&bloqueGrupo=host/back";
-	 	$formSaraDataURL.="&idbooking=".$booking['IDBOOKING'];
-	 	$formSaraDataURL.="&optionBooking=voucher";
+	 	$formSaraDataURL.="&booking=".$booking['IDBOOKING'];
 		$formSaraDataURL=$this->miConfigurador->fabricaConexiones->crypto->codificar_url($formSaraDataURL,$this->enlace);
 
 		//$formSaraDataService.="pagina=bookingManagement";
@@ -603,11 +586,11 @@ class FronterabookingManagement{
 
 	function showViewBookingList(){
 
-		$cadena_sql=$this->sql->cadena_sql("allBookingsByCompany",$this->commerce);
+		$cadena_sql=$this->sql->cadena_sql("allBookingsByCommerce",$this->commerce);
 		$bookings=$this->miRecursoDB->ejecutarAcceso($cadena_sql,"busqueda");
 
-		$cadena_sql=$this->sql->cadena_sql("allUsers","");
-		$users=$this->miRecursoDB->ejecutarAcceso($cadena_sql,"busqueda");
+		$cadena_sql=$this->sql->cadena_sql("allUsers",""); 
+		$users=$this->masterResource->ejecutarAcceso($cadena_sql,"busqueda");
 		$users=$this->orderArrayKeyBy($users,"IDUUSER");
 
 		$formSaraDataURL="jxajax=main";
@@ -617,14 +600,13 @@ class FronterabookingManagement{
 	  $formSaraDataURL.="&saramodule=host";
 		$formSaraDataURL=$this->miConfigurador->fabricaConexiones->crypto->codificar_url($formSaraDataURL,$this->enlace);
 
-		$formSaraDataBookingList="pagina=bookingManagement";
-	 	$formSaraDataBookingList.="&opcion=bookinglist";
-	 	$formSaraDataBookingList.="&saramodule=host";
-		$formSaraDataBookingList=$this->miConfigurador->fabricaConexiones->crypto->codificar_url($formSaraDataBookingList,$this->enlace);
+		$formSaraDataBookingList  = "pagina=bookingManagement";
+	 	$formSaraDataBookingList .= "&opcion=bookinglist";
+	 	$formSaraDataBookingList .= "&saramodule=host";
+		$formSaraDataBookingList  = $this->miConfigurador->fabricaConexiones->crypto->codificar_url($formSaraDataBookingList,$this->enlace);
 
 		include_once($this->ruta."/html/viewList.php");
 	}
-
 
 	function paintBookingForm($month,$year,$commerce){
 
@@ -637,20 +619,16 @@ class FronterabookingManagement{
 		$variable['LastDay'] = mktime(23,59,59, $month,$numDaysMonth,$year);
 		$variable['commerce'] = $commerce;
 
-
 		$cadena_sql = $this->sql->cadena_sql("typeBookingCommerce",$variable['commerce']);
 		$type = $this->masterResource->ejecutarAcceso($cadena_sql,"busqueda");
-
 
 		//si la reserva es por Numero de Personas se consulta la tabla reservas
 
 			$cadena_sql = $this->sql->cadena_sql("bookingsByNP",$variable);
 			$bookings=$this->miRecursoDB->ejecutarAcceso($cadena_sql,"busqueda");
 
-
 			//recorremos las reservas para calcular la duracion de cada una
 			if(is_array($bookings)){
-
 				$b=0;
 				while(isset($bookings[$b][0])){
 					$duration = ($bookings[$b]['DATEEND'])-($bookings[$b]['DATESTART']);
@@ -691,13 +669,10 @@ class FronterabookingManagement{
 				for($j;$j<=$numDaysMonth;$j++){
 					$grid['BOOKING'][$j][]=mktime(0,0,0,$month,$j,$year)."-".$rooms[$i]['IDROOM'];
 				}
-				$i++;
+				$i++; 
 			}
-
 			include_once($this->ruta."/html/formNP.php");
 	}
-
-
 
 	function orderArrayKeyBy($array,$key){
 

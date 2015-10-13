@@ -102,3 +102,29 @@ font-weight: bold;
 .return-btn{
 	display:none;
 }
+
+.input-append, .input-prepend {
+    font-size: 1em !important;
+}
+
+	.span6{
+		width:48% !important;
+	}
+	.detailBookingBox img{
+		width:25px;
+	}
+	.detailBookingBox h1{
+		  text-align: right;
+      padding-right: 5%;
+	}
+	.control-label{
+		width: 0 !important;
+	}
+	.pdf{
+		position: relative;
+		top: 3px;
+		left: 76%;
+		}
+	.user-edit input{
+		width:130px;
+	}

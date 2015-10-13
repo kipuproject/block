@@ -34,68 +34,14 @@ class SqlNavigation extends sql {
 		 
 		switch($tipo) {
 			 
-			/**
-			 * Clausulas específicas
-			 */
-			 
-			case "userList":
-				$cadena_sql="SELECT ";
-				$cadena_sql.="u.id_usuario ID, ";
-				$cadena_sql.="CONCAT(u.nombre,' ',apellido) NOMBRE,";
-				$cadena_sql.="GROUP_CONCAT( DISTINCT (eu.id_establecimiento))  EMPRESA, ";				 
-				$cadena_sql.="correo CORREO, ";
-				$cadena_sql.="GROUP_CONCAT( DISTINCT (s.nombre) ) ROL, ";				 				 
-				$cadena_sql.="u.estado ESTADO ";				 
-				$cadena_sql.="FROM ";
-				$cadena_sql.=$prefijo."usuario u ";
-				$cadena_sql.="INNER JOIN ";
-				$cadena_sql.=$prefijo."usuario_subsistema us ";
-				$cadena_sql.="ON ";
-				$cadena_sql.="u.id_usuario = us.id_usuario ";
-				$cadena_sql.="INNER JOIN ";
-				$cadena_sql.=$prefijo."subsistema s ";
-				$cadena_sql.="ON ";
-				$cadena_sql.="us.id_subsistema = s.id_subsistema ";
-				$cadena_sql.="LEFT JOIN ";
-				$cadena_sql.=$prefijo."usuario_establecimiento eu ";
-				$cadena_sql.="ON ";
-				$cadena_sql.="u.id_usuario = eu.id_usuario ";
-				$cadena_sql.="GROUP BY u.id_usuario ";
-				break;
-
-			case "userListByID":
-				$cadena_sql="SELECT ";
-				$cadena_sql.="u.id_usuario ID, ";
-				$cadena_sql.="u.nombre NOMBRE,";
-				$cadena_sql.="u.apellido APELLIDO,";
-				$cadena_sql.="GROUP_CONCAT( DISTINCT (eu.id_establecimiento))  EMPRESA, ";				 
-				$cadena_sql.="correo CORREO, ";
-				$cadena_sql.="GROUP_CONCAT( DISTINCT (s.nombre) ) ROL, ";				 				 
-				$cadena_sql.="u.estado ESTADO ";				 
-				$cadena_sql.="FROM ";
-				$cadena_sql.=$prefijo."usuario u ";
-				$cadena_sql.="INNER JOIN ";
-				$cadena_sql.=$prefijo."usuario_subsistema us ";
-				$cadena_sql.="ON ";
-				$cadena_sql.="u.id_usuario = us.id_usuario ";
-				$cadena_sql.="INNER JOIN ";
-				$cadena_sql.=$prefijo."subsistema s ";
-				$cadena_sql.="ON ";
-				$cadena_sql.="us.id_subsistema = s.id_subsistema ";
-				$cadena_sql.="LEFT JOIN ";
-				$cadena_sql.=$prefijo."usuario_establecimiento eu ";
-				$cadena_sql.="ON ";
-				$cadena_sql.="u.id_usuario = eu.id_usuario ";
-				$cadena_sql.="WHERE u.id_usuario=".$variable;
-				$cadena_sql.=" GROUP BY u.id_usuario ";
-				break;
+			
 
 			case "roleList":
 				$cadena_sql="SELECT ";
 				$cadena_sql.="id_subsistema ID, ";
 				$cadena_sql.="nombre ROL ";
-				$cadena_sql.="FROM ";
-				$cadena_sql.=$prefijo."subsistema ";
+				$cadena_sql.="FROM "; 
+				$cadena_sql.=$prefijo."role ";
 				break;
 
 			case "menuList":
@@ -113,23 +59,6 @@ class SqlNavigation extends sql {
 				$cadena_sql.=$prefijo."menu m "; 
 				$cadena_sql.="WHERE ";
 				$cadena_sql.="m.rol ='".$variable."' ";
-				
-				/*$cadena_sql.="INNER JOIN ";
-				$cadena_sql.=$prefijo."subsistema s ";
-				$cadena_sql.="ON ";
-				$cadena_sql.="m.rol = s.id_subsistema ";
-				$cadena_sql.="WHERE ";
-				$cadena_sql.="m.rol ='".$variable."' ";*/
-
-				break;
-			case "buscarUsuario":
-				$cadena_sql="SELECT ";
-				$cadena_sql.="FECHA_CREACION, ";
-				$cadena_sql.="PRIMER_NOMBRE ";				 
-				$cadena_sql.="FROM ";
-				$cadena_sql.="USUARIOS ";
-				$cadena_sql.="WHERE ";
-				$cadena_sql.="`PRIMER_NOMBRE` ='".$variable."' ";
 				break;
 
 

@@ -51,7 +51,7 @@ class SqlgestionReserva extends sql {
 								
 			case "buscarReservablesOcupados":
 				$cadena_sql="SELECT  ";
-				$cadena_sql.="count(id_reservable) ";
+				$cadena_sql.="'S' ";
 				$cadena_sql.="FROM ";
 				$cadena_sql.=$prefijo."reserva ";
 				$cadena_sql.="INNER JOIN ";
@@ -71,8 +71,6 @@ class SqlgestionReserva extends sql {
 				$cadena_sql.=") ";
 				$cadena_sql.="AND ";
 				$cadena_sql.=$prefijo."reserva.estado_reserva NOT IN (3,4) "; //la reserva no contenga los estados FINALIZADO Y CANCELADO
-				$cadena_sql.="AND ";
-				$cadena_sql.=$prefijo."reserva.establecimiento='".$variable["company"]."' ";
 				$cadena_sql.="AND ";
 				$cadena_sql.=$prefijo."reserva.tipo_reserva='".$variable["commerce"]."' ";
 				$cadena_sql.="AND ";
