@@ -9,7 +9,7 @@ width: 90%;
 border: 1px solid #2E2793;
 margin: auto;
 border-radius: 20px;
-margin-top:2% !important; 
+margin-top:2% !important;
 
 }
 
@@ -48,7 +48,6 @@ font-weight: bold;
 }
 
 .labelSup{
-
 	color:#000 !important;
 	width:100% !important;
 	border:1px solid #CCCCCC;
@@ -70,12 +69,12 @@ font-weight: bold;
 }
 
 .black{
-	background:#000000; 
+	background:#000000;
 	color:#FFFFFF;
 }
 
 .yellow{
-	background:#FFFF00; 
+	background:#FFFF00;
 	color:#000;
 }
 

@@ -1,19 +1,26 @@
 <form action="index.php" method="POST" class='form-horizontal form-bordered'>
   <div class="control-group" style="width:20%; float:left">
     <div for="textfield" class="labelSup">/</div>
-    <?php foreach($grid['LABELS'] as $idlabelroom=>$label): ?>
-        <div  id="room_<?=$idlabelroom?>" class="labelSup "> 
+    <?php
+      $row=1;
+      foreach($grid['LABELS'] as $idlabelroom=>$label):
+    ?>
+        <div  id="room_<?=$idlabelroom?>" class="labelSup r<?=$row?>  ">
           <?=$label?>
         </div>
-    <?php endforeach; ?>
+    <?php
+      $row++;
+      endforeach;
+    ?>
   </div>
-  <?php 
+  <?php
   for($i=1;$i<=$numDaysMonth;$i++):
   ?>
   <div class="control-group" style="width:<?=$widthCell?>%; float:left"> <? /* width:<?=$widthCell?>% */?>
-    <div for="textfield" class="labelSup" ><?=$i?></div>
-    <?php 
-      foreach($grid['BOOKING'][$i] as $value): 
+    <div for="textfield" class="labelSup c<?=$i?>" ><?=$i?></div>
+    <?php
+      $row=1;
+      foreach($grid['BOOKING'][$i] as $value):
 
         $totalAdults = 0;
         $totalChildren = 0;
@@ -22,10 +29,10 @@
 
         if(isset($bookings[$value])){
           $numBookings = count($bookings[$value]);
-          
+
           $bbc = 0; //se recorren todas las reservas q pertenecen a la misma celda
           while(isset($bookings[$value][$bbc]['IDCELL'])){
-            $totalAdults = $bookings[$value][$bbc]['NUMGUEST']+$totalAdults;	
+            $totalAdults = $bookings[$value][$bbc]['NUMGUEST']+$totalAdults;
             $totalChildren = $bookings[$value][$bbc]['NUMKIDS']+$totalChildren;
             $bbc++;
           }
@@ -39,7 +46,7 @@
             $classColor = "grey";
           }
 
-          $state = $bookings[$value][0]['STATEBOOKING']; 
+          $state = $bookings[$value][0]['STATEBOOKING'];
 
           if($state == 5){
 
@@ -60,7 +67,7 @@
         }
       ?>
         <div style="width:95%; border:1px solid #FFFFFF" >
-          <div id='<?php echo $value; ?>-<?php echo $bookings[$value][0]['DATESTART']; ?>' title="Adultos:<?=$totalAdults?> Niños:<?=$totalChildren?>" class="clickableElement <?=$classColor?>"  id="">
+          <div row="r<?=$row?>" col="c<?=$i?>"  id='<?php echo $value; ?>-<?php echo $bookings[$value][0]['DATESTART']; ?>' title="Adultos:<?=$totalAdults?> Niños:<?=$totalChildren?>" class="clickableElement <?=$classColor?>" >
             <?php
               if($state<>5){
                 echo $numBookings;
@@ -68,9 +75,10 @@
                 echo "B";
               }
             ?>
-          </div>	
-        </div>	
-    <?php 
+          </div>
+        </div>
+    <?php
+      $row++;
       endforeach;
     ?>
   </div>

@@ -4,7 +4,7 @@
 			type: 'GET',
 			url: '<?=$formSaraDataURL?>',
 			async: false,
-			data: { 
+			data: {
 				optionBooking : "assignStatus",
 				status:obj.val(),
 				booking:booking,
@@ -15,13 +15,13 @@
 			}
 		});
 	}
-	
+
 	function assignStatusPayment(obj,booking){
 	   $.ajax({
 			type: 'GET',
 			url: '<?=$formSaraDataURL?>',
 			async: false,
-			data: { 
+			data: {
 				optionBooking : "assignStatusPayment",
 				paymentstatus:obj.val(),
 				booking:booking,
@@ -32,14 +32,14 @@
 			}
 		});
 	}
-	
+
 	function assignOnlineValue(obj,booking){
 
 	   $.ajax({
 			type: 'GET',
 			url: '<?=$formSaraDataURL?>',
-			async: false, 
-			data: { 
+			async: false,
+			data: {
 				optionBooking : "assignOnlineValue",
 				onlinepayment:obj.val(),
 				booking:booking,
@@ -50,14 +50,14 @@
 			}
 		});
 	}
-  
+
 	function assignDate(chekininput,chekoutinput,booking){
 
 	   $.ajax({
 			type: 'GET',
 			url: '<?=$formSaraDataURL?>',
 			async: false,
-			data: { 
+			data: {
 				optionBooking : "assignDate",
 				chekininput:chekininput.val(),
 				chekoutinput:chekoutinput.val(),
@@ -66,19 +66,19 @@
 				},
 			success: function(respuesta) {
 				alert(respuesta);
-				location.reload(); 
+				location.reload();
 			}
 		});
-		
-		
+
+
 	}
-	
+
 	function assignRoom(obj,booking){
 	   $.ajax({
 			type: 'GET',
 			url: '<?=$formSaraDataURL?>',
 			async: false,
-			data: { 
+			data: {
 				optionBooking : "assignRoom",
 				room:obj.val(),
 				booking:booking,
@@ -89,13 +89,13 @@
 			}
 		});
 	}
-	
+
 	function assignTypeRoom(obj,booking){
 	   $.ajax({
 			type: 'GET',
 			url: '<?=$formSaraDataURL?>',
 			async: false,
-			data: { 
+			data: {
 				optionBooking : "assignTypeRoom",
 				typeroom:obj.val(),
 				booking:booking,
@@ -106,13 +106,13 @@
 			}
 		});
 	}
-	
+
 	function updateResponsible(form){
 		$.ajax({
 			type: 'GET',
 			url: '<?=$formSaraDataURL?>',
 			async: false,
-			data: { 
+			data: {
 				optionBooking : "updateResponsible",
 				dni :  $(form+" #u-main-dni").val(),
 				id :  $(form+" #u-value").val(),
@@ -134,7 +134,7 @@
 			type: 'GET',
 			url: '<?=$formSaraDataURL?>',
 			async: false,
-			data: { 
+			data: {
 				optionBooking : "assignPaymentValue",
 				value:obj.val(),
 				booking:booking,
@@ -144,15 +144,15 @@
 				alert(respuesta);
 			}
 		});
-	}	
-	
+	}
+
 	function assignObservation(obj,booking){
- 
+
 	   $.ajax({
 			type: 'GET',
 			url: '<?=$formSaraDataURL?>',
 			async: false,
-			data: { 
+			data: {
 				optionBooking : "assignObservation",
 				value:obj.val(),
 				booking:booking,
@@ -162,15 +162,15 @@
 				alert(respuesta);
 			}
 		});
-	}	
-	
+	}
+
 	function assignValue(obj,booking){
 
 	   $.ajax({
 			type: 'GET',
 			url: '<?=$formSaraDataURL?>',
 			async: false,
-			data: { 
+			data: {
 				optionBooking : "assignValue",
 				value:obj.val(),
 				booking:booking,
@@ -179,12 +179,12 @@
 			success: function(respuesta) {
 				alert(respuesta);
 				$('#valueinput').prop('disabled',true);
-				$('#valuenightinput').val(($('#valueinput').val())/($('#nights').html())); 
+				$('#valuenightinput').val(($('#valueinput').val())/($('#nights').html()));
 			}
 		});
 	}
 
-	
+
 	$(document).ready(function(){
 		  var isDown = false;   // Tracks status of mouse button
 			$(function() {
@@ -196,16 +196,39 @@
 		  .mouseup(function() {
         isDown = false;    // When mouse goes up, set isDown to false
 		  });
+
+
+
+
 		  $(".clickableElement").live('mouseover', function() {
-			if(isDown) {        // Only change css if mouse is down
-			  selection($(this));
-			}
+
+		  	row = $(this).attr("row");
+				col = $(this).attr("col");
+
+		  	if(isDown) {        // Only change css if mouse is down
+				  selection($(this));
+				}else{
+
+					$("."+row).css({"background":"yellowgreen"});
+					$("."+col).css({"background":"yellowgreen"});
+				}
 		  });
+
+		  $(".clickableElement").live('mouseout', function() {
+
+		  	row = $(this).attr("row");
+				col = $(this).attr("col");
+
+		  	$("."+row).css({"background":"#ECECEC"});
+				$("."+col).css({"background":"#ECECEC"});
+
+		  });
+
 		  $(".clickableElement").live('mousedown', function() {
 			   selection($(this));
 		  });
-		   
-		   
+
+
 		function selection(obj){
 
 			if(obj.hasClass("activeBook")){
@@ -213,36 +236,36 @@
 			   obj.removeClass("activeBook");
 			}else{
 			   obj.css({"border":"1px solid #FF0000"});
-			   obj.addClass("activeBook"); 
-			}   
+			   obj.addClass("activeBook");
+			}
 		}
 		$(function(){
-		   var my_books = $('.activeBook'); 
+		   var my_books = $('.activeBook');
 		   $('#show_hide').click(function(){
 			   my_books.each(function(){
-				   var $this = $(this); 
+				   var $this = $(this);
 				   if( $this.is(':visible') )
-					   $this.hide(); 
-				   else 
-					   $this.show(); 
-			   }); 
-		   }); 
-		}); 
+					   $this.hide();
+				   else
+					   $this.show();
+			   });
+		   });
+		});
 
 		$('.booking-filter').on('change', function() {
 			reloadCalendar();
 		});
-		
+
 		$('.return-btn').on('click', function() {
 			reloadCalendar();
 		});
-		
+
 		function reloadCalendar(){
 			$.ajax({
 				type: 'GET',
 				url: '<?=$formSaraDataURL?>',
 				async: false,
-				data: { 
+				data: {
 					optionBooking : "reloadForm",
 					month:$("#booking-month").val(),
 					year:$("#booking-year").val(),
@@ -256,7 +279,7 @@
 				}
 			});
 		}
-	   
+
 	});
 </script>
 
@@ -267,7 +290,7 @@
 			</li>
 	</ul>
 	<br/><br/><br/>
-	
+
 <div class="titulob">
 	<div class="tituloimg">
 		<h1>ADMINISTRAR DISPONIBILIDAD</h1>
@@ -277,11 +300,11 @@
 <div class="box box-color box-bordered no-seleccionable" >
 	<div class="box-title">
 		<h3>
-			<select class="booking-filter" style="width:90px" id="booking-year"> 
+			<select class="booking-filter" style="width:90px" id="booking-year">
 				<option <?=($year=="2014")?"selected":""?>  VALUE="2014" >2014</option>
 				<option <?=($year=="2015")?"selected":""?>  VALUE="2015" >2015</option>
 			</select>
-			
+
 			<select class="booking-filter" id="booking-month">
 				<option <?=($month=="1")?"selected":""?>  VALUE="1" >ENERO</option>
 				<option <?=($month=="2")?"selected":""?>  VALUE="2" >FEBRERO</option>
@@ -297,7 +320,7 @@
 				<option <?=($month=="12")?"selected":""?>  VALUE="12" >DICIEMBRE</option>
 			</select>
 		</h3>
-		<input type="hidden" id="booking-commerce"  value="<?=$this->commerce?>"/> 
+		<input type="hidden" id="booking-commerce"  value="<?=$this->commerce?>"/>
 		<ul class="main-nav menu_calendar">
 			<li class="btn-calendar">
 				<a onclick="showDetail('<?php echo $formSaraDataURL; ?>')"><span>VER</span></a>
@@ -315,8 +338,8 @@
 				<a  onclick="unselect('<?php echo $formSaraDataURL; ?>')"><span>REGRESAR</span></a>
 			</li>
 		</ul>
-	</div>		
-	<div id="booking-calendar" class="box-content nopadding">		
+	</div>
+	<div id="booking-calendar" class="box-content nopadding">
 		<?=$this->paintBookingForm($month,$year,$this->commerce)?>
 	</div>
 </div>
