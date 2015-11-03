@@ -134,32 +134,32 @@
 											<div class="control-group">
 												<label for="firstname" class="control-label">Nombre y Apellido</label>
 												<div class="controls" id="div-nameCustomer" >
-													<input  size="50" type="text"  name="nameCustomer" id="" value="" class="">*
+													<input  size="50" type="text"  name="nameCustomer" id="nameCustomer" value="" class="">*
 												</div>
 											</div>
 											<div class="control-group">
 												<label for="firstname" class="control-label">Fecha de Nacimiento</label>
 												<div class="controls" id="div-dateCustomer" >
-													<input  size="50" type="date"  name="dateCustomer" id="" value="" class="">
+													<input  size="50" type="date"  name="dateCustomer" id="dateCustomer" value="" class="">
 												</div>
 											</div>
 
 											<div class="control-group" >
 												<label for="anotherelem" class="control-label">Correo</label>
 												<div class="controls" id="div-emailCustomer">
-													<input onchange="updateDataCustomer()" size="50" type="text"  name="emailCustomer" id="" value="" class="">*
+													<input onchange="updateDataCustomer()" size="50" type="text"  name="emailCustomer" id="emailCustomer" value="" class="">*
  	 											</div>
 											</div>
 											<div class="control-group" >
 												<label for="additionalfield" class="control-label">Telefono</label>
 												<div class="controls" id="div-phoneCustomer">
-													<input  size="50" type="text"  name="phoneCustomer" id="" value="" class="">
+													<input  size="50" type="text"  name="phoneCustomer" id="phoneCustomer" value="" class="">
 												</div>
 											</div>
 											<div class="control-group" >
 												<label for="anotherelem" class="control-label">Nacionalidad</label>
 												<div class="controls" id="div-countryCustomer">
-													<input  size="50" type="text" required="true" name="countryCustomer" id="" value="" class="">
+													<input  size="50" type="text" required="true" name="countryCustomer" id="countryCustomer" value="" class="">
 												</div>
 											</div>
 

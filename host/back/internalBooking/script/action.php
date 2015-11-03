@@ -58,8 +58,15 @@
 					data: { 
 						idCustomer:$("#idCustomer").val(),
 					},
-					success: function(respuesta) {
-						$("#dataCustomer").html(respuesta);
+					success: function(response) {
+            myJson=$.parseJSON(response);
+            if(myJson.status == "true") {
+              $("#nameCustomer").val(myJson.name);
+              $("#dateCustomer").val(myJson.birthday);
+              $("#emailCustomer").val(myJson.email);
+              $("#phoneCustomer").val(myJson.phone);
+              $("#countryCustomer").val(myJson.country);
+            }  
 					}
 				});
 			}
