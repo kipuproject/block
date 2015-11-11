@@ -15,8 +15,7 @@ class FronteracompanyManagement{
 	var $miConfigurador;
 	var $companies;
 
-	function __construct()
-	{
+	function __construct(){
 
 		$this->miConfigurador=Configurador::singleton();
 		$this->enlace=$this->miConfigurador->getVariableConfiguracion("host").$this->miConfigurador->getVariableConfiguracion("site")."?".$this->miConfigurador->getVariableConfiguracion("enlace");
@@ -28,7 +27,7 @@ class FronteracompanyManagement{
 		$this->masterResource=$this->miConfigurador->fabricaConexiones->getRecursoDB("master");
 
 		if($this->idSesion==""){
-			echo "Sesion cerrada<br/>";
+			echo "Sesion cerrada";
 		}
 
 	}
@@ -45,8 +44,7 @@ class FronteracompanyManagement{
 		$this->formulario=$formulario;
 	}
 
-	function setSql($a)
-	{
+	function setSql($a){
 		$this->sql=$a;
 
 	}
@@ -72,11 +70,10 @@ class FronteracompanyManagement{
 		$formSaraData="jxajax=main";
 		$formSaraData.="&action=companyManagement";
 		$formSaraData.="&bloque=companyManagement";
-	   	$formSaraData.="&bloqueGrupo=people/back";
+	  $formSaraData.="&bloqueGrupo=people/back";
 		$formSaraData.="&optionProcess=processDelete";
 		$formSaraData.="&optionValue=".$id;
 		$link['delete']=$this->miConfigurador->fabricaConexiones->crypto->codificar_url($formSaraData,$this->enlace);
-
 
 		$formSaraData="pagina=companyManagement";
 		$formSaraData.="&bloque=companyManagement";
@@ -96,9 +93,7 @@ class FronteracompanyManagement{
 		include_once("core/builder/FormularioHtml.class.php");
 
 		$this->ruta=$this->miConfigurador->getVariableConfiguracion("rutaBloque");
-
 		$this->miFormulario=new formularioHtml();
-
 		$option=isset($_REQUEST['option'])?$_REQUEST['option']:"edit";
 
 		switch($option){
@@ -122,105 +117,6 @@ class FronteracompanyManagement{
 
 				break;
 		}
-
-	}
-
-
-	/**
-	* Consulta el listado de establecimientos asociados a cada usuario tambien denominado nivel de acceos
-	*/
-	function companyByUser(){
-
-		$cadena_sql=$this->sql->cadena_sql("companyByUser",$this->idSesion);
-		$result=$this->miRecursoDB->ejecutarAcceso($cadena_sql,"busqueda");
-
-		$cadena_sql=$this->sql->cadena_sql("companyListAll");
-		$allCompanies=$this->miRecursoDB->ejecutarAcceso($cadena_sql,"busqueda");
-
-
-		$this->companies=array();
-
-
-		$i=0;
-		while(isset($result[$i]['IDCOMPANY'])){
-
-			$this->companyByParent($result[$i]['IDCOMPANY'],$allCompanies);
-
-			$i++;
-		}
-
-		return $this->companies;
-	}
-
-
-	function companyByParent($parent,$allCompanies) {
-
-		/*$cadena_sql=$this->sql->cadena_sql("companyList",$parent);
-		$result=$this->miRecursoDB->ejecutarAcceso($cadena_sql,"busqueda");*/
-		$allCompaniesOrderByParent=$this->orderArrayKeyBy($allCompanies,"IDPARENT");
-
-		//si el id tiene hijos asociados recorremos sus hijos
-		if(array_key_exists($parent,$allCompaniesOrderByParent)){
-
-			foreach($allCompaniesOrderByParent[$parent] as $key=>$value){
-				$this->companyByParent($value['IDCOMPANY'],$allCompanies);
-			}
-
-		}
-		/*if(is_array($result)){
-
-			$i=0;
-			while(isset($result[$i]['IDCOMPANY'])){
-
-				$this->companyByParent($result[$i]['IDCOMPANY'],$allCompanies);
-
-				$i++;
-			}
-
-		}*/else{
-
-			//si el id no tiene hijos entonces lo agregamos a las empresas o establecimientos q pertenecen al usuario
-			$this->companies[]=$parent;
-
-		}
-
-
-	}
-
-
-
-	function loadFiltersByCommerce($type,$idcommerce) {
-
-		$filter=new generadorFiltros();
-		$component1=$filter->filterComponentList('GTR_HOTELES');
-		$component2=$filter->filterComponentList('GTR_UBICACION');
-		$component=array_merge($component1,$component2);
-
-		$component=$this->orderArrayKeyBy($component,"NOMBRE_COMPONENTE");
-
-		$cadena_sql=$this->sql->cadena_sql("commerceFilterList",$idcommerce);
-		$commerce=$this->masterResource->ejecutarAcceso($cadena_sql,"busqueda");
- 		$commerce=$this->orderArrayKeyBy($commerce,"IDOPTION");
-
-
-		//se rescatan las opciones listado principal  si la opcion la encontramos las opciones asociadas al comercio
-		//marcamos la opcion como true
-
-		foreach($component as $keyComponent=>$option){
-			foreach($option as $keyOption=>$value){
-
-				if (array_key_exists($value["ID_OPCION"],$commerce)){
-
-				 	$component[$keyComponent][$keyOption]["CHECKED"]="true";
-
-				}else{
-
-				 	$component[$keyComponent][$keyOption]["CHECKED"]="false";
-
-				}
-			}
-		}
-	  return $component;
 
 	}
 
@@ -272,7 +168,7 @@ class FronteracompanyManagement{
 	}
 
 
-	function showView($id){ 
+	function showView($id){
 
 		$cadena_sql=$this->sql->cadena_sql("companyListbyID",$id);
 		$company=$this->miRecursoDB->ejecutarAcceso($cadena_sql,"busqueda");
@@ -284,9 +180,6 @@ class FronteracompanyManagement{
 
 	function showNewCommerce($idCompany,$typeCommerce,$reload){
 
-		/*$cadena_sql=$this->sql->cadena_sql("companyListbyID",$id);
-		$company=$this->miRecursoDB->ejecutarAcceso($cadena_sql,"busqueda");
-		$company=$company[0];*/
 
 		$formSaraData="bloque=companyManagement";
 		$formSaraData.="&bloqueGrupo=host/back";

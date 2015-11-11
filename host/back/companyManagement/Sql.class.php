@@ -12,28 +12,28 @@ include_once("core/connection/Sql.class.php");
 //en camel case precedida por la palabra sql
 
 class SqlcompanyManagement extends sql {
-	
-	
+
+
 	var $miConfigurador;
-	
-	
+
+
 	function __construct(){
 		$this->miConfigurador=Configurador::singleton();
 	}
-	
+
 
 	function cadena_sql($tipo,$variable="") {
-		 
+
 		/**
 		 * 1. Revisar las variables para evitar SQL Injection
 		 *
 		 */
-		
+
 		$prefijo=$this->miConfigurador->getVariableConfiguracion("prefijo");
 
-		 
+
 		switch($tipo) {
-			 
+
 			/**
 			 * Clausulas específicas
 			 */
@@ -85,7 +85,7 @@ class SqlcompanyManagement extends sql {
 				$cadena_sql.="'".$variable['files_folder']."' ";
 				$cadena_sql.=")";
 				break;
-				
+
 			case "companyByUser":
 				$cadena_sql="SELECT ";
 				$cadena_sql.="u.id_usuario IDUSER, ";
@@ -112,7 +112,7 @@ class SqlcompanyManagement extends sql {
 				$cadena_sql.=$prefijo."establecimiento ";
 				$cadena_sql.="WHERE id_parent=".$variable;
 				break;
-				
+
 			case "categoryListCommerce":
 				$cadena_sql="SELECT ";
 				$cadena_sql.="id_claTipoReserva IDCATCOMMERCE, ";
@@ -122,7 +122,7 @@ class SqlcompanyManagement extends sql {
 				$cadena_sql.="WHERE estado='1'";
 				break;
 
-				
+
 			case "updateDataCompany":
 				$cadena_sql="UPDATE ";
 				$cadena_sql.=$prefijo."establecimiento ";
@@ -156,11 +156,11 @@ class SqlcompanyManagement extends sql {
 				$cadena_sql.="estado='".$variable['commercestatus']."', ";
 				$cadena_sql.="latitud='".$variable['latitude']."', ";
 				$cadena_sql.="longitud='".$variable['longitude']."' ";
-				
+
 				$cadena_sql.="WHERE id_tipoReserva=".$variable['optionValue'];
 				break;
-			
-			
+
+
 			case "updateDataCommerceMenu":
 				$cadena_sql="UPDATE ";
 				$cadena_sql.=$prefijo."commerce ";
@@ -168,7 +168,7 @@ class SqlcompanyManagement extends sql {
 				$cadena_sql.="menu='".$variable['menu']."' ";
 				$cadena_sql.="WHERE id_tipoReserva=".$variable['optionValue'];
 				break;
-				
+
 			case "updateDataCommerceLogo":
 				$cadena_sql="UPDATE ";
 				$cadena_sql.=$prefijo."commerce ";
@@ -176,16 +176,20 @@ class SqlcompanyManagement extends sql {
 				$cadena_sql.="imagen='".$variable['logo']."' ";
 				$cadena_sql.="WHERE id_tipoReserva=".$variable['optionValue'];
 				break;
-				
-				
-			case "updateDataCommerceTime":
+
+
+			case "updateDataCommerceAditional":
 				$cadena_sql="UPDATE ";
 				$cadena_sql.=$prefijo."commerce ";
 				$cadena_sql.="SET ";
 				$cadena_sql.="politicas_pago='".$variable['ppago']."', ";
 				$cadena_sql.="hora_inicio='".$variable['horapertura']."', ";
-				$cadena_sql.="hora_cierre='".$variable['horacierre']."', "; 
+				$cadena_sql.="hora_cierre='".$variable['horacierre']."', ";
 				$cadena_sql.="link_comentarios='".$variable['linkcomments']."', ";
+				$cadena_sql.="payment_hotel='".$variable['payment-hotel']."', ";
+				$cadena_sql.="payment_bank='".$variable['payment-bank']."', ";
+				$cadena_sql.="payment_payu='".$variable['payment-payu']."', ";
+				$cadena_sql.="payment_davivienda='".$variable['payment-davivienda']."', ";
 				$cadena_sql.="politicas_especiales='".$variable['pespeciales']."' ";
 				$cadena_sql.="WHERE id_tipoReserva=".$variable['optionValue'];
 				break;
@@ -209,8 +213,8 @@ class SqlcompanyManagement extends sql {
 				$cadena_sql.="FROM ";
 				$cadena_sql.=$prefijo."commerce  ";
 				$cadena_sql.="WHERE id_establecimiento=".$variable['optionValue'];
-				break; 
-				
+				break;
+
 			case "insertDataCommerceFeatures":
 				$cadena_sql="INSERT INTO ";
 				$cadena_sql.=$prefijo."tipo_reserva_filtrador  ";
@@ -260,12 +264,12 @@ class SqlcompanyManagement extends sql {
 				$cadena_sql.="horario HOURLABEL, ";
 				$cadena_sql.="telefono PHONES, ";
 				$cadena_sql.="imagen IMAGE, ";
-				
+
 				$cadena_sql.="files_folder FILEFOLDER, ";
 				$cadena_sql.="menu MENU, ";
 				$cadena_sql.="latitud LATITUDE, ";
 				$cadena_sql.="longitud LONGITUDE, ";
-				
+
 				//$cadena_sql.="telefonos TELEFONOS, ";
 				$cadena_sql.="direccion ADDRESS ";
 				$cadena_sql.="FROM ";
@@ -273,7 +277,7 @@ class SqlcompanyManagement extends sql {
 				$cadena_sql.="WHERE id_establecimiento IN (".$variable.") ";
 				$cadena_sql.="AND estado<>0";
 				break;
-				
+
 			case "commercebyID":
 				$cadena_sql="SELECT ";
 				$cadena_sql.="id_tipoReserva IDCOMMERCE, ";
@@ -296,14 +300,14 @@ class SqlcompanyManagement extends sql {
 				$cadena_sql.="horario HOURLABEL, ";
 				$cadena_sql.="telefono PHONES, ";
 				$cadena_sql.="imagen IMAGE, ";
-				
+
 				$cadena_sql.="files_folder FILEFOLDER, ";
 				$cadena_sql.="api_key APIKEY, ";
 				$cadena_sql.="menu MENU, ";
 				$cadena_sql.="latitud LATITUDE, ";
 				$cadena_sql.="longitud LONGITUDE, ";
 				$cadena_sql.="estado STATUS, ";
-				
+
 				//$cadena_sql.="telefonos TELEFONOS, ";
 				$cadena_sql.="direccion ADDRESS ";
 				$cadena_sql.="FROM ";
