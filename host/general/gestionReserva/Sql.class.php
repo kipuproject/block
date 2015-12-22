@@ -511,8 +511,8 @@ class SqlgestionReserva extends sql {
 			case "dataBookingByID":
 				$cadena_sql="SELECT ";
 				$cadena_sql.="r.id_reserva IDBOOKING, ";
-				$cadena_sql.="DATE_FORMAT(FROM_UNIXTIME(r.fecha_inicio),'%m/%d/%Y') CHECKIN, ";
-				$cadena_sql.="DATE_FORMAT(FROM_UNIXTIME((r.fecha_fin)+2),'%m/%d/%Y') CHECKOUT, ";
+				$cadena_sql.="DATE_FORMAT(FROM_UNIXTIME(r.fecha_inicio),'%d %b %Y') CHECKIN, ";
+				$cadena_sql.="DATE_FORMAT(FROM_UNIXTIME((r.fecha_fin)+2),'%d %b %Y') CHECKOUT, ";
 				$cadena_sql.="r.fecha_inicio CHECKIN_UNIXTIME, ";
 				$cadena_sql.="r.fecha_fin CHECKOUT_UNIXTIME, ";
 				$cadena_sql.="r.observacion_cliente OBSERVATION_CLIENT, ";

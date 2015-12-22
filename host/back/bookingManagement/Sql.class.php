@@ -251,7 +251,8 @@ class SqlbookingManagement extends sql {
 				$cadena_sql="UPDATE ";
 				$cadena_sql.=$prefijo."reserva_reservable ";
 				$cadena_sql.="SET ";
-				$cadena_sql.="id_reservable='".$variable['room']."' ";
+				$cadena_sql.="id_reservable='".$variable['room']."', ";
+				$cadena_sql.="id_reservable_grupo = (SELECT id_reservableGrupo FROM {$prefijo}reservable WHERE id_reservable = '".$variable['room']."') ";
 				$cadena_sql.="WHERE id_reserva=".$variable['booking'];
 				break;
 

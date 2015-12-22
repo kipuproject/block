@@ -1,3 +1,189 @@
+
+	function assignStatusPayment(obj,booking,formSaraDataURL){
+	   $.ajax({
+			type: 'GET',
+			url: formSaraDataURL,
+			async: false,
+			data: {
+				optionBooking : "assignStatusPayment",
+				paymentstatus:obj.val(),
+				booking:booking,
+				commerce:$("#booking-commerce").val()
+				},
+			success: function(respuesta) {
+				alert(respuesta);
+			}
+		});
+	}
+
+	function assignOnlineValue(obj,booking,formSaraDataURL){
+
+	   $.ajax({
+			type: 'GET',
+			url: formSaraDataURL,
+			async: false,
+			data: {
+				optionBooking : "assignOnlineValue",
+				onlinepayment:obj.val(),
+				booking:booking,
+				commerce:$("#booking-commerce").val()
+				},
+			success: function(respuesta) {
+				alert(respuesta);
+			}
+		});
+	}
+
+	function assignDate(chekininput,chekoutinput,booking,formSaraDataURL){
+
+	   $.ajax({
+			type: 'GET',
+			url: formSaraDataURL,
+			async: false,
+			data: {
+				optionBooking : "assignDate",
+				chekininput:chekininput.val(),
+				chekoutinput:chekoutinput.val(),
+				booking:booking,
+				commerce:$("#booking-commerce").val()
+				},
+			success: function(respuesta) {
+				alert(respuesta);
+				location.reload();
+			}
+		});
+
+
+	}
+
+	function assignRoom(obj,booking,formSaraDataURL){
+	   $.ajax({
+			type: 'GET',
+			url: formSaraDataURL,
+			async: false,
+			data: {
+				optionBooking : "assignRoom",
+				room:obj.val(),
+				booking:booking,
+				commerce:$("#booking-commerce").val()
+				},
+			success: function(respuesta) {
+				alert(respuesta);
+			}
+		});
+	}
+
+	function assignTypeRoom(obj,booking,formSaraDataURL){
+	   $.ajax({
+			type: 'GET',
+			url: formSaraDataURL,
+			async: false,
+			data: {
+				optionBooking : "assignTypeRoom",
+				typeroom:obj.val(),
+				booking:booking,
+				commerce:$("#booking-commerce").val()
+				},
+			success: function(respuesta) {
+				alert(respuesta);
+			}
+		});
+	}
+
+	function updateResponsible(form,formSaraDataURL){
+		$.ajax({
+			type: 'GET',
+			url: formSaraDataURL,
+			async: false,
+			data: {
+				optionBooking : "updateResponsible",
+				dni :  $(form+" #u-main-dni").val(),
+				id :  $(form+" #u-value").val(),
+				name: $(form+" #u-main-name").val(),
+				country: $(form+" #u-main-country").val(),
+				uemail: $(form+" #u-main-email").val(),
+				phone: $(form+" #u-main-phone").val()
+				},
+			success: function(respuesta) {
+				alert(respuesta);
+			}
+		});
+
+	}
+
+	function assignPaymentValue(obj,booking,formSaraDataURL){
+
+	   $.ajax({
+			type: 'GET',
+			url: formSaraDataURL,
+			async: false,
+			data: {
+				optionBooking : "assignPaymentValue",
+				value:obj.val(),
+				booking:booking,
+				commerce:$("#booking-commerce").val()
+				},
+			success: function(respuesta) {
+				alert(respuesta);
+			}
+		});
+	}
+
+	function assignObservation(obj,booking,formSaraDataURL){
+
+	   $.ajax({
+			type: 'GET',
+			url: formSaraDataURL,
+			async: false,
+			data: {
+				optionBooking : "assignObservation",
+				value:obj.val(),
+				booking:booking,
+				commerce:$("#booking-commerce").val()
+				},
+			success: function(respuesta) {
+				alert(respuesta);
+			}
+		});
+	}
+
+	function assignValue(obj,booking,formSaraDataURL){
+
+	   $.ajax({
+			type: 'GET',
+			url: formSaraDataURL,
+			async: false,
+			data: {
+				optionBooking : "assignValue",
+				value:obj.val(),
+				booking:booking,
+				commerce:$("#booking-commerce").val()
+				},
+			success: function(respuesta) {
+				alert(respuesta);
+				$('#valueinput').prop('disabled',true);
+				$('#valuenightinput').val(($('#valueinput').val())/($('#nights').html()));
+			}
+		});
+	}
+  
+function assignStatus(obj,booking,formSaraDataURL){
+   $.ajax({
+    type: 'GET',
+    url: formSaraDataURL,
+    async: false,
+    data: { 
+      optionBooking : "assignStatus",
+      status:obj.val(),
+      booking:booking,
+      commerce:$("#booking-commerce").val()
+      },
+    success: function(respuesta) {
+      alert(respuesta);
+    }
+  });
+}
+  
 function updateForm(formSaraData,form){
 	$.ajax({
 		type: 'GET',

@@ -6,6 +6,8 @@ $additionaldata=$this->getAdditionalData($booking['IDBOOKING']);
 
 ?>
 <link rel="stylesheet" type="text/css" href="https://code.jquery.com/ui/1.11.4/themes/smoothness/jquery-ui.css">
+<script>var actionURL = "<?php echo $formSaraDataURL; ?>"</script> 
+
 
 <div id="dialog<?php echo $booking['IDBOOKING']; ?>" title="Informacion Pago" style="display:none">
   <p>This is the default dialog which is useful for displaying information. The dialog window can be moved, resized and closed with the 'x' icon.</p>
@@ -61,7 +63,7 @@ $additionaldata=$this->getAdditionalData($booking['IDBOOKING']);
 						<div class="controls">
 							<div class="">
 									HOTEL:
-									<textarea onchange="assignObservation($(this),'<?=$booking['IDBOOKING']?>')" id="observationvalueinput"><?=$booking['OBSERVATION']?></textarea>
+									<textarea onchange="assignObservation($(this),'<?=$booking['IDBOOKING']?>',actionURL)" id="observationvalueinput"><?=$booking['OBSERVATION']?></textarea>
 									<br/>
 									CLIENTE: <?php echo $booking['OBSERVATION_CUSTOMER']; ?>
 							</div>
@@ -87,7 +89,7 @@ $additionaldata=$this->getAdditionalData($booking['IDBOOKING']);
 						<label class="control-label" for="textfield">ESTADO RESERVA:</label>
 						<div class="controls">
 							<div class="input-prepend">
-									<select name="assignStatusObj" id="assignStatusObj" onchange="assignStatus($(this),'<?=$booking['IDBOOKING']?>')" >
+									<select name="assignStatusObj" id="assignStatusObj" onchange="assignStatus($(this),'<?=$booking['IDBOOKING']?>',actionURL)" >
 										<option <?=($booking['STATUS']=="6")?"selected":""?> value="6">PENDIENTE</option>
 										<option <?=($booking['STATUS']=="2")?"selected":""?> value="2">CONFIRMADA</option>
 										<option <?=($booking['STATUS']=="3")?"selected":""?> value="3">CANCELADA</option>
@@ -104,7 +106,7 @@ $additionaldata=$this->getAdditionalData($booking['IDBOOKING']);
 						<label class="control-label" for="textfield">HABITACION:</label>
 						<div class="controls">
 							<div class="input-prepend">
-								<select onchange="assignRoom($(this),'<?=$booking['IDBOOKING']?>')"  id="assignRoomObj" >
+								<select onchange="assignRoom($(this),'<?=$booking['IDBOOKING']?>',actionURL)"  id="assignRoomObj" >
 									<option <?=($booking['ROOM']=="0")?"selected":""?> value="0">SIN ASIGNAR</option>
 									<?php
 										foreach($avalaibleRooms as $key=>$value): ?>
@@ -115,14 +117,8 @@ $additionaldata=$this->getAdditionalData($booking['IDBOOKING']);
 								</select>
 							</div>
 							<span class="help-block">
-								TIPO DE HABITACION:
-								<select  id="typeroominput" disabled="true"  onchange="assignTypeRoom($(this),'<?=$booking['IDBOOKING']?>')">
-								<? foreach($typeRooms as $key=>$value): ?>
-										<option <?=($booking['ROOMTYPE']==$value[0]['IDTYPEROOM'])?"selected":""?> value="<?=$value[0]['IDTYPEROOM']?>" ><?=$value[0]['NAME']?></OPTION>
-								<? endforeach; ?>
-								</select>
-								<span class="add-on"><a onclick="$('#typeroominput').prop('disabled', false);" ><img src="http://www.assets.kipu.co/img/edit.png"></a></span>
-							</span>
+								TIPO DE HABITACION: <?=$typeRooms[$booking['ROOMTYPE']][0]['NAME']?>
+              </span>
 						</div>
 					</div>
 				</div>
@@ -141,8 +137,9 @@ $additionaldata=$this->getAdditionalData($booking['IDBOOKING']);
 							<div class="controls">
 								<div class="input-prepend">
 									<span class="add-on">$</span>
-									<input type="text" style="width:70px"  onchange="assignValue($(this),'<?=$booking['IDBOOKING']?>')" disabled="true"  id="valueinput" value="<?=$booking['VALUEBOOKING']?>" />
-									<span class="add-on"><a onclick="$('#valueinput').prop('disabled', false);" ><img src="http://www.assets.kipu.co/img/edit.png"></a></span>
+									<input type="text" style="width:70px"  onchange="assignValue($(this),'<?=$booking['IDBOOKING']?>',actionURL)" disabled="true"  id="valueinput" value="<?=$booking['VALUEBOOKING']?>" />
+									<span class="add-on"><a onclick="$('#valueinput').prop('disabled', false);" >
+                  <img src="http://www.assets.kipu.co/img/edit.png"></a></span>
 								</div>
                 <span class="help-block">
 								VALOR POR NOCHE:  <?=round(($booking['VALUEBOOKING'])/(round((($booking['FECHA_FIN_UNIX'])*1-($booking['FECHA_INICIO_UNIX'])*1)/86400)))?>
@@ -166,7 +163,7 @@ $additionaldata=$this->getAdditionalData($booking['IDBOOKING']);
 							<label class="control-label" for="textfield">ESTADO PAGO:</label>
 							<div class="controls">
 								<div class="input-prepend">
-										<select name="assignStatusPaymentObj" id="assignStatusPaymentObj" onchange="assignStatusPayment($(this),'<?=$booking['IDBOOKING']?>')" >
+										<select name="assignStatusPaymentObj" id="assignStatusPaymentObj" onchange="assignStatusPayment($(this),'<?=$booking['IDBOOKING']?>',actionURL)" >
 											<option <?=($booking['PAYMENT']=="1")?"selected":""?> value="1">PAGO REALIZADO</option>
 											<option <?=($booking['PAYMENT']=="0")?"selected":""?> value="0">NO SE REPORTA PAGO</option>
 											<option <?=($booking['PAYMENT']=="2")?"selected":""?> value="2">PAGO PARCIAL</option>
@@ -179,7 +176,7 @@ $additionaldata=$this->getAdditionalData($booking['IDBOOKING']);
 							<div class="controls">
 								<div class="input-prepend">
 									<span class="add-on">$</span>
-									<input type="text" style="width:70px" onchange="assignOnlineValue($(this),'<?=$booking['IDBOOKING']?>')" disabled="true" id="payupaymentinput" value="<?=$payuPayment['VALUE']?>" />
+									<input type="text" style="width:70px" onchange="assignOnlineValue($(this),'<?=$booking['IDBOOKING']?>',actionURL)" disabled="true" id="payupaymentinput" value="<?=$payuPayment['VALUE']?>" />
 									<span class="add-on">PAGO EN LINEA</span>
 									<span class="add-on"><?=$payuPayment['VALUE']*100/$booking['VALUEBOOKING']?>%</span>
 									<span class="add-on">
@@ -195,7 +192,7 @@ $additionaldata=$this->getAdditionalData($booking['IDBOOKING']);
                   </span>
 									<br/>
 									<span class="add-on">$</span>
-									<input type="text" style="width:70px"  onchange="assignPaymentValue($(this),'<?=$booking['IDBOOKING']?>')" disabled="true"  id="paymentvalueinput" value="<?=$booking['VALUEPAYMENT']?>" />
+									<input type="text" style="width:70px"  onchange="assignPaymentValue($(this),'<?=$booking['IDBOOKING']?>',actionURL)" disabled="true"  id="paymentvalueinput" value="<?=$booking['VALUEPAYMENT']?>" />
 									<span class="add-on">PAGO DIRECTO</span>
 									<span class="add-on"><a onclick="$('#paymentvalueinput').prop('disabled', false);" ><img src="http://www.assets.kipu.co/img/edit.png"></a></span>
 								</div>
@@ -305,7 +302,7 @@ $additionaldata=$this->getAdditionalData($booking['IDBOOKING']);
 							<td><input id = "u-main-phone" value = "<?=$booking['PHONECLIENT']?>" /></td>
 	            <td colspan = "2" >
 	            		<input id="u-value" type="hidden" value = "<?=$booking['ID']?>" />
-	            		<img onclick="updateResponsible('#<?=$meu?>'); $('#uecancel').hide();" src="http://www.assets.kipu.co/img/check.png">
+	            		<img onclick="updateResponsible('#<?=$meu?>',actionURL); $('#uecancel').hide();" src="http://www.assets.kipu.co/img/check.png">
 	            		<img id="uecancel" onclick="$('#<?=$mvu?>').show(); $('#<?=$meu?>').hide();" src="http://www.assets.kipu.co/img/uncheck.png">
 	            </td>
 						</tr>

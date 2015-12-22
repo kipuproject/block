@@ -25,12 +25,12 @@ class ApigestionReserva{
 	var $status = "";
 
 	function __construct(){
-		$this->miConfigurador=Configurador::singleton();
-		$this->miInspectorHTML=InspectorHTML::singleton();
+		$this->miConfigurador = Configurador::singleton();
+		$this->miInspectorHTML = InspectorHTML::singleton();
 		$this->ruta = $this->miConfigurador->getVariableConfiguracion("rutaBloque");
     $this->rutaURL = $this->miConfigurador->getVariableConfiguracion("host");
 		$this->rutaURL .= $this->miConfigurador->getVariableConfiguracion("site");
-	  $this->Access=Acceso::singleton();
+	  $this->Access = Acceso::singleton();
 	  $conexion = "master";
 	  $this->master_resource = $this->miConfigurador->fabricaConexiones->getRecursoDB($conexion);
 	}
@@ -78,9 +78,9 @@ class ApigestionReserva{
 			$_REQUEST[urldecode($key)]=urldecode($value);
 		}
 
-		if(isset($_REQUEST['method'])){
+		if(isset($_REQUEST['method'])) {
 
-			switch($_REQUEST['method']){
+			switch($_REQUEST['method']) {
 				case 'getSession':
 					$result = $this->createBDSession($_REQUEST);
 				break;
@@ -119,24 +119,19 @@ class ApigestionReserva{
 				break;
 			}
 
-			$json=json_encode($result);
-			if(isset($_GET['callback'])){
+			$json = json_encode($result);
+			if(isset($_GET['callback'])) {
 				echo "{$_GET['callback']}($json)";
-			}else{
+			}else {
 				echo $json;
 			}
- 		}else{
+ 		}else {
 				echo "no data";
 		}
 	}
 
 	private function confirmBooking($variable){
-  
-    /*$response->status_code = 200;
-    $response->status = "true";
-    $response->id = '5971'; 
-    return $response;  */
-      
+        
 		$response = $this->sessionValidate($variable);
 		if($response->status_code == 205){
 			return $response;
@@ -148,7 +143,7 @@ class ApigestionReserva{
 				$response->status = "false";
 				return $response;
 			}
-		}
+		} 
 		$cadena_sql = $this->sql->cadena_sql("dataBookingBySession",$variable['session']);
 		$book = $this->miRecursoDB->ejecutarAcceso($cadena_sql,"busqueda");
    
@@ -287,7 +282,7 @@ class ApigestionReserva{
   }
 
 	private function saveOthersGuest($variable){
-
+    
     $friends = array();
     foreach($variable as $key=>$value){
       $friend = explode("-",$key);
@@ -295,7 +290,7 @@ class ApigestionReserva{
     }
 
     foreach($friends as $key=>$value){
-
+  
         $cadena_sql = $this->sql->cadena_sql("dataBookingBySession",$variable['session']);
         $dataBooking = $this->miRecursoDB->ejecutarAcceso($cadena_sql,"busqueda");
         $dataBooking = $dataBooking[0];
@@ -346,7 +341,7 @@ class ApigestionReserva{
 			$cadena_sql = $this->sql->cadena_sql("insertUser",$variable);
 			$result = $this->master_resource->ejecutarAcceso($cadena_sql,"");
 
-			if($result){
+			if($result) {
 				$variable['user'] = $this->master_resource->ultimo_insertado();
 				$cadena_sql = $this->sql->cadena_sql("updateUserBooking",$variable);
         $result = $this->master_resource->ejecutarAcceso($cadena_sql,"");
@@ -354,14 +349,16 @@ class ApigestionReserva{
         $cadena_sql = $this->sql->cadena_sql("insertRole",$variable);
         $result = $this->master_resource->ejecutarAcceso($cadena_sql,"");
 			}
+       
+      exit;
 		}
  		return true;
 	}
 
 	private function createBDSession(){
-		$response=new stdClass();
-		$fecha=explode (" ",microtime());
-		$sesionId=md5($this->fecha[1].substr($this->fecha[0],2).rand());
+		$response = new stdClass();
+		$fecha = explode (" ",microtime());
+		$sesionId = md5($this->fecha[1].substr($this->fecha[0],2).rand());
 		$response->sesionId = $sesionId;
 		$cadena_sql = $this->sql->cadena_sql("setBookingSession",$sesionId);
 		$session = $this->master_resource->ejecutarAcceso($cadena_sql,"");
@@ -375,7 +372,7 @@ class ApigestionReserva{
 	private function sendEmail($idbooking){
 
 		//booking
-		$response=new stdClass();
+		$response = new stdClass();
 		$this->mail=new phpmailer();
 
 		$cadena_sql = $this->sql->cadena_sql("dataBookingByID",$idbooking);
@@ -438,7 +435,6 @@ class ApigestionReserva{
 		//return $response;
 	}
 
-
 	private function getDataCommerceByID($idcommerce){
 		//commerce
 		$response=new stdClass();
@@ -457,7 +453,6 @@ class ApigestionReserva{
 
 		return $response;
 	}
-
 
 	//groupRoom,commerce,checkin(YYYY/MM/DD),checkout(YYYY/MM/DD),numRooms
 	//user,session,adults,children,infants
@@ -532,12 +527,12 @@ class ApigestionReserva{
 			$anio = $checkin[2];
 
 			//la uso para validar la reserva aumento un segundo
-			$variable['timeStampStart']=(mktime(0,0,0,$mes,$dia,$anio)); //+1
+			$variable['timeStampStart'] = (mktime(0,0,0,$mes,$dia,$anio)); //+1
 
 			//la uso para insertar la reserva
-			$timeStampStart=mktime(0,0,0,$mes,$dia,$anio);
+			$timeStampStart = mktime(0,0,0,$mes,$dia,$anio);
 
-			$checkout=explode("/",$variable['checkout']);
+			$checkout = explode("/",$variable['checkout']);
 
       $dia  = $checkout[0];
       $mes  = $checkout[1];
@@ -652,14 +647,6 @@ class ApigestionReserva{
 				$cadena_sql = $this->sql->cadena_sql("updateValueBookingbyID",$variable);
 				$registro = $this->miRecursoDB->ejecutarAcceso($cadena_sql,"");
 
-
-				//E. Inserto Servicios Adicionales
-				//Por ahora el unico servicio es el de niños
-				/*$variable['id_servicio']=1;
-				$variable['cantidad'] = $variable['kids'];
-				$cadena_sql = $this->sql->cadena_sql("insertServices",$variable);
-				$registro = $this->master_resource->ejecutarAcceso($cadena_sql,"");*/
-
 			}
 
 			$output['status_code']=200;
@@ -678,8 +665,6 @@ class ApigestionReserva{
 			$currentBooking = $this->miRecursoDB->ejecutarAcceso($cadena_sql,"busqueda");
 			$currentBooking = $currentBooking[0];
 			$numDaysBooking = $currentBooking['NUMDAYS'];
-
-
 
 			//Con el id rescato los reservables de la reserva (los grupos)
 			//por ahora la relacion es uno a uno en el futuro se espera varios reservbles por reserva
@@ -751,8 +736,6 @@ class ApigestionReserva{
 
 				}
 				$i++;
-
-
 			}
 
   		$output['message'] = "";
@@ -764,7 +747,6 @@ class ApigestionReserva{
 			$output['days'] = $currentBooking['NUMDAYS'];
 			$output['value'] = $valueBooking;
 
-
 			return $output;
 	}
 
@@ -774,7 +756,8 @@ class ApigestionReserva{
 		$cadena_sql = $this->sql->cadena_sql("dataRoomAvailability",$variable);
 		$rooms = $this->miRecursoDB->ejecutarAcceso($cadena_sql,"busqueda");
 		$rooms = $this->orderArrayKeyBy($rooms,"IDGROUP");
-		foreach($rooms as $key=>$value){
+    
+		foreach($rooms as $key=>$value) {
 			unset($rooms[$key][0]);
 			unset($rooms[$key][1]);
 			unset($rooms[$key][2]);
@@ -818,7 +801,6 @@ class ApigestionReserva{
 		$variable['all']='all';
 		$variable['commerceType']='2';
 
-
 		if(isset($variable['plan'])){
 			switch($variable['plan']){
 				case 'premium':
@@ -842,6 +824,7 @@ class ApigestionReserva{
 	}
 
 	private function saveGuest($variable){
+    $response = new stdClass();
     /* revisar campos adicionales */
     $this->saveOthersFields($variable);
     /* fin revisar campos adicionales */
@@ -902,9 +885,6 @@ class ApigestionReserva{
 				$newArray[$value[$key]] = $array[$name];
 			}
 		}
-		/*echo "<pre>";
-		var_dump($newArray);
-		echo "</pre>";*/
 		return $newArray;
 	}
 

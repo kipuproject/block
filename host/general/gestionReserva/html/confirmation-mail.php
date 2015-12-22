@@ -82,13 +82,16 @@
                                     </tr>
                                     <tr style="border-left:1px solid #c3c3c3;border-right:1px solid #c3c3c3;border-bottom:1px solid #c3c3c3">
                                       <td style="width:225px;color:black;background-color:#f5f5f5;font-size:12px;border-right:1px solid #c3c3c3">
-                                        <p style="margin:0px!important;padding:10px 0 10px 10px"><a> <?=$response->room['NAME']?></a></p>
+                                        <p style="margin:0px!important;padding:10px 0 10px 10px">
+                                        <a><?=$response->room['NAME']?></a>
+                                        <br><b>Valor Total:</b> <?=date($response->booking['VALUE'])?>
+                                        </p>
                                       </td>
                                      <td style="width:90px;color:black;background-color:#f5f5f5;font-size:12px;border-right:1px solid #c3c3c3">
-                                      <center><p style="margin:0px!important;padding:10px 0 10px 0;color:black"><b><?=date($response->booking['CHECKIN'])?></b></p></center>
+                                      <center><p style="margin:0px!important;padding:10px 0 10px 0;color:black"><b><?=$response->booking['CHECKIN']?></b></p></center>
                                      </td>
                                      <td style="width:70px;color:black;background-color:#f5f5f5;font-size:12px;border-right:1px solid #c3c3c3">
-                                      <center><p style="margin:0px!important;padding:10px 0 10px 0;color:black"><b><?=date($response->booking['CHECKOUT'])?></b></p></center>
+                                      <center><p style="margin:0px!important;padding:10px 0 10px 0;color:black"><b><?=$response->booking['CHECKOUT']?></b></p></center>
                                      </td>
                                      <td style="width:90px;color:black;background-color:#f5f5f5;font-size:12px;border-right:1px solid #c3c3c3">
                                       <center><p style="margin:0px!important;padding:10px 0 10px 0;color:#a9a9a9;"><?=round((($response->booking['CHECKOUT_UNIXTIME'])*1-($response->booking['CHECKIN_UNIXTIME'])*1)/86400)?></p></center>
