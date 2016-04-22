@@ -161,6 +161,9 @@ class FronteraroomsManagement{
 				
 		$formSaraDataCapacity=$formSaraData."&optionProcess=processUpdateCapacity";
 		$formSaraDataCapacity=$this->miConfigurador->fabricaConexiones->crypto->codificar_url($formSaraDataCapacity,$this->enlace);
+					
+		$formSaraDataMinimun=$formSaraData."&optionProcess=processUpdateMinimun";
+		$formSaraDataMinimun=$this->miConfigurador->fabricaConexiones->crypto->codificar_url($formSaraDataMinimun,$this->enlace);
 		
 		$formSaraDataNew="action=roomsManagement";
 		$formSaraDataNew.="&bloque=roomsManagement";

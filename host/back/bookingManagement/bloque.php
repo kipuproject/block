@@ -15,13 +15,13 @@ include_once("core/manager/Configurador.class.php");
 //Elementos que constituyen un bloque típico CRUD.
 
 //Interfaz gráfica
-include_once("Frontera.class.php");
+include_once("View.class.php");
 
 //Funciones de procesamiento de datos
-include_once("Funcion.class.php");
+include_once("Controller.class.php");
 
 //Compilación de clausulas SQL utilizadas por el bloque
-include_once("Sql.class.php");
+include_once("Model.class.php");
 
 //Mensajes
 include_once("Lenguaje.class.php");
@@ -44,22 +44,16 @@ if(class_exists('BloquebookingManagement') === false){
 
 		var $miSql;
 
-
 		var $miConfigurador;
 
-		public function __construct($esteBloque,$lenguaje="")
-		{
+		public function __construct($esteBloque,$lenguaje="")	{
 
 			//El objeto de la clase Configurador debe ser único en toda la aplicación
 			$this->miConfigurador=Configurador::singleton();
 
-
 			$ruta=$this->miConfigurador->getVariableConfiguracion("raizDocumento");
 			$rutaURL=$this->miConfigurador->getVariableConfiguracion("host").$this->miConfigurador->getVariableConfiguracion("site");
-			
-			
-
-
+	
 			if($esteBloque["grupo"]==""){
 				$ruta.="/blocks/".$esteBloque["nombre"]."/";
 				$rutaURL.="/blocks/".$esteBloque["nombre"]."/";
@@ -82,30 +76,22 @@ if(class_exists('BloquebookingManagement') === false){
 
 			$nombreClaseLenguaje="Lenguaje".$esteBloque["nombre"];
 			$this->miLenguaje=new $nombreClaseLenguaje();
-
-
 		}
 
-		public function bloque(){
-			
-			if(!isset($_REQUEST['action'])){
-
-				
+		public function bloque() {
+			if(!isset($_REQUEST['action'])) {
 				$this->miFrontera->setSql($this->miSql);
 				$this->miFrontera->setFuncion($this->miFuncion);
 				$this->miFrontera->setLenguaje($this->miLenguaje);
 				$this->miFrontera->html();
-			}else{
-
+			}else {
 				$this->miFuncion->setSql($this->miSql);
 				$this->miFuncion->setFuncion($this->miFuncion);
 				$this->miFuncion->setHTML($this->miFrontera);
 				$this->miFuncion->setLenguaje($this->miLenguaje);
 				$this->miFuncion->action();
 			}
-				
 		}
-
 	}
 }
 // @ Crear un objeto bloque especifico
@@ -117,17 +103,10 @@ $estaClase="Bloque".$unBloque["nombre"];
 
 $this->miConfigurador->setVariableConfiguracion("esteBloque",$unBloque);
 
-if(isset($lenguaje)){
-
+if(isset($lenguaje)) {
 	$esteBloque=new $estaClase($unBloque,$lenguaje);
-}else{
-
+}else {
 	$esteBloque=new $estaClase($unBloque);
-
 }
 
 $esteBloque->bloque();
-
-
-
-?>

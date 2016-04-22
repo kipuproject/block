@@ -47,6 +47,10 @@ class FuncionroomsManagement{
 	function processUpdateCapacity($variable){
 		include_once($this->ruta."/funcion/processUpdateCapacity.php");
 	}
+		
+	function processUpdateMinimun($variable){
+		include_once($this->ruta."/funcion/processUpdateMinimun.php");
+	}
 	
 	function processEditTypeRoom($variable){
 		include_once($this->ruta."/funcion/processEditTypeRoom.php");
@@ -95,6 +99,10 @@ class FuncionroomsManagement{
 			break;
 			case "processUpdateCapacity":
 				$this->processUpdateCapacity($_REQUEST);
+				echo $this->mensaje;
+			break;
+			case "processUpdateMinimun":
+				$this->processUpdateMinimun($_REQUEST);
 				echo $this->mensaje;
 			break;
 			case "processNewTypeRoom":

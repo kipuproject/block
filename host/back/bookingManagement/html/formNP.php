@@ -29,7 +29,7 @@
 
         if(isset($bookings[$value])){
           $numBookings = count($bookings[$value]);
-
+          $customer = $users[$bookings[$value][0]['CUSTOMER']][0]['NAMECLIENT'];
           $bbc = 0; //se recorren todas las reservas q pertenecen a la misma celda
           while(isset($bookings[$value][$bbc]['IDCELL'])){
             $totalAdults = $bookings[$value][$bbc]['NUMGUEST']+$totalAdults;
@@ -64,12 +64,11 @@
         }else{
           $numBookings = 0;
           $state = "";
-        }
+        } 
       ?>
         <div style="width:95%; border:1px solid #FFFFFF" >
-          <div row="r<?=$row?>" col="c<?=$i?>"  id='<?php echo $value; ?>-<?php echo $bookings[$value][0]['DATESTART']; ?>' title="Adultos:<?=$totalAdults?> Niños:<?=$totalChildren?>" class="clickableElement <?=$classColor?>" >
-            <?php
-              if($state<>5){
+          <div row="r<?=$row?>" col="c<?=$i?>"  id='<?php echo $value; ?>-<?php echo $bookings[$value][0]['DATESTART']; ?>' title=" Cliente:<?=$customer?> Adultos:<?=$totalAdults?> Niños:<?=$totalChildren?>" class="clickableElement <?=$classColor?>" >
+            <?php if($state<>5) {
                 echo $numBookings;
               }else{
                 echo "B";

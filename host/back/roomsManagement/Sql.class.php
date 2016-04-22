@@ -66,6 +66,7 @@ class SqlroomsManagement extends sql {
 				$cadena_sql.="nombre NAME, ";
 				$cadena_sql.="nombre_maquina MACHINENAME, ";
 				$cadena_sql.="TRIM(descripcion) DESCRIPTION, ";
+				$cadena_sql.="minimo MINIMUN, ";        
 				$cadena_sql.="tipo_capacidad CAPACITYTYPE, ";
 				$cadena_sql.="capacidad CAPACITY ";
 				$cadena_sql.="FROM ";
@@ -132,7 +133,8 @@ class SqlroomsManagement extends sql {
 				$cadena_sql.="nombre='".$variable['name']."',";
 				$cadena_sql.="nombre_maquina='".$variable['idtyperoom']."', ";
 				$cadena_sql.="descripcion=trim('".$variable['description']."'), ";
-				$cadena_sql.="capacidad='".$variable['capacity']."' ";
+				$cadena_sql.="capacidad='".$variable['capacity']."', ";
+				$cadena_sql.="minimo='".$variable['minimun']."' ";
 				$cadena_sql.="WHERE id_reservable_grupo=".$variable['idtyperoom'];
 				$cadena_sql.=" AND id_tipoReserva=".$variable['idcommerce'];
 				break;				

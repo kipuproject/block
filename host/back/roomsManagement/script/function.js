@@ -42,6 +42,20 @@ function updateCapacity(formSaraData,form){
 	});
 }
 
+function updateMinimun(formSaraData,form){
+
+	$.ajax({
+		type: 'GET',
+		url: formSaraData,
+		data: $(form).serialize(),
+		success: function(respuesta) {
+			//$(form+" #status").html(respuesta);
+			alert(respuesta);
+			location.reload();
+		}
+	});
+}
+
 function addRoom(formSaraData){
 
 	$.ajax({

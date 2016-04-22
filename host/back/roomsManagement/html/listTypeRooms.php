@@ -45,7 +45,7 @@ $i++;
 							<br/>
 							<div class="habitaciones2">
 							<div class="cuatrocol20">
-                Nombre
+                Datos básicos
 							</div>
 							<div class="cuatrocol20">
                 Descripción
@@ -62,21 +62,23 @@ $i++;
 							<div class="habitaciones">
 										<form id="form-room" >
 											<div class="cuatrocol_20">
-												<div class="dat_1">
-                          (<?=$roomList[$i]['IDTYPEROOM']?>) Nombre Habitación</div>
+                        (<?=$roomList[$i]['IDTYPEROOM']?>) Nombre Habitación
 												<br/>
                         <input name="name"  onchange="updateTypeRoom('<?=$formSaraDataEdit?>',$(this.form))" value="<?=$roomList[$i]['NAME']?>"  type="text" placeholder=""><br/>
-												<div class="dat_1">
                           Capacidad (# Personas)
                           <?=($roomList[$i]['CAPACITYTYPE']=="C")?"<br/>Capacidad Compartida":""?>
-                        </div>
                         <br/>
                         <input name="capacity-type" value="<?php echo $roomList[$i]['CAPACITYTYPE']; ?>" type="hidden" />
                         <input name="capacity"  onchange="updateCapacity('<?=$formSaraDataCapacity?>',$(this.form))" value="<?=$roomList[$i]['CAPACITY']?>"  type="text" placeholder="">
+                        
+                        Mínimo de días a reservar:
+                        <br/>
+                        <input name="minimun"  onchange="updateMinimun('<?=$formSaraDataMinimun?>',$(this.form))" value="<?=$roomList[$i]['MINIMUN']?>"  type="text" placeholder="">
+                        
 											</div>
 											<div class="cuatrocol_20">
 												<textarea style="width: 95%; height: 175px;"onchange="updateTypeRoom('<?=$formSaraDataEdit?>',$(this.form))" name="description"><?=trim($roomList[$i]['DESCRIPTION'])?></textarea>
-												<a class="fotografias<?=$roomList[$i]['IDTYPEROOM']?> btn btn-primary">Fotografias</a>
+												<!--a class="fotografias<?=$roomList[$i]['IDTYPEROOM']?> btn btn-primary">Fotografias</a-->
 											</div>
 											<div class="cuatrocol_30">
 												<table>

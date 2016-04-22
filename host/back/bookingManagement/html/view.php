@@ -113,8 +113,9 @@
 	<div class="box-title">
 		<h3>
 			<select class="booking-filter" style="width:90px" id="booking-year">
-				<option <?=($year=="2014")?"selected":""?>  VALUE="2014" >2014</option>
-				<option <?=($year=="2015")?"selected":""?>  VALUE="2015" >2015</option>
+        <?php for($i=2014;$i<=2020;$i++): ?>
+				<option <?=($year==$i)?"selected":""?>  VALUE="<?=$i?>" ><?=$i?></option>
+				<?php endfor; ?>
 			</select>
 
 			<select class="booking-filter" id="booking-month">
