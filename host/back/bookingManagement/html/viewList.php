@@ -49,10 +49,10 @@ foreach ($funcion as $clave=>$nombre){
 	<div class="span12">
 		<div class="box box-bordered">
  			<div class="box-content nopadding">
-        Seleccione el año de consulta: 
+      <!--  Seleccione el año de consulta: 
       <select>
         <option>2016</option>
-      </select>
+      </select-->
 				<table class="table table-hover table-nomargin table-bordered dataTable dataTable-tools dataTable-columnfilter bookingtable"> 
 					<thead>
 						<tr  class="thefilter">
@@ -74,9 +74,9 @@ foreach ($funcion as $clave=>$nombre){
 							<!--th>Creacion</th-->
 							<th>Origen</th>
 							<th>Habitacion</th>
+              <th>Responsable</th>
 							<th>Check In <br/> dd-mm-yyyy</th>
 							<th>Check Out <br/> dd-mm-yyyy</th>
-							<th>Responsable</th>
 							<th>Notas Cliente</th>
 							<th>Notas Hotel</th>
 							<th>Valor</th>
@@ -92,16 +92,15 @@ foreach ($funcion as $clave=>$nombre){
 					while(isset($bookings[$i][0])):
 					?>
 						<tr>
-							<!--td><?=strftime("%d-%b-%Y",strtotime($bookings[$i]['DATEREGISTER']))?></td-->
-							<td><?=$bookings[$i]['SOURCE']?></td>
+							<td><?=$bookings[$i]['SOURCE']?></td> 
 							<td class='hidden-350'><?=$bookings[$i]['NAMERESERVABLE']?></td>
-							<td class='hidden-1024'><?=strftime("%d-%m-%Y",strtotime($bookings[$i]['DATESTART']))?></td>
-							<td class='hidden-480'><?=strftime("%d-%m-%Y",strtotime($bookings[$i]['DATEEND']))?></td>
-							<td class='hidden-480'><?=$users[$bookings[$i]['CUSTOMER']][0]['NAMECLIENT']?></td>
+              <td class='hidden-480'><?=$users[$bookings[$i]['CUSTOMER']][0]['NAMECLIENT']?></td> 
+							<td class='hidden-1024'><?=date("d-m-Y",strtotime($bookings[$i]['DATESTART']))?></td>
+							<td class='hidden-480'><?=date("d-m-Y",strtotime($bookings[$i]['DATEEND']))?></td> 
 							<td class='hidden-480'><?=$bookings[$i]['OBSERVATION_CUSTOMER']?></td>
 							<td class='hidden-480'><?=$bookings[$i]['OBSERVATION']?></td>
 							<td class='hidden-480'><?=$bookings[$i]['PAYMENT']?></td>
-							<td class='hidden-480'><?=$bookings[$i]['STATEBOOKING']?></td>
+							<td class='hidden-480'><?=($statusBoooking[$bookings[$i]['STATEBOOKING']])?></td>
 							<td class='hidden-480'><?=($bookings[$i]['STATEPAYMENT']=='1')?'SI':'NO'?></td>
 						</tr>
 					<?php

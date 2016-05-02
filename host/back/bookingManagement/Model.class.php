@@ -165,8 +165,8 @@ class SqlbookingManagement extends sql {
 				$cadena_sql.="rr.id_reservable IDRESERVABLE, ";
 				$cadena_sql.="rv.nombre NAMERESERVABLE, ";
 				$cadena_sql.="DATE_FORMAT(FROM_UNIXTIME( `fecha_registro` ),'%m/%d/%Y %H:%i') DATEREGISTER, ";
-				$cadena_sql.="DATE_FORMAT(FROM_UNIXTIME( `fecha_inicio` ),'%m/%d/%Y') DATESTART, ";
-				$cadena_sql.="DATE_FORMAT(FROM_UNIXTIME( `fecha_fin` ),'%m/%d/%Y') DATEEND, ";
+        $cadena_sql.="FROM_UNIXTIME(r.fecha_inicio) DATESTART, ";
+				$cadena_sql.="FROM_UNIXTIME((r.fecha_fin)+2) DATEEND, ";
 				$cadena_sql.="cliente CUSTOMER, ";
 				$cadena_sql.="medio SOURCE, ";
 				$cadena_sql.="valor_total PAYMENT, ";
@@ -199,11 +199,12 @@ class SqlbookingManagement extends sql {
 
 			case "detailPayment":
 				$cadena_sql="SELECT ";
-				$cadena_sql.="value VALUE ";
+				$cadena_sql.="value VALUE, ";
+				$cadena_sql.="id_payu_reference ID ";
 				$cadena_sql.="FROM ";
 				$cadena_sql.=$prefijo."payu_payment ";
-				$cadena_sql.="WHERE system_reference=".$variable;
-				$cadena_sql.=" AND status='1'";
+				$cadena_sql.="WHERE system_reference=".$variable['reference'];
+				$cadena_sql.=" AND status='".$variable['status']."'";
 				break;
 
 			case "companyList":

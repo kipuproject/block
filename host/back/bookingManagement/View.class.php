@@ -451,14 +451,15 @@ class FronterabookingManagement{
 		return $clients;
 	}
 
-	function getPayuPayment($booking){
-
-		$cadena_sql = $this->sql->cadena_sql("detailPayment",$booking);
+	function getPayuPayment($booking,$status=1){
+    $variable['reference'] = $booking;
+    $variable['status']    = $status; 
+		$cadena_sql = $this->sql->cadena_sql("detailPayment",$variable);
 		$result = $this->miRecursoDB->ejecutarAcceso($cadena_sql,"busqueda");
 		if(is_array($result)){
 
 		}else{
-			$result[0]['VALUE']=0;
+			$result[0]['VALUE'] = 0;
 		}
 		return $result[0];
 	}
@@ -604,7 +605,11 @@ class FronterabookingManagement{
 	 	$formSaraDataBookingList .= "&opcion=bookinglist";
 	 	$formSaraDataBookingList .= "&saramodule=host";
 		$formSaraDataBookingList  = $this->miConfigurador->fabricaConexiones->crypto->codificar_url($formSaraDataBookingList,$this->enlace);
-
+    
+    $statusBoooking["2"] = "CONFIRMADA";
+    $statusBoooking["3"] = "CANCELADA";
+    $statusBoooking["6"] = "PENDIENTE";
+    
 		include_once($this->ruta."/html/viewList.php");
 	}
 

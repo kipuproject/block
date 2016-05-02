@@ -315,7 +315,6 @@ function unblock(formSaraDataURL){
 }
 
 function getPayuData(formSaraDataURL,key,value){
-
    $.ajax({
     type: 'GET',
     url: formSaraDataURL,
@@ -336,6 +335,26 @@ function getPayuData(formSaraDataURL,key,value){
       $('#dialog'+value).dialog();
     }
   });
+}
+
+function refreshPayuData(formSaraDataURL,key,value){
+   $.ajax({
+    type: 'GET',
+    url: formSaraDataURL,
+    async: false,
+    data: {
+      api : "payu",
+      method : "payu-order-verify",
+      value:value,
+      key:key
+      },
+    success: function(response) {
+      json = jQuery.parseJSON(response);
+      if(json.status_code == 200){
+        alert(json.status);
+      }
+    }
+   });
 }
 
 function editDate(){

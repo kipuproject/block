@@ -199,6 +199,14 @@ class SqlPayu extends sql {
 				$cadena_sql.="r.id_reserva ='".$variable."' ";
 			break;
       
+      case "updateDataCommerceByReference":
+				$cadena_sql="UPDATE ";
+				$cadena_sql.=$prefijo."payu_payment ";
+				$cadena_sql.="SET "; 
+				$cadena_sql.="answer='".$variable['answer']."' ";
+				$cadena_sql.="WHERE id_payu_reference=".$variable['reference'];
+				break;
+      
 		}
 		//echo "<br/>".$tipo."=".$cadena_sql;
 		return $cadena_sql;

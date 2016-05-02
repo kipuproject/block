@@ -262,7 +262,7 @@ class ApiPayu{
   private function getDataCommerce() {
     $response= new stdClass();
 
-    $string_sql = $this->sql->cadena_sql("dataCommerce",$this->commerce);
+    $string_sql = $this->sql->cadena_sql("dataCommerce",$this->commerce); 
     $result = $this->master_resource->ejecutarAcceso($string_sql,"busqueda");
 
     if(is_array($result)){
@@ -359,9 +359,30 @@ class ApiPayu{
         }
       }
     }
-    return $transaction;
+ 
+    $result = $this->updateDataCommerceByReference($value,$transaction);
+    
+    $response = new stdClass();
+    $response->answer = $transaction;
+    $response->status_code = 200;
+    $response->status = $result->status;
+    return $response;
   }
-
+  
+  private function updateDataCommerceByReference($value,$transaction) {
+  
+    $data = array();
+    $data["reference"] = $value;
+    $data["answer"] = (string)json_encode($transaction);
+    $string_sql = $this->sql->cadena_sql("updateDataCommerceByReference",$data);
+    $result = $this->miRecursoDB->ejecutarAcceso($string_sql,"");
+    
+    $response = new stdClass();
+    $response->status_code = 200;
+    $response->status = "Información actualizada";
+    return $response;
+    
+  }
 
   private function getpolResponseCode($cod){
 

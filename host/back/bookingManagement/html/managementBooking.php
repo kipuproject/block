@@ -1,7 +1,8 @@
 <?php
 
 $avalaibleRooms=$this->getAvalaibleRooms($booking['ROOM'],strtotime($booking['FECHA_INICIO']),strtotime($booking['FECHA_FIN']),$booking['IDCOMMERCE'],$booking['ROOMTYPE']);
-$payuPayment=$this->getPayuPayment($booking['IDBOOKING']);
+$payuPayment = $this->getPayuPayment($booking['IDBOOKING']);
+$idPayuPayment = $this->getPayuPayment($booking['IDBOOKING'],0);
 $additionaldata=$this->getAdditionalData($booking['IDBOOKING']);
 
 ?>
@@ -186,7 +187,7 @@ $additionaldata=$this->getAdditionalData($booking['IDBOOKING']);
                     <a onclick="getPayuData('<?php echo $booking['LINK']; ?>','<?php echo $booking['KEY']; ?>','<?php echo $booking['IDBOOKING']; ?>')" >
                       <img src="http://www.assets.kipu.co/img/info32.png">
                     </a>
-                    <a onclick="" >
+                    <a onclick="refreshPayuData('<?php echo $booking['LINK']; ?>','<?php echo $booking['KEY']; ?>','<?php echo $idPayuPayment['ID']; ?>')" >
                       <img src="http://www.assets.kipu.co/img/refresh32.png">
                     </a>
                   </span>
