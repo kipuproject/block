@@ -12,8 +12,8 @@ include_once("core/builder/Bloque.interface.php");
 include_once("core/manager/Configurador.class.php");
 //Interfaz gráfica
 include_once("Html.class.php");
-//Funciones de procesamiento de datos
-include_once("Funcion.class.php");
+//Controles de procesamiento de datos
+include_once("Control.class.php");
 //Compilación de clausulas SQL utilizadas por el bloque
 include_once("Sql.class.php");
 //Mensajes
@@ -29,7 +29,7 @@ if(class_exists('BloquegestionReserva') === false){
 	{
 
 		var $nombreBloque;
-		var $miFuncion;
+		var $miControl;
 		var $miSql;
 		var $miConfigurador;
 
@@ -50,13 +50,13 @@ if(class_exists('BloquegestionReserva') === false){
 				$ruta.="/blocks/".$esteBloque["grupo"]."/".$esteBloque["nombre"]."/";
 				$rutaURL.="/blocks/".$esteBloque["grupo"]."/".$esteBloque["nombre"]."/";
 			}
-				
+
 			$this->miConfigurador->setVariableConfiguracion("rutaBloque",$ruta);
 			$this->miConfigurador->setVariableConfiguracion("rutaUrlBloque",$rutaURL);
 
-			$nombreClaseFuncion="Funcion".$esteBloque["nombre"];
-			$this->miFuncion=new $nombreClaseFuncion();
-			
+			$nombreClaseControl="Control".$esteBloque["nombre"];
+			$this->miControl=new $nombreClaseControl();
+
 			$nombreAPI="Api".$esteBloque["nombre"];
 			$this->api=new $nombreAPI();
 
@@ -72,26 +72,26 @@ if(class_exists('BloquegestionReserva') === false){
 		}
 
 		public function bloque(){
-		
+
 				$html=array();
 
 				if(!isset($_REQUEST['action'])){
-					$this->miHTML->setFuncion($this->miFuncion);
+					$this->miHTML->setControl($this->miControl);
 					$this->miHTML->setLenguaje($this->miLenguaje);
 					$this->miHTML->setSql($this->miSql);
 					$this->miHTML->html();
-					
+
 				}elseif($_REQUEST['api']){
-					$this->api->setSql($this->miSql); 
+					$this->api->setSql($this->miSql);
 					$resultado=$this->api->process();
-					
+
 				}else{
-					$this->miFuncion->setSql($this->miSql);
-					$resultado=$this->miFuncion->action();
+					$this->miControl->setSql($this->miSql);
+					$resultado=$this->miControl->action();
 				}
 
 		}
-		
+
 	}
 }
 
@@ -106,7 +106,7 @@ $this->miConfigurador->setVariableConfiguracion("esteBloque",$unBloque);
 if(isset($lenguaje)){
 
 	$esteBloque=new $estaClase($unBloque,$lenguaje);
-	
+
 }else{
 
 	$esteBloque=new $estaClase($unBloque);

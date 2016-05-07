@@ -15,13 +15,13 @@ include_once("core/manager/Configurador.class.php");
 //Elementos que constituyen un bloque típico CRUD.
 
 //Interfaz gráfica
-include_once("View.class.php");
+include_once("Html.class.php");
 
 //Funciones de procesamiento de datos
-include_once("Controller.class.php");
+include_once("Control.class.php");
 
 //Compilación de clausulas SQL utilizadas por el bloque
-include_once("Model.class.php");
+include_once("Sql.class.php");
 
 //Mensajes
 include_once("Lenguaje.class.php");
@@ -53,7 +53,7 @@ if(class_exists('BloquebookingManagement') === false){
 
 			$ruta=$this->miConfigurador->getVariableConfiguracion("raizDocumento");
 			$rutaURL=$this->miConfigurador->getVariableConfiguracion("host").$this->miConfigurador->getVariableConfiguracion("site");
-	
+
 			if($esteBloque["grupo"]==""){
 				$ruta.="/blocks/".$esteBloque["nombre"]."/";
 				$rutaURL.="/blocks/".$esteBloque["nombre"]."/";
@@ -61,7 +61,7 @@ if(class_exists('BloquebookingManagement') === false){
 				$ruta.="/blocks/".$esteBloque["grupo"]."/".$esteBloque["nombre"]."/";
 				$rutaURL.="/blocks/".$esteBloque["grupo"]."/".$esteBloque["nombre"]."/";
 			}
-				
+
 			$this->miConfigurador->setVariableConfiguracion("rutaBloque",$ruta);
 			$this->miConfigurador->setVariableConfiguracion("rutaUrlBloque",$rutaURL);
 

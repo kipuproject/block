@@ -74,97 +74,97 @@ class SqlinternalBooking extends sql {
 				$cadena_sql="SELECT  ";
 				$cadena_sql.=$prefijo."reservable.id_reservable ID_RESERVABLE, ";
 				$cadena_sql.=$prefijo."reservable.nombre NOMBRE_RESERVABLE, ";
-				$cadena_sql.="FROM_UNIXTIME(".$prefijo."reserva.fecha_inicio) FECHA_INICIO, ";
-				$cadena_sql.="FROM_UNIXTIME(".$prefijo."reserva.fecha_fin) FECHA_FIN ";
+				$cadena_sql.="FROM_UNIXTIME(".$prefijo."reservation.fecha_inicio) FECHA_INICIO, ";
+				$cadena_sql.="FROM_UNIXTIME(".$prefijo."reservation.fecha_fin) FECHA_FIN ";
 				$cadena_sql.="FROM ";
-				$cadena_sql.=$prefijo."reserva ";
+				$cadena_sql.=$prefijo."reservation ";
 				$cadena_sql.="INNER JOIN ";
-				$cadena_sql.=$prefijo."reserva_reservable ";
-				$cadena_sql.="ON (".$prefijo."reserva_reservable.id_reserva = ".$prefijo."reserva.id_reserva) ";
+				$cadena_sql.=$prefijo."reservation_reservable ";
+				$cadena_sql.="ON (".$prefijo."reservation_reservable.id_reserva = ".$prefijo."reservation.id_reserva) ";
 				$cadena_sql.="INNER JOIN ";
 				$cadena_sql.=$prefijo."reservable ";
-				$cadena_sql.="ON (".$prefijo."reserva_reservable.id_reservable = ".$prefijo."reservable.id_reservable) ";
+				$cadena_sql.="ON (".$prefijo."reservation_reservable.id_reservable = ".$prefijo."reservable.id_reservable) ";
 				$cadena_sql.="WHERE ";
 
 				$cadena_sql.="( ";
-				$cadena_sql.=$prefijo."reserva.fecha_inicio BETWEEN '".$variable["timestampInicio"]."' AND '".$variable["timestampFin"]."' ";
+				$cadena_sql.=$prefijo."reservation.fecha_inicio BETWEEN '".$variable["timestampInicio"]."' AND '".$variable["timestampFin"]."' ";
 				$cadena_sql.=" OR ";
-				$cadena_sql.=$prefijo."reserva.fecha_fin BETWEEN '".$variable["timestampInicio"]."' AND '".$variable["timestampFin"]."' ";
+				$cadena_sql.=$prefijo."reservation.fecha_fin BETWEEN '".$variable["timestampInicio"]."' AND '".$variable["timestampFin"]."' ";
 				$cadena_sql.=" OR ";
 				$cadena_sql.="	( ";
-				$cadena_sql.=$prefijo."reserva.fecha_inicio < '".$variable["timestampInicio"]."' ";
+				$cadena_sql.=$prefijo."reservation.fecha_inicio < '".$variable["timestampInicio"]."' ";
 				$cadena_sql.="	AND ";
-				$cadena_sql.=$prefijo."reserva.fecha_fin > '".$variable["timestampFin"]."' ";
+				$cadena_sql.=$prefijo."reservation.fecha_fin > '".$variable["timestampFin"]."' ";
 				$cadena_sql.="	) ";
 				$cadena_sql.=") ";
 
 				$cadena_sql.="AND ";
-				$cadena_sql.=$prefijo."reserva_reservable.id_reservable IN ( ".$variable["cadena_reservables"]." ) ";
+				$cadena_sql.=$prefijo."reservation_reservable.id_reservable IN ( ".$variable["cadena_reservables"]." ) ";
 				$cadena_sql.="AND ";
-				$cadena_sql.=$prefijo."reserva.estado_reserva NOT IN (3,4) "; //la reserva no contenga los estados FINALIZADO Y CANCELADO
+				$cadena_sql.=$prefijo."reservation.estado_reserva NOT IN (3,4) "; //la reservation no contenga los estados FINALIZADO Y CANCELADO
 				$cadena_sql.="AND ";
-				$cadena_sql.=$prefijo."reserva.establecimiento=".$variable["establecimiento"]." ";
+				$cadena_sql.=$prefijo."reservation.establecimiento=".$variable["establecimiento"]." ";
 				$cadena_sql.="AND ";
-				$cadena_sql.=$prefijo."reserva.tipo_reserva=".$variable["tipo_reserva"]." ";
+				$cadena_sql.=$prefijo."reservation.tipo_reserva=".$variable["tipo_reserva"]." ";
 				break;
 
 			case "buscarCruceCapacidadMaximaReserva":
 				$cadena_sql="SELECT  ";
-				$cadena_sql.=$prefijo."reserva.numero_personas NUMERO_PERSONAS, ";
-				$cadena_sql.="FROM_UNIXTIME(".$prefijo."reserva.fecha_inicio) FECHA_INICIO, ";
-				$cadena_sql.="FROM_UNIXTIME(".$prefijo."reserva.fecha_fin) FECHA_FIN ";
+				$cadena_sql.=$prefijo."reservation.numero_personas NUMERO_PERSONAS, ";
+				$cadena_sql.="FROM_UNIXTIME(".$prefijo."reservation.fecha_inicio) FECHA_INICIO, ";
+				$cadena_sql.="FROM_UNIXTIME(".$prefijo."reservation.fecha_fin) FECHA_FIN ";
 				$cadena_sql.="FROM ";
-				$cadena_sql.=$prefijo."reserva ";
+				$cadena_sql.=$prefijo."reservation ";
 				$cadena_sql.="WHERE ";
 				$cadena_sql.="( ";
-				$cadena_sql.=$prefijo."reserva.fecha_inicio BETWEEN '".$variable["timeStampIni"]."' AND '".$variable["timeStampEnd"]."' ";
+				$cadena_sql.=$prefijo."reservation.fecha_inicio BETWEEN '".$variable["timeStampIni"]."' AND '".$variable["timeStampEnd"]."' ";
 				$cadena_sql.=" OR ";
-				$cadena_sql.=$prefijo."reserva.fecha_fin BETWEEN '".$variable["timeStampIni"]."' AND '".$variable["timeStampEnd"]."' ";
+				$cadena_sql.=$prefijo."reservation.fecha_fin BETWEEN '".$variable["timeStampIni"]."' AND '".$variable["timeStampEnd"]."' ";
 				$cadena_sql.=" OR ";
 				$cadena_sql.="	( ";
-				$cadena_sql.=$prefijo."reserva.fecha_inicio < '".$variable["timeStampIni"]."' ";
+				$cadena_sql.=$prefijo."reservation.fecha_inicio < '".$variable["timeStampIni"]."' ";
 				$cadena_sql.="	AND ";
-				$cadena_sql.=$prefijo."reserva.fecha_fin > '".$variable["timeStampEnd"]."' ";
+				$cadena_sql.=$prefijo."reservation.fecha_fin > '".$variable["timeStampEnd"]."' ";
 				$cadena_sql.="	) ";
 				$cadena_sql.=") ";
 				$cadena_sql.="AND ";
-				$cadena_sql.=$prefijo."reserva.estado_reserva NOT IN (3,4) "; //la reserva no contenga los estados FINALIZADO Y CANCELADO
+				$cadena_sql.=$prefijo."reservation.estado_reserva NOT IN (3,4) "; //la reservation no contenga los estados FINALIZADO Y CANCELADO
 				$cadena_sql.="AND ";
-				$cadena_sql.=$prefijo."reserva.establecimiento=".$variable["company"]." ";
+				$cadena_sql.=$prefijo."reservation.establecimiento=".$variable["company"]." ";
 				$cadena_sql.="AND ";
-				$cadena_sql.=$prefijo."reserva.tipo_reserva=".$variable["commerce"]." ";
+				$cadena_sql.=$prefijo."reservation.tipo_reserva=".$variable["commerce"]." ";
 				break;
 
 			case "buscarReservablesOcupados":
 				$cadena_sql="SELECT  ";
 				$cadena_sql.="count(id_reservable) ";
 				$cadena_sql.="FROM ";
-				$cadena_sql.=$prefijo."reserva ";
+				$cadena_sql.=$prefijo."reservation ";
 				$cadena_sql.="INNER JOIN ";
-				$cadena_sql.=$prefijo."reserva_reservable ";
-				$cadena_sql.="ON (".$prefijo."reserva_reservable.id_reserva = ".$prefijo."reserva.id_reserva) ";
+				$cadena_sql.=$prefijo."reservation_reservable ";
+				$cadena_sql.="ON (".$prefijo."reservation_reservable.id_reserva = ".$prefijo."reservation.id_reserva) ";
 				$cadena_sql.="WHERE ";
 				$cadena_sql.="( ";
-				$cadena_sql.=$prefijo."reserva.fecha_inicio BETWEEN '".$variable["timeStampStart"]."' AND '".$variable["timeStampEnd"]."' ";
+				$cadena_sql.=$prefijo."reservation.fecha_inicio BETWEEN '".$variable["timeStampStart"]."' AND '".$variable["timeStampEnd"]."' ";
 				$cadena_sql.=" OR ";
-				$cadena_sql.=$prefijo."reserva.fecha_fin BETWEEN '".$variable["timeStampStart"]."' AND '".$variable["timeStampEnd"]."' ";
+				$cadena_sql.=$prefijo."reservation.fecha_fin BETWEEN '".$variable["timeStampStart"]."' AND '".$variable["timeStampEnd"]."' ";
 				$cadena_sql.=" OR ";
 				$cadena_sql.="	( ";
-				$cadena_sql.=$prefijo."reserva.fecha_inicio < '".$variable["timeStampStart"]."' ";
+				$cadena_sql.=$prefijo."reservation.fecha_inicio < '".$variable["timeStampStart"]."' ";
 				$cadena_sql.="	AND ";
-				$cadena_sql.=$prefijo."reserva.fecha_fin > '".$variable["timeStampEnd"]."' ";
+				$cadena_sql.=$prefijo."reservation.fecha_fin > '".$variable["timeStampEnd"]."' ";
 				$cadena_sql.="	) ";
 				$cadena_sql.=") ";
 				$cadena_sql.="AND ";
-				$cadena_sql.=$prefijo."reserva.estado_reserva NOT IN (3,4) "; //la reserva no contenga los estados FINALIZADO Y CANCELADO
+				$cadena_sql.=$prefijo."reservation.estado_reserva NOT IN (3,4) "; //la reservation no contenga los estados FINALIZADO Y CANCELADO
 				$cadena_sql.="AND ";
-				$cadena_sql.=$prefijo."reserva.establecimiento='".$variable["company"]."' ";
+				$cadena_sql.=$prefijo."reservation.establecimiento='".$variable["company"]."' ";
 				$cadena_sql.="AND ";
-				$cadena_sql.=$prefijo."reserva.tipo_reserva='".$variable["commerce"]."' ";
+				$cadena_sql.=$prefijo."reservation.tipo_reserva='".$variable["commerce"]."' ";
 				$cadena_sql.="AND ";
-				$cadena_sql.=$prefijo."reserva_reservable.id_reservable_grupo='".$variable["groupRoom"]."' ";
+				$cadena_sql.=$prefijo."reservation_reservable.id_reservable_grupo='".$variable["groupRoom"]."' ";
 				$cadena_sql.="AND ";
-				$cadena_sql.=$prefijo."reserva.estado='1'";
+				$cadena_sql.=$prefijo."reservation.estado='1'";
 				break;
 
 			case "buscarReservables":
@@ -266,7 +266,7 @@ class SqlinternalBooking extends sql {
 
 			case "insertBooking":
 				$cadena_sql="INSERT INTO ";
-				$cadena_sql.=$prefijo."reserva ";
+				$cadena_sql.=$prefijo."reservation ";
 				$cadena_sql.="( ";
 				$cadena_sql.="`medio`, ";
 				$cadena_sql.="`fecha_inicio`, ";
@@ -306,7 +306,7 @@ class SqlinternalBooking extends sql {
 
 			case "insertBookingItems":
 				$cadena_sql="INSERT INTO ";
-				$cadena_sql.=$prefijo."reserva_reservable ";
+				$cadena_sql.=$prefijo."reservation_reservable ";
 				$cadena_sql.="( ";
 				$cadena_sql.="`id_reserva`, ";
 				$cadena_sql.="`id_reservable_grupo`, ";
@@ -324,7 +324,7 @@ class SqlinternalBooking extends sql {
 				$cadena_sql="SELECT ";
 				$cadena_sql.="id_reservable_grupo IDGROUP ";
 				$cadena_sql.="FROM ";
-				$cadena_sql.=$prefijo."reserva_reservable ";
+				$cadena_sql.=$prefijo."reservation_reservable ";
 				$cadena_sql.="WHERE ";
 				$cadena_sql.="id_reserva ='".$variable."' ";
 				break;
@@ -383,7 +383,7 @@ class SqlinternalBooking extends sql {
 				$cadena_sql.=$prefijo."tipo_reserva_filtrador ";
 				$cadena_sql.="ON (".$prefijo."tipo_reserva.id_tipoReserva = ".$prefijo."tipo_reserva_filtrador.id_tipoReserva) ";
 				$cadena_sql.="WHERE ";
-				$cadena_sql.=$prefijo."tipo_reserva.estado=1 ";
+				$cadena_sql.=$prefijo."tipo_reserva.estado=1 ";  
 				$cadena_sql.="AND ";
 				$cadena_sql.=$prefijo."tipo_reserva_filtrador.estado=1 ";
 				if($variable['filtros']<>""){
@@ -432,7 +432,7 @@ class SqlinternalBooking extends sql {
 				$cadena_sql.="capacidad CAPACITY, ";
 				$cadena_sql.="descripcion DESCRIPTION ";
 				$cadena_sql.="FROM ";
-				$cadena_sql.=$prefijo."reservable_grupo ";
+				$cadena_sql.=$prefijo."room_type ";
 				$cadena_sql.="WHERE ";
 				$cadena_sql.="id_tipoReserva ='".$variable["commerce"]."' ";
 				if($variable["group"]<>""){
@@ -452,7 +452,7 @@ class SqlinternalBooking extends sql {
 				$cadena_sql.="capacidad CAPACITY, ";
 				$cadena_sql.="descripcion DESCRIPTION ";
 				$cadena_sql.="FROM ";
-				$cadena_sql.=$prefijo."reservable_grupo ";
+				$cadena_sql.=$prefijo."room_type ";
 				$cadena_sql.="WHERE ";
 				$cadena_sql.="id_tipoReserva ='".$variable["commerce"]."' ";
 				$cadena_sql.="AND ";
@@ -516,7 +516,7 @@ class SqlinternalBooking extends sql {
 				$cadena_sql.="r.fecha_inicio STARTBOOKING, ";
 				$cadena_sql.="r.fecha_fin ENDBOOKING ";
 				$cadena_sql.="FROM ";
-				$cadena_sql.=$prefijo."reserva r ";
+				$cadena_sql.=$prefijo."reservation r ";
 				$cadena_sql.="WHERE ";
 				$cadena_sql.="r.sesion_temp ='".$variable['session']."' ";
 				$cadena_sql.="AND ";
@@ -558,7 +558,7 @@ class SqlinternalBooking extends sql {
 				$cadena_sql.="e.email EMAILCOMPANY, ";
 				$cadena_sql.="e.telefonos PHONE ";
 				$cadena_sql.="FROM ";
-				$cadena_sql.=$prefijo."reserva r ";
+				$cadena_sql.=$prefijo."reservation r ";
 				$cadena_sql.="INNER JOIN ";
 				$cadena_sql.=$prefijo."tipo_reserva tr ";
 				$cadena_sql.="ON ";
@@ -574,7 +574,7 @@ class SqlinternalBooking extends sql {
 			case "deleteUnconfirmedBookingUser":
 				$cadena_sql="DELETE ";
 				$cadena_sql.="FROM ";
-				$cadena_sql.=$prefijo."reserva ";
+				$cadena_sql.=$prefijo."reservation ";
 				$cadena_sql.="WHERE ";
 				$cadena_sql.="`cliente` ='".$variable."' ";
 				$cadena_sql.="AND ";
@@ -584,7 +584,7 @@ class SqlinternalBooking extends sql {
 			case "deleteUnconfirmedBookingAll":
 				$cadena_sql="DELETE ";
 				$cadena_sql.="FROM ";
-				$cadena_sql.=$prefijo."reserva ";
+				$cadena_sql.=$prefijo."reservation ";
 				$cadena_sql.="WHERE ";
 				$cadena_sql.="sesion_temp<>'' ";
 				$cadena_sql.="AND ";
@@ -620,7 +620,7 @@ class SqlinternalBooking extends sql {
 
 			case "confirmBookingbyID":
 				$cadena_sql="UPDATE ";
-				$cadena_sql.=$prefijo."reserva ";
+				$cadena_sql.=$prefijo."reservation ";
 				$cadena_sql.="SET ";
 				$cadena_sql.="sesion_temp ='', ";
 				$cadena_sql.="tiempo_expira_temp=fecha_fin, ";
@@ -635,7 +635,7 @@ class SqlinternalBooking extends sql {
 
 			case "confirmBooking":
 				$cadena_sql="UPDATE ";
-				$cadena_sql.=$prefijo."reserva ";
+				$cadena_sql.=$prefijo."reservation ";
 				$cadena_sql.="SET ";
 				$cadena_sql.="sesion_temp ='', ";
 				$cadena_sql.="tiempo_expira_temp=fecha_fin, ";
@@ -651,7 +651,7 @@ class SqlinternalBooking extends sql {
 
 			case "updateUserBooking":
 				$cadena_sql="UPDATE ";
-				$cadena_sql.=$prefijo."reserva ";
+				$cadena_sql.=$prefijo."reservation ";
 				$cadena_sql.="SET ";
 				$cadena_sql.="cliente='".$variable['cliente']."' ";
 				$cadena_sql.="WHERE ";
@@ -660,7 +660,7 @@ class SqlinternalBooking extends sql {
 
 			case "updateMedioBooking":
 				$cadena_sql="UPDATE ";
-				$cadena_sql.=$prefijo."reserva ";
+				$cadena_sql.=$prefijo."reservation ";
 				$cadena_sql.="SET ";
 				$cadena_sql.="medio='".$variable['medioBooking']."' ";
 				$cadena_sql.="WHERE ";

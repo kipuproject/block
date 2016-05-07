@@ -70,11 +70,8 @@ $i++;
                         <br/>
                         <input name="capacity-type" value="<?php echo $roomList[$i]['CAPACITYTYPE']; ?>" type="hidden" />
                         <input name="capacity"  onchange="updateCapacity('<?=$formSaraDataCapacity?>',$(this.form))" value="<?=$roomList[$i]['CAPACITY']?>"  type="text" placeholder="">
-                        
-                        Mínimo de días a reservar:
-                        <br/>
-                        <input name="minimun"  onchange="updateMinimun('<?=$formSaraDataMinimun?>',$(this.form))" value="<?=$roomList[$i]['MINIMUN']?>"  type="text" placeholder="">
-                        
+
+
 											</div>
 											<div class="cuatrocol_20">
 												<textarea style="width: 95%; height: 175px;"onchange="updateTypeRoom('<?=$formSaraDataEdit?>',$(this.form))" name="description"><?=trim($roomList[$i]['DESCRIPTION'])?></textarea>
@@ -125,7 +122,11 @@ $i++;
 													<tr>
 														<td style="color:darkblue" >Niño <input style="width:90px" name="currency-<?=$currency?>-1-0"  onchange="updateTypeRoom('<?=$formSaraDataEdit?>',$(this.form))" name="name"  value="<?=$priceList[$roomList[$i]['IDTYPEROOM']]['1']['0'][$currency]?>"  type="text" placeholder=""></td>
 														<td style="color:darkblue">Niño <input style="width:90px" name="currency-<?=$currency?>-2-0"  onchange="updateTypeRoom('<?=$formSaraDataEdit?>',$(this.form))" name="name"  value="<?=$priceList[$roomList[$i]['IDTYPEROOM']]['2']['0'][$currency]?>"  type="text" placeholder=""></td>
-													</tr>
+                          </tr>
+                          <tr>
+                            <td style="color:darkblue">Mínimo Días<br/><input style="width:90px" name="minimun"  onchange="updateMinimun('<?=$formSaraDataMinimun?>',$(this.form))" value="<?=$roomList[$i]['MINIMUN']?>"  type="text" placeholder=""></td>
+                            <td style="color:darkblue">Mínimo Días<br/><input style="width:90px" name="minimun"  onchange="updateMinimun('<?=$formSaraDataMinimun?>',$(this.form))" value="<?=$roomList[$i]['MINIMUN']?>"  type="text" placeholder=""></td>
+                          </tr>
 
 												</table>
 
@@ -161,6 +162,10 @@ $i++;
 														<td style="color:darkblue">Niño <input style="width:90px" name="currency-<?=$currency?>-3-0"  onchange="updateTypeRoom('<?=$formSaraDataEdit?>',$(this.form))" name="name"  value="<?=$priceList[$roomList[$i]['IDTYPEROOM']]['3']['0'][$currency]?>"  type="text" placeholder=""></td>
 														<td style="color:darkblue">Niño <input style="width:90px" name="currency-<?=$currency?>-4-0"  onchange="updateTypeRoom('<?=$formSaraDataEdit?>',$(this.form))" name="name"  value="<?=$priceList[$roomList[$i]['IDTYPEROOM']]['4']['0'][$currency]?>"  type="text" placeholder=""></td>
 													</tr>
+                          <tr>
+                            <td style="color:darkblue">Mínimo Días<br/><input style="width:90px" name="minimun"  onchange="updateMinimun('<?=$formSaraDataMinimun?>',$(this.form))" value="<?=$roomList[$i]['MINIMUN']?>"  type="text" placeholder=""></td>
+                            <td style="color:darkblue">Mínimo Días<br/><input style="width:90px" name="minimun"  onchange="updateMinimun('<?=$formSaraDataMinimun?>',$(this.form))" value="<?=$roomList[$i]['MINIMUN']?>"  type="text" placeholder=""></td>
+                          </tr>
 												</table>
 											</div>
 											<input name="idtyperoom"  value="<?=$roomList[$i]['IDTYPEROOM']?>"  type="hidden" placeholder="">

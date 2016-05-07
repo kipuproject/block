@@ -11,28 +11,28 @@ include_once("core/connection/Sql.class.php");
 //en camel case precedida por la palabra sql
 
 class SqlPayu extends sql {
-	
+
 	var $miConfigurador;
-	
+
 	function __construct(){
 		$this->miConfigurador=Configurador::singleton();
 	}
 
 	function cadena_sql($tipo,$variable="") {
-		 
+
 		/**
 		 * 1. Revisar las variables para evitar SQL Injection
 		 *
 		 */
 		$prefijo=$this->miConfigurador->getVariableConfiguracion("prefijo");
 		$idSesion=$this->miConfigurador->getVariableConfiguracion("id_sesion");
-		 
+
 		switch($tipo) {
-			 
+
 			/**
 			 * Clausulas específicas
 			 */
-			 
+
 			case "api_key":
 				$cadena_sql="SELECT ";
 				$cadena_sql.="dbms DBMS, ";
@@ -43,8 +43,8 @@ class SqlPayu extends sql {
 				$cadena_sql.="WHERE estado=1 ";
 				$cadena_sql.="AND api_key='".$variable."'";
 				break;
-								
-      			 
+
+
 			case "insertTransaction":
 				$cadena_sql="INSERT INTO ";
 				$cadena_sql.=$prefijo."payu_payment ";
@@ -69,8 +69,8 @@ class SqlPayu extends sql {
 				$cadena_sql.="now(), ";
 				$cadena_sql.="'0' ";
 				$cadena_sql.=")";
-				break;  
-			
+				break;
+
 			case "iniciarTransaccion":
 				$cadena_sql="START TRANSACTION";
 				break;
@@ -100,8 +100,8 @@ class SqlPayu extends sql {
 				$cadena_sql.="pp.id_commerce='".$variable['commerce']."' ";
 				$cadena_sql.="AND ";
 				$cadena_sql.="pp.status=0 ";
-				break;   
-        
+				break;
+
 			case "searchTransactionbyBooking":
 				$cadena_sql="SELECT  ";
 				$cadena_sql.="pp.system_reference SYSTEMREFERENCE, ";
@@ -117,8 +117,8 @@ class SqlPayu extends sql {
 				$cadena_sql.="pp.system_reference='".$variable['booking']."' ";
 				$cadena_sql.="AND ";
 				$cadena_sql.="pp.id_commerce='".$variable['commerce']."' ";
-				break;     
-        
+				break;
+
 			case "dataCommerce":
 				$cadena_sql="SELECT  ";
 				$cadena_sql.="pc.merchant_id MERCHANTID, ";
@@ -129,21 +129,21 @@ class SqlPayu extends sql {
 				$cadena_sql.="pc.api_login APILOGIN ";
 				$cadena_sql.="FROM ";
 				$cadena_sql.=$prefijo."payu_config pc ";
-				$cadena_sql.="WHERE "; 
+				$cadena_sql.="WHERE ";
 				$cadena_sql.="pc.id_commerce='".$variable."' ";
-				break;        
-  
-				
-			case "apiCommerceByID":  
+				break;
+
+
+			case "apiCommerceByID":
 				$cadena_sql="SELECT  ";
 				$cadena_sql.=$prefijo."commerce.api_key APIKEY ";
 				$cadena_sql.="FROM ";
 				$cadena_sql.=$prefijo."commerce ";
 				$cadena_sql.="WHERE ";
 				$cadena_sql.=$prefijo."commerce.id_tipoReserva ='".$variable."' ";
-				break;			
-				
-			case "dataCommerceByID":  
+				break;
+
+			case "dataCommerceByID":
 				$cadena_sql="SELECT  ";
 				$cadena_sql.=$prefijo."commerce.nombre NAME, ";
 				$cadena_sql.=$prefijo."commerce.descripcion DESCRIPTION, ";
@@ -159,54 +159,54 @@ class SqlPayu extends sql {
 				$cadena_sql.=$prefijo."commerce ";
 				$cadena_sql.="WHERE ";
 				$cadena_sql.=$prefijo."commerce.id_tipoReserva ='".$variable."' ";
-				break;	
-      
+				break;
+
       case "dataBookingByID":
 				$cadena_sql="SELECT ";
 				$cadena_sql.="r.id_reserva IDBOOKING, ";
 				$cadena_sql.="DATE_FORMAT(FROM_UNIXTIME(r.fecha_inicio),'%m/%d/%Y') CHECKIN, ";
 				$cadena_sql.="DATE_FORMAT(FROM_UNIXTIME((r.fecha_fin)+2),'%m/%d/%Y') CHECKOUT, ";
 				$cadena_sql.="r.fecha_inicio CHECKIN_UNIXTIME, ";
-				$cadena_sql.="r.fecha_fin CHECKOUT_UNIXTIME, ";	
+				$cadena_sql.="r.fecha_fin CHECKOUT_UNIXTIME, ";
 				$cadena_sql.="r.observacion_cliente OBSERVATION_CLIENT, ";
 				$cadena_sql.="'0' INFANTS, ";
 				$cadena_sql.="r.cliente CLIENT, ";
 				$cadena_sql.="r.tipo_reserva COMMERCE, ";
 				$cadena_sql.="r.valor_total VALUE ";
-				$cadena_sql.="FROM "; 
-				$cadena_sql.=$prefijo."reserva r ";
+				$cadena_sql.="FROM ";
+				$cadena_sql.=$prefijo."reservation r ";
 				$cadena_sql.="WHERE ";
 				$cadena_sql.="r.id_reserva ='".$variable."' ";
 			break;
-      
+
       case "dataRoomBookingbyID":
 				$cadena_sql="SELECT ";
 				$cadena_sql.="rg.nombre NAME, ";
         $cadena_sql.="r.cliente CLIENT, ";
 				$cadena_sql.="r.tipo_reserva COMMERCE, ";
 				$cadena_sql.="r.valor_total VALUE ";
-				$cadena_sql.="FROM "; 
-				$cadena_sql.=$prefijo."reserva r ";
+				$cadena_sql.="FROM ";
+				$cadena_sql.=$prefijo."reservation r ";
 				$cadena_sql.="INNER JOIN ";
-				$cadena_sql.=$prefijo."reserva_reservable rr ";
+				$cadena_sql.=$prefijo."reservation_room rr ";
 				$cadena_sql.="ON ";
-				$cadena_sql.="rr.id_reserva = r.id_reserva ";				
+				$cadena_sql.="rr.id_reserva = r.id_reserva ";
 				$cadena_sql.="INNER JOIN ";
-				$cadena_sql.=$prefijo."reservable_grupo rg ";
+				$cadena_sql.=$prefijo."room_type rg ";
 				$cadena_sql.="ON ";
 				$cadena_sql.="rr.id_reservable_grupo = rg.id_reservable_grupo ";
 				$cadena_sql.="WHERE ";
 				$cadena_sql.="r.id_reserva ='".$variable."' ";
 			break;
-      
+
       case "updateDataCommerceByReference":
 				$cadena_sql="UPDATE ";
 				$cadena_sql.=$prefijo."payu_payment ";
-				$cadena_sql.="SET "; 
+				$cadena_sql.="SET ";
 				$cadena_sql.="answer='".$variable['answer']."' ";
 				$cadena_sql.="WHERE id_payu_reference=".$variable['reference'];
 				break;
-      
+
 		}
 		//echo "<br/>".$tipo."=".$cadena_sql;
 		return $cadena_sql;

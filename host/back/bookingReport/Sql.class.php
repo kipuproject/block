@@ -12,40 +12,40 @@ include_once("core/connection/Sql.class.php");
 //en camel case precedida por la palabra sql
 
 class SqlbookingReport extends sql {
-	
-	
+
+
 	var $miConfigurador;
-	
-	
+
+
 	function __construct(){
 		$this->miConfigurador=Configurador::singleton();
 	}
-	
+
 
 	function cadena_sql($tipo,$variable="") {
-		 
+
 		/**
 		 * 1. Revisar las variables para evitar SQL Injection
 		 *
 		 */
-		
+
 		$prefijo=$this->miConfigurador->getVariableConfiguracion("prefijo");
 		$idSesion=$this->miConfigurador->getVariableConfiguracion("id_sesion");
-		 
+
 		switch($tipo) {
-			 
+
 			/**
 			 * Clausulas específicas
 			 */
-			 
+
 			case "userList":
 				$cadena_sql="SELECT ";
 				$cadena_sql.="u.id_usuario ID, ";
 				$cadena_sql.="CONCAT(u.nombre,' ',apellido) NOMBRE,";
-				$cadena_sql.="GROUP_CONCAT( DISTINCT (eu.id_establecimiento))  EMPRESA, ";				 
+				$cadena_sql.="GROUP_CONCAT( DISTINCT (eu.id_establecimiento))  EMPRESA, ";
 				$cadena_sql.="correo CORREO, ";
-				$cadena_sql.="GROUP_CONCAT( DISTINCT (s.nombre) ) ROL, ";				 				 
-				$cadena_sql.="u.estado ESTADO ";				 
+				$cadena_sql.="GROUP_CONCAT( DISTINCT (s.nombre) ) ROL, ";
+				$cadena_sql.="u.estado ESTADO ";
 				$cadena_sql.="FROM ";
 				$cadena_sql.=$prefijo."usuario u ";
 				$cadena_sql.="INNER JOIN ";
@@ -68,10 +68,10 @@ class SqlbookingReport extends sql {
 				$cadena_sql.="u.id_usuario ID, ";
 				$cadena_sql.="u.nombre NOMBRE,";
 				$cadena_sql.="u.apellido APELLIDO,";
-				$cadena_sql.="GROUP_CONCAT( DISTINCT (eu.id_establecimiento))  EMPRESA, ";				 
+				$cadena_sql.="GROUP_CONCAT( DISTINCT (eu.id_establecimiento))  EMPRESA, ";
 				$cadena_sql.="correo CORREO, ";
-				$cadena_sql.="GROUP_CONCAT( DISTINCT (s.nombre) ) ROL, ";				 				 
-				$cadena_sql.="u.estado ESTADO ";				 
+				$cadena_sql.="GROUP_CONCAT( DISTINCT (s.nombre) ) ROL, ";
+				$cadena_sql.="u.estado ESTADO ";
 				$cadena_sql.="FROM ";
 				$cadena_sql.=$prefijo."usuario u ";
 				$cadena_sql.="INNER JOIN ";
@@ -122,7 +122,7 @@ class SqlbookingReport extends sql {
 			case "buscarUsuario":
 				$cadena_sql="SELECT ";
 				$cadena_sql.="FECHA_CREACION, ";
-				$cadena_sql.="PRIMER_NOMBRE ";				 
+				$cadena_sql.="PRIMER_NOMBRE ";
 				$cadena_sql.="FROM ";
 				$cadena_sql.="USUARIOS ";
 				$cadena_sql.="WHERE ";

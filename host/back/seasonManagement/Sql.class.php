@@ -12,28 +12,28 @@ include_once("core/connection/Sql.class.php");
 //en camel case precedida por la palabra sql
 
 class SqlseasonManagement extends sql {
-	
-	
+
+
 	var $miConfigurador;
-	
-	
+
+
 	function __construct(){
 		$this->miConfigurador=Configurador::singleton();
 	}
-	
+
 
 	function cadena_sql($tipo,$variable="") {
-		 
+
 		/**
 		 * 1. Revisar las variables para evitar SQL Injection
 		 *
 		 */
-		
+
 		$prefijo=$this->miConfigurador->getVariableConfiguracion("prefijo");
 		$idSesion=$this->miConfigurador->getVariableConfiguracion("id_sesion");
-		 
+
 		switch($tipo) {
-			 
+
 			case "searchSeason":
 				$cadena_sql="SELECT ";
 				$cadena_sql.="id_season IDSEASON, ";
@@ -43,8 +43,8 @@ class SqlseasonManagement extends sql {
 				$cadena_sql.=$prefijo."season ";
 				$cadena_sql.="WHERE estado='1' ";
 				break;
-				
-				
+
+
 			case "insertDay":
 				$cadena_sql="INSERT INTO ";
 				$cadena_sql.=$prefijo."season_calendar ";
@@ -62,9 +62,9 @@ class SqlseasonManagement extends sql {
 				$cadena_sql.="'1' ";
 				$cadena_sql.=")";
 				break;
-			
-			
-				
+
+
+
 			case "searchDay":
 				$cadena_sql="SELECT ";
 				$cadena_sql.="id_seasonCalendar IDSEASONCALENDAR ";
@@ -73,8 +73,8 @@ class SqlseasonManagement extends sql {
 				$cadena_sql.="WHERE estado='1' ";
 				$cadena_sql.=" AND id_commerce = ".$variable['commerce'];
 				$cadena_sql.=" AND time = '".$variable['day']."'";
-				break;			
-				
+				break;
+
 			case "searchAllDays":
 				$cadena_sql="SELECT ";
 				$cadena_sql.="id_seasonCalendar IDSEASONCALENDAR, ";
@@ -86,8 +86,8 @@ class SqlseasonManagement extends sql {
 				$cadena_sql.=" AND id_commerce = ".$variable['commerce'];
 				break;
 
-				
-				
+
+
 			case "updateDay":
 				$cadena_sql="UPDATE ";
 				$cadena_sql.=$prefijo."season_calendar ";
@@ -98,7 +98,7 @@ class SqlseasonManagement extends sql {
 				$cadena_sql.=" AND time = '".$variable['day']."'";
 
 				break;
-				
+
 			case "iniciarTransaccion":
 				$cadena_sql="START TRANSACTION";
 				break;

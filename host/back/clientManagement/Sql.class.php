@@ -12,32 +12,32 @@ include_once("core/connection/Sql.class.php");
 //en camel case precedida por la palabra sql
 
 class SqlclientManagement extends sql {
-	
-	
+
+
 	var $miConfigurador;
-	
-	
+
+
 	function __construct(){
 		$this->miConfigurador=Configurador::singleton();
 	}
-	
+
 
 	function cadena_sql($tipo,$variable="") {
-		 
+
 		/**
 		 * 1. Revisar las variables para evitar SQL Injection
 		 *
 		 */
-		
+
 		$prefijo=$this->miConfigurador->getVariableConfiguracion("prefijo");
 		$idSesion=$this->miConfigurador->getVariableConfiguracion("id_sesion");
-		 
+
 		switch($tipo) {
-			 
+
 			/**
 			 * Clausulas específicas
 			 */
-			 
+
 			case "dataByID":
 				$cadena_sql="SELECT ";
 				$cadena_sql.="a.id_usuario ID, ";
@@ -53,7 +53,7 @@ class SqlclientManagement extends sql {
 				$cadena_sql.="WHERE a.estado IN ('0','1') ";
 				$cadena_sql.="AND a.id_usuario='".$variable."'";
 				break;
-				
+
 			case "dataList":
 				$cadena_sql="SELECT ";
 				$cadena_sql.="a.id_usuario ID, ";
@@ -64,7 +64,7 @@ class SqlclientManagement extends sql {
 				$cadena_sql.="a.correo EMAIL, ";
 				$cadena_sql.="a.telefono PHONE, ";
 				$cadena_sql.="a.estado STATUS ";
-				$cadena_sql.="FROM "; 
+				$cadena_sql.="FROM ";
 				$cadena_sql.=$prefijo."user a ";
 				$cadena_sql.="INNER JOIN ".$prefijo."user_role r  ";
         $cadena_sql.="ON a.id_usuario=r.id_usuario  ";
@@ -77,7 +77,7 @@ class SqlclientManagement extends sql {
 				$cadena_sql.="WHERE ";
 				$cadena_sql.="id_usuario='".$variable."' ";
 				break;
-		
+
 			case "updateData":
 				$cadena_sql="UPDATE ";
 				$cadena_sql.=$prefijo."user ";
@@ -92,7 +92,7 @@ class SqlclientManagement extends sql {
 				$cadena_sql.="WHERE ";
 				$cadena_sql.="`id_usuario` =".$_REQUEST["optionValue"]." ";
 				break;
-							
+
 			case "insertData":
 				$cadena_sql="INSERT INTO ";
 				$cadena_sql.=$prefijo."user ";
@@ -116,7 +116,7 @@ class SqlclientManagement extends sql {
 				$cadena_sql.="'1' ";
 				$cadena_sql.=")";
 				break;
-			
+
 		}
 		//echo "<br/><br/>".$cadena_sql;
 		return $cadena_sql;

@@ -15,10 +15,10 @@ include_once("core/manager/Configurador.class.php");
 //Elementos que constituyen un bloque típico CRUD.
 
 //Interfaz gráfica
-include_once("Frontera.class.php");
+include_once("Html.class.php");
 
 //Funciones de procesamiento de datos
-include_once("Funcion.class.php");
+include_once("Control.class.php");
 
 //Compilación de clausulas SQL utilizadas por el bloque
 include_once("Sql.class.php");

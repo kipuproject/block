@@ -11,7 +11,8 @@
 
 		$asunto = "Confirmacion Reserva ".$response->commerce['NAME']." \n\n";
 		$cabeceras="From: reservas@kipu.co\r\n";
-		$cabeceras.="Bcc: karenpalacios@kreent.com,carolinaherrera@kreent.com,info@kreent.com\r\n";
+		//$cabeceras.="Bcc: karenpalacios@kreent.com,carolinaherrera@kreent.com,info@kreent.com\r\n";
+		$cabeceras.="Bcc: karenmpalacios@gmail.com\r\n";
 		$cabeceras.="Content-type: text/html\r\n";
 		$ok=mail($email,$asunto,$body,$cabeceras);
 

@@ -4,7 +4,7 @@ if(!isset($GLOBALS["autorizado"])){
 	exit;
 }
 
-class FunciongestionReserva{
+class ControlgestionReserva{
 
 	public function action(){
 	}
@@ -17,7 +17,7 @@ class FunciongestionReserva{
 		$this->sql=$a;
 	}
 
-	public function setFuncion($funcion){
+	public function setControl($funcion){
 		$this->funcion=$funcion;
 	}
 
@@ -28,6 +28,6 @@ class FunciongestionReserva{
 	public function setFormulario($formulario){
 		$this->formulario=$formulario;
 	}
-	
+
 }
 ?>
