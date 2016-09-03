@@ -7,7 +7,7 @@ $additionaldata=$this->getAdditionalData($booking['IDBOOKING']);
 
 ?>
 <link rel="stylesheet" type="text/css" href="https://code.jquery.com/ui/1.11.4/themes/smoothness/jquery-ui.css">
-<script>var actionURL = "<?php echo $formSaraDataURL; ?>"</script> 
+<script>var actionURL = "<?php echo $formSaraDataURL; ?>"</script>
 
 
 <div id="dialog<?php echo $booking['IDBOOKING']; ?>" title="Informacion Pago" style="display:none">
@@ -21,11 +21,11 @@ $additionaldata=$this->getAdditionalData($booking['IDBOOKING']);
 		<li class="active" ><a href="#general<?=$booking['IDBOOKING']?>" data-toggle='tab'>INFORMACION GENERAL</a></li>
 		<li><a href="#financiera<?=$booking['IDBOOKING']?>" data-toggle='tab'>INFORMACION FINANCIERA</a></li>
 		<li><a href="#huespedes<?=$booking['IDBOOKING']?>" data-toggle='tab'>INFORMACION HUESPEDES</a></li>
-		<!--li>
+		<li>
 			<a href="<?=$booking['URLVOUCHER']?>" target="_blank">
 				<img title="Imprimir Voucher" src="http://www.hoteles.kipu.co/blocks/host/back/bookingManagement/html/voucher/imagenes/pdf.png" >
 			</a>
-		</li-->
+		</li>
 	</ul>
 
 	<div class="tab-content padding tab-content-inline tab-content-bottom">
@@ -45,7 +45,7 @@ $additionaldata=$this->getAdditionalData($booking['IDBOOKING']);
               <div class="input-prepend"> Check Out:
 									<input type="text" disabled="true"  id="chekoutinput" value="<?=date("d/m/Y",strtotime($booking['FECHA_FIN']))?>" />
 							</div>
-              
+
               <span class="add-on">
                 <a id="editbutton" onclick="editDate()" >
                   Editar fechas
@@ -85,7 +85,7 @@ $additionaldata=$this->getAdditionalData($booking['IDBOOKING']);
 					</div>
         </div>
         <div class="span6">
-        
+
 					<div class="control-group"  >
 						<label class="control-label" for="textfield">ESTADO RESERVA:</label>
 						<div class="controls">
@@ -100,7 +100,7 @@ $additionaldata=$this->getAdditionalData($booking['IDBOOKING']);
                 Procedencia de la Reserva: <?php echo $booking['MEDIO']; ?>
               </span>
 						</div>
-					</div>        
+					</div>
         </div>
 				<div class="span6">
 					<div class="control-group">
@@ -177,12 +177,11 @@ $additionaldata=$this->getAdditionalData($booking['IDBOOKING']);
 							<div class="controls">
 								<div class="input-prepend">
 									<span class="add-on">$</span>
-									<input type="text" style="width:70px" onchange="assignOnlineValue($(this),'<?=$booking['IDBOOKING']?>',actionURL)" disabled="true" id="payupaymentinput" value="<?=$payuPayment['VALUE']?>" />
+									<input type="text" style="width:70px" onchange="assignOnlineValue($(this),'<?=$booking['IDBOOKING']?>',actionURL)" disabled="true" id="payupaymentinput<?php echo $booking['IDBOOKING']; ?>" value="<?=$payuPayment['VALUE']?>" />
 									<span class="add-on">PAGO EN LINEA</span>
-									<span class="add-on"><?=$payuPayment['VALUE']*100/$booking['VALUEBOOKING']?>%</span>
 									<span class="add-on">
-                    <a onclick="$('#payupaymentinput').prop('disabled', false);" >
-                      <img src="http://www.assets.kipu.co/img/kate32.png">
+                    <a onclick="$('#payupaymentinput<?php echo $booking['IDBOOKING']; ?>').prop('disabled',false);" >
+                      <img src="http://www.assets.kipu.co/img/edit.png">
                     </a>
                     <a onclick="getPayuData('<?php echo $booking['LINK']; ?>','<?php echo $booking['KEY']; ?>','<?php echo $booking['IDBOOKING']; ?>')" >
                       <img src="http://www.assets.kipu.co/img/info32.png">
@@ -193,9 +192,13 @@ $additionaldata=$this->getAdditionalData($booking['IDBOOKING']);
                   </span>
 									<br/>
 									<span class="add-on">$</span>
-									<input type="text" style="width:70px"  onchange="assignPaymentValue($(this),'<?=$booking['IDBOOKING']?>',actionURL)" disabled="true"  id="paymentvalueinput" value="<?=$booking['VALUEPAYMENT']?>" />
+									<input type="text" style="width:70px"  onchange="assignPaymentValue($(this),'<?=$booking['IDBOOKING']?>',actionURL)" disabled="true"  id="paymentvalueinput<?php echo $booking['IDBOOKING']; ?>" value="<?=$booking['VALUEPAYMENT']?>" />
 									<span class="add-on">PAGO DIRECTO</span>
-									<span class="add-on"><a onclick="$('#paymentvalueinput').prop('disabled', false);" ><img src="http://www.assets.kipu.co/img/edit.png"></a></span>
+									<span class="add-on">
+                    <a onclick="$('#paymentvalueinput<?php echo $booking['IDBOOKING']; ?>').prop('disabled', false);" >
+                      <img src="http://www.assets.kipu.co/img/edit.png">
+                    </a>
+                  </span>
 								</div>
 							</div>
 						</div>

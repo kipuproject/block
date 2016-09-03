@@ -29,7 +29,7 @@
 
 <page format="100x200" orientation="L" backcolor="whitesmoke" style="font: arial;">
     <div style="rotate: 90; position: absolute; width: 100mm; height: 4mm; left: 195mm; top: 0; font-style: italic; font-weight: normal; text-align: center; font-size: 2.5mm;">
-Voucher Sistema de Reservas <?=$nombrehotel?> - Fecha 20 Nov 2014 
+Voucher Sistema de Reservas <?=$nombrehotel?> - Fecha <?php echo $date; ?>
     </div>
     <table style="width: 99%;border: none;" cellspacing="4mm" cellpadding="0">
         <tr>
@@ -46,9 +46,9 @@ Voucher Sistema de Reservas <?=$nombrehotel?> - Fecha 20 Nov 2014
                         N° Referencia: <b><?=$booking['IDBOOKING']?></b><br>
                         Check In : <b><?=$checkin?></b><br> Check Out : <b><?=$chekcout?></b><br>
                     </div>
-                    <h1>Voucher <?=$nombrehotel?></h1>
+                    <h1>Voucher de Reserva</h1>
                     <b style="font-size:14px;">Fecha <?php echo $date; ?> </b><br>
-                    <img src="<?=$logo?>" alt="logo" style="height:70px;">
+                    <img src="<?=$logo?>" alt="logo">
                 </div>
             </td>
         </tr>
@@ -92,8 +92,9 @@ Voucher Sistema de Reservas <?=$nombrehotel?> - Fecha 20 Nov 2014
 		                                   
 					<br>
 					
-                    <h2>Responsable de Reserva: <?=$booking['NAMECLIENT']?></h2>
-					<i>Identificacion: <?=$booking['DNI']?></i>
+                    <h2>Responsable de Reserva:</h2>
+                    <b><?=$booking['NAMECLIENT']?></b>
+                    <i>Identificacion: <?=$booking['DNI']?></i>
                 </div>
             </td>
         </tr>
@@ -109,7 +110,7 @@ Voucher Sistema de Reservas <?=$nombrehotel?> - Fecha 20 Nov 2014
         $html2pdf = new HTML2PDF('P', 'A4', 'fr', true, 'UTF-8', 0);
         $html2pdf->pdf->SetDisplayMode('fullpage');
         $html2pdf->writeHTML($content, isset($_GET['vuehtml']));
-        $html2pdf->Output('ticket.pdf');
+        $html2pdf->Output('voucherkipu.pdf');
     }
     catch(HTML2PDF_exception $e) {
         echo $e;

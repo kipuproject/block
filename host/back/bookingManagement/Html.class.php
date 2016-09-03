@@ -234,6 +234,9 @@ class FronterabookingManagement{
 		$result=$this->miRecursoDB->ejecutarAcceso($cadena_sql,"busqueda");
 		$result=$result[0];
 
+    $cadena_sql=$this->sql->cadena_sql("inactiveBooking",$booking);
+    $this->miRecursoDB->ejecutarAcceso($cadena_sql,"");
+
     $param['api'] = "hbooking";
 		$param['method'] = "validate";
 		$param['key'] = $commerce[0]['APIKEY'];
@@ -250,19 +253,22 @@ class FronterabookingManagement{
 		$data=file_get_contents($url);
     $data=json_decode($data);
 
+    $cadena_sql=$this->sql->cadena_sql("activeBooking",$booking);
+    $this->miRecursoDB->ejecutarAcceso($cadena_sql,"");
+
 		if($data->status=="false"){
-    
-			echo $data->message;
-      
+
+			echo $data->message[0];
+
 		}elseif($data->status=="true"){
-    
+
 			$variable['oldBooking'] = $result['IDBOOKING'];
 			$variable['newBooking'] = $data->idbooking;
 
 			$cadena_sql=$this->sql->cadena_sql("updateBookingDates",$variable);
 			$result=$this->miRecursoDB->ejecutarAcceso($cadena_sql,"");
 
-			$cadena_sql=$this->sql->cadena_sql("inactiveBooking",$variable['newBooking']); 
+			$cadena_sql=$this->sql->cadena_sql("inactiveBooking",$variable['newBooking']);
 			$result=$this->miRecursoDB->ejecutarAcceso($cadena_sql,"");
 
 			echo "Las fechas se actualizaron correctamente \n No olvides verificar el valor de la Reserva";
@@ -453,7 +459,7 @@ class FronterabookingManagement{
 
 	function getPayuPayment($booking,$status=1){
     $variable['reference'] = $booking;
-    $variable['status']    = $status; 
+    $variable['status']    = $status;
 		$cadena_sql = $this->sql->cadena_sql("detailPayment",$variable);
 		$result = $this->miRecursoDB->ejecutarAcceso($cadena_sql,"busqueda");
 		if(is_array($result)){
@@ -549,7 +555,16 @@ class FronterabookingManagement{
 	 	$formSaraDataService.="&optionBooking=addService";
 		$formSaraDataService=$this->miConfigurador->fabricaConexiones->crypto->codificar_url($formSaraDataService,$this->enlace);
 
-		$booking['URLVOUCHER'] = $formSaraDataURL;
+    $formSaraDataVoucher.="pagina=bookingManagement";
+    $formSaraDataVoucher.="&bloque=bookingManagement";
+    $formSaraDataVoucher.="&action=bookingManagement";
+    $formSaraDataVoucher.="&saramodule=host";
+    $formSaraDataVoucher.="&bloqueGrupo=host/back";
+    $formSaraDataVoucher.="&idbooking=".$booking['IDBOOKING'];
+    $formSaraDataVoucher.="&optionBooking=voucher";
+    $formSaraDataVoucher=$this->miConfigurador->fabricaConexiones->crypto->codificar_url($formSaraDataVoucher,$this->enlace);
+
+		$booking['URLVOUCHER'] = $formSaraDataVoucher;
 		$booking['DNI'] = $users[$booking['CLIENT']][0]['DNI'];
 		$booking['NAMECLIENT'] = $users[$booking['CLIENT']][0]['NAMECLIENT'];
 		$booking['COUNTRY'] = $users[$booking['CLIENT']][0]['COUNTRY'];
@@ -582,34 +597,48 @@ class FronterabookingManagement{
 		$numDaysMonth = cal_days_in_month(CAL_GREGORIAN,$month,$year);
 		$widthCell=(80/($numDaysMonth));
 		//
+       
 		include_once($this->ruta."/html/view.php");
 	}
 
 	function showViewBookingList(){
 
-		$cadena_sql=$this->sql->cadena_sql("allBookingsByCommerce",$this->commerce);
-		$bookings=$this->miRecursoDB->ejecutarAcceso($cadena_sql,"busqueda");
+		$cadena_sql = $this->sql->cadena_sql("allBookingsByCommerce",$this->commerce);
+		$bookings = $this->miRecursoDB->ejecutarAcceso($cadena_sql,"busqueda");
 
-		$cadena_sql=$this->sql->cadena_sql("allUsers",""); 
+		$cadena_sql = $this->sql->cadena_sql("allPaymentsByCommerce",$this->commerce);
+		$payments = $this->miRecursoDB->ejecutarAcceso($cadena_sql,"busqueda");
+    $payments = $this->orderArrayKeyBy($payments,"IDBOOKING");
+
+		$cadena_sql = $this->sql->cadena_sql("allUsers","");
 		$users=$this->masterResource->ejecutarAcceso($cadena_sql,"busqueda");
 		$users=$this->orderArrayKeyBy($users,"IDUUSER");
 
-		$formSaraDataURL="jxajax=main";
-		$formSaraDataURL.="&pagina=bookingManagement";
-		$formSaraDataURL.="&bloque=bookingManagement";
-	  $formSaraDataURL.="&bloqueGrupo=host/back";
-	  $formSaraDataURL.="&saramodule=host";
-		$formSaraDataURL=$this->miConfigurador->fabricaConexiones->crypto->codificar_url($formSaraDataURL,$this->enlace);
+		$formSaraDataURL  = "jxajax=main";
+		$formSaraDataURL .= "&pagina=bookingManagement";
+		$formSaraDataURL .= "&bloque=bookingManagement";
+	  $formSaraDataURL .= "&bloqueGrupo=host/back";
+	  $formSaraDataURL .= "&saramodule=host";
+		$formSaraDataURL  = $this->miConfigurador->fabricaConexiones->crypto->codificar_url($formSaraDataURL,$this->enlace);
 
 		$formSaraDataBookingList  = "pagina=bookingManagement";
 	 	$formSaraDataBookingList .= "&opcion=bookinglist";
 	 	$formSaraDataBookingList .= "&saramodule=host";
 		$formSaraDataBookingList  = $this->miConfigurador->fabricaConexiones->crypto->codificar_url($formSaraDataBookingList,$this->enlace);
-    
+
     $statusBoooking["2"] = "CONFIRMADA";
     $statusBoooking["3"] = "CANCELADA";
     $statusBoooking["6"] = "PENDIENTE";
     
+    $formSaraDataAllReport.="pagina=bookingManagement";
+    $formSaraDataAllReport.="&bloque=bookingManagement";
+    $formSaraDataAllReport.="&action=bookingManagement";
+    $formSaraDataAllReport.="&saramodule=host";
+    $formSaraDataAllReport.="&bloqueGrupo=host/back";
+    $formSaraDataAllReport.="&optionBooking=allReport";
+    $formSaraDataAllReport=$this->miConfigurador->fabricaConexiones->crypto->codificar_url($formSaraDataAllReport,$this->enlace);
+
+
 		include_once($this->ruta."/html/viewList.php");
 	}
 
@@ -626,7 +655,7 @@ class FronterabookingManagement{
 
 		$cadena_sql = $this->sql->cadena_sql("typeBookingCommerce",$variable['commerce']);
 		$type = $this->masterResource->ejecutarAcceso($cadena_sql,"busqueda");
-    
+
     $cadena_sql=$this->sql->cadena_sql("allUsers","");
 		$users=$this->masterResource->ejecutarAcceso($cadena_sql,"busqueda");
     $users=$this->orderArrayKeyBy($users,"IDUUSER");
@@ -679,7 +708,7 @@ class FronterabookingManagement{
 				for($j;$j<=$numDaysMonth;$j++){
 					$grid['BOOKING'][$j][]=mktime(0,0,0,$month,$j,$year)."-".$rooms[$i]['IDROOM'];
 				}
-				$i++; 
+				$i++;
 			}
 			include_once($this->ruta."/html/formNP.php");
 	}

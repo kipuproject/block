@@ -110,6 +110,8 @@ class SqlbookingManagement extends sql {
 				$cadena_sql="SELECT ";
 				$cadena_sql.="c.id_tipoReserva IDCOMMERCE, ";
 				$cadena_sql.="c.api_key APIKEY, ";
+				$cadena_sql.="c.files_folder FOLDER, ";
+				$cadena_sql.="c.imagen LOGO, ";
 				$cadena_sql.="c.nombre NAME ";
 				$cadena_sql.="FROM ";
 				$cadena_sql.=$prefijo."commerce c ";
@@ -170,6 +172,7 @@ class SqlbookingManagement extends sql {
 				$cadena_sql.="cliente CUSTOMER, ";
 				$cadena_sql.="medio SOURCE, ";
 				$cadena_sql.="valor_total PAYMENT, ";
+				$cadena_sql.="valor_pagado LOCALPAYMENT, ";
 				$cadena_sql.="adults NUMGUEST, ";
 				$cadena_sql.="children NUMKIDS, ";
 				$cadena_sql.="infants INFANTS, ";
@@ -195,6 +198,18 @@ class SqlbookingManagement extends sql {
 				$cadena_sql.="FROM ";
 				$cadena_sql.=$prefijo."commerce tr ";
 				$cadena_sql.="WHERE tr.id_tipoReserva=".$variable;
+				break;
+
+			case "allPaymentsByCommerce":
+				$cadena_sql="SELECT ";
+				$cadena_sql.="value VALUE, ";
+				$cadena_sql.="id_payu_reference ID, ";
+				$cadena_sql.="system_reference IDBOOKING ";
+				$cadena_sql.="FROM ";
+				$cadena_sql.=$prefijo."payu_payment ";
+				$cadena_sql.="WHERE ";
+        $cadena_sql.=" id_commerce = ".$variable;
+				$cadena_sql.=" AND status='1'";
 				break;
 
 			case "detailPayment":
@@ -304,7 +319,7 @@ class SqlbookingManagement extends sql {
 				$cadena_sql.=$prefijo."reservation ";
 				$cadena_sql.="SET ";
 				$cadena_sql.="estado='1' ";
-				$cadena_sql.="WHERE id_reserva=".$variable['IDBOOKING'];
+				$cadena_sql.="WHERE id_reserva=".$variable;
 				break;
 
 			case "updateBookingDates":

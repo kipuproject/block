@@ -83,10 +83,10 @@ function Header()
 {
 	// Logo y fondo
 	
-	$this->Image($this->logo,25,15,50,0,'',''); 
+	$this->Image($this->logo,25,15,0,0,'',''); 
 	$this->Image($this->rutaURL.'/html/voucher/imagenes/voucher.png',4,1,290,0,'','');
 	$this->Cell(10);
-	$this->Ln(20);
+	$this->Ln(0);
 }
 
 function certificado()

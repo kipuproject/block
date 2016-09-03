@@ -46,7 +46,7 @@ class SqlservicesManagement extends sql {
 				$cadena_sql.="TRIM(descripcion) DESCRIPTION, ";
 				$cadena_sql.="online ONLINE, ";
 				$cadena_sql.="dinamico DYNAMIC, ";
-				$cadena_sql.="id_reservable_grupo IDTYPEROOM, ";
+				$cadena_sql.="id_reservable_type IDTYPEROOM, ";
 				$cadena_sql.="pago_unico ONPAYMENT ";
 				$cadena_sql.="FROM ";
 				$cadena_sql.=$prefijo."servicio ";

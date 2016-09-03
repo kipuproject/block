@@ -114,7 +114,15 @@ class SqlroomsManagement extends sql {
 				$cadena_sql.="WHERE estado='1' ";
 				$cadena_sql.="AND id_tipoReserva='".$variable['commerce']."'";
 				break;
-
+        
+			case "listTypeRoomSeason": 
+				$cadena_sql="SELECT ";
+				$cadena_sql.="min_days MINIMUN, ";
+				$cadena_sql.="id_reservable_type IDTYPEROOM, ";
+				$cadena_sql.="id_season SEASON ";
+				$cadena_sql.="FROM ";
+				$cadena_sql.=$prefijo."reservable_type_season ";
+				break; 
 
 			case "updateDataRoom":
 				$cadena_sql="UPDATE ";
@@ -150,11 +158,6 @@ class SqlroomsManagement extends sql {
 				break;
 
 			case "deleteRoom":
-				/*$cadena_sql="DELETE ";
-				$cadena_sql.="FROM ";
-				$cadena_sql.=$prefijo."reservable  ";
-				$cadena_sql.="WHERE id_reservable=".$variable['idroom'];*/
-
 				$cadena_sql="UPDATE ";
 				$cadena_sql.=$prefijo."reservable ";
 				$cadena_sql.="SET ";
@@ -202,26 +205,35 @@ class SqlroomsManagement extends sql {
 				$cadena_sql.="'1'";
 				$cadena_sql.=") ";
 				break;
-
-
-
-			case "companyListAll":
+    
+			case "getTypeRoomSeason":
 				$cadena_sql="SELECT ";
-				$cadena_sql.="id_establecimiento IDCOMPANY, ";
-				$cadena_sql.="id_parent IDPARENT ";
+				$cadena_sql.="min_days MINIMUN ";
 				$cadena_sql.="FROM ";
-				$cadena_sql.=$prefijo."establecimiento ";
+				$cadena_sql.=$prefijo."reservable_type_season ";
+				$cadena_sql.="WHERE ";
+        $cadena_sql.=" id_reservable_type=".$variable['idtyperoom'];
+				$cadena_sql.=" AND ";
+        $cadena_sql.=" id_season=".$variable['season'];
 				break;
-
-			case "commerceFilterList":
-				$cadena_sql="SELECT ";
-				$cadena_sql.="id_filtroOpcion IDOPTION ";
-				$cadena_sql.="FROM ";
-				$cadena_sql.=$prefijo."tipo_reserva_filtrador ";
-				$cadena_sql.="WHERE id_tipoReserva IN (".$variable.") ";
-				$cadena_sql.="AND estado<>0";
+        
+  		case "insertTypeRoomSeason":
+				$cadena_sql="INSERT INTO ";
+				$cadena_sql.=$prefijo."reservable_type_season(id_reservable_type,id_season,min_days)  ";
+				$cadena_sql.="VALUES( ";
+				$cadena_sql.="'".$variable['idtyperoom']."',";
+				$cadena_sql.="'".$variable['season']."',";
+				$cadena_sql.="'".$variable['min_days']."' ";
+				$cadena_sql.=") ";
 				break;
-
+        
+      case "updateTypeRoomSeason":
+				$cadena_sql="UPDATE ";
+				$cadena_sql.=$prefijo."reservable_type_season ";
+				$cadena_sql.="SET ";
+				$cadena_sql.=" min_days=".$variable['min_days']." ";
+				$cadena_sql.="WHERE id_reservable_type=".$variable['idtyperoom'];
+				$cadena_sql.=" AND id_season=".$variable['season'];
 		}
 
 		//echo "<br/><br/>$tipo=".$cadena_sql;

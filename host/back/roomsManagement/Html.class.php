@@ -147,9 +147,12 @@ class FronteraroomsManagement{
 		
 		$cadena_sql=$this->sql->cadena_sql("typeListRoom",$variable);
 		$typeListRoom=$this->miRecursoDB->ejecutarAcceso($cadena_sql,"busqueda");
-		
-		$priceList=$this->orderArrayKeyBy($priceList,"IDTYPEROOM","SEASON","GUEST");
-		
+		$priceList=$this->orderArrayKeyBy($priceList,"IDTYPEROOM","SEASON","GUEST");	
+    
+		$cadena_sql = $this->sql->cadena_sql("listTypeRoomSeason",$variable);
+		$typeSeason = $this->miRecursoDB->ejecutarAcceso($cadena_sql,"busqueda");
+		$typeSeason = $this->orderArrayKeyBy($typeSeason,"IDTYPEROOM","SEASON");
+		 
 		$formSaraData="jxajax=main";
 		$formSaraData.="&action=roomsManagement";
 		$formSaraData.="&bloque=roomsManagement";

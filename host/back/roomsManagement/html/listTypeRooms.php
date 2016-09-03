@@ -124,8 +124,8 @@ $i++;
 														<td style="color:darkblue">Niño <input style="width:90px" name="currency-<?=$currency?>-2-0"  onchange="updateTypeRoom('<?=$formSaraDataEdit?>',$(this.form))" name="name"  value="<?=$priceList[$roomList[$i]['IDTYPEROOM']]['2']['0'][$currency]?>"  type="text" placeholder=""></td>
                           </tr>
                           <tr>
-                            <td style="color:darkblue">Mínimo Días<br/><input style="width:90px" name="minimun"  onchange="updateMinimun('<?=$formSaraDataMinimun?>',$(this.form))" value="<?=$roomList[$i]['MINIMUN']?>"  type="text" placeholder=""></td>
-                            <td style="color:darkblue">Mínimo Días<br/><input style="width:90px" name="minimun"  onchange="updateMinimun('<?=$formSaraDataMinimun?>',$(this.form))" value="<?=$roomList[$i]['MINIMUN']?>"  type="text" placeholder=""></td>
+                            <td style="color:darkblue">Mínimo Días<br/><input style="width:90px" name="minimun[1]"  onchange="updateMinimun('<?=$formSaraDataMinimun?>',$(this.form),1)" value="<?=$typeSeason[$roomList[$i]['IDTYPEROOM']][1]['MINIMUN']?>"  type="text" placeholder=""></td>
+                            <td style="color:darkblue">Mínimo Días<br/><input style="width:90px" name="minimun[2]"  onchange="updateMinimun('<?=$formSaraDataMinimun?>',$(this.form),2)" value="<?=$typeSeason[$roomList[$i]['IDTYPEROOM']][2]['MINIMUN']?>"  type="text" placeholder=""></td>
                           </tr>
 
 												</table>
@@ -163,8 +163,8 @@ $i++;
 														<td style="color:darkblue">Niño <input style="width:90px" name="currency-<?=$currency?>-4-0"  onchange="updateTypeRoom('<?=$formSaraDataEdit?>',$(this.form))" name="name"  value="<?=$priceList[$roomList[$i]['IDTYPEROOM']]['4']['0'][$currency]?>"  type="text" placeholder=""></td>
 													</tr>
                           <tr>
-                            <td style="color:darkblue">Mínimo Días<br/><input style="width:90px" name="minimun"  onchange="updateMinimun('<?=$formSaraDataMinimun?>',$(this.form))" value="<?=$roomList[$i]['MINIMUN']?>"  type="text" placeholder=""></td>
-                            <td style="color:darkblue">Mínimo Días<br/><input style="width:90px" name="minimun"  onchange="updateMinimun('<?=$formSaraDataMinimun?>',$(this.form))" value="<?=$roomList[$i]['MINIMUN']?>"  type="text" placeholder=""></td>
+                            <td style="color:darkblue">Mínimo Días<br/><input style="width:90px" name="minimun[3]"  onchange="updateMinimun('<?=$formSaraDataMinimun?>',$(this.form),3)" value="<?=$typeSeason[$roomList[$i]['IDTYPEROOM']][3]['MINIMUN']?>"  type="text" placeholder=""></td>
+                            <td style="color:darkblue">Mínimo Días<br/><input style="width:90px" name="minimun[4]"  onchange="updateMinimun('<?=$formSaraDataMinimun?>',$(this.form),4)" value="<?=$typeSeason[$roomList[$i]['IDTYPEROOM']][4]['MINIMUN']?>"  type="text" placeholder=""></td>
                           </tr>
 												</table>
 											</div>

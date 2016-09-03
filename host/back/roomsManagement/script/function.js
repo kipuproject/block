@@ -42,12 +42,13 @@ function updateCapacity(formSaraData,form){
 	});
 }
 
-function updateMinimun(formSaraData,form){
+function updateMinimun(formSaraData,form,season){
 
+	data_form = $(form).serialize();
 	$.ajax({
 		type: 'GET',
 		url: formSaraData,
-		data: $(form).serialize(),
+		data: data_form+"&season="+season,
 		success: function(respuesta) {
 			//$(form+" #status").html(respuesta);
 			alert(respuesta);
@@ -63,7 +64,7 @@ function addRoom(formSaraData){
 		url: formSaraData,
 		success: function(respuesta) {
 			$("#table-rooms").append(respuesta);
-		}	
+		}
 	});
 }
 
