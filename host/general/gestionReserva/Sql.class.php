@@ -506,6 +506,18 @@ class SqlgestionReserva extends sql {
 				$cadena_sql.=" AND time = '".$variable['day']."'";
 				//$cadena_sql.=" AND DATE_FORMAT(FROM_UNIXTIME(time),'%m%d') = DATE_FORMAT(FROM_UNIXTIME('".$variable['day']."'),'%m%d')";
 			break;
+      
+      case "getTypeRoomSeason": 
+				$cadena_sql="SELECT ";
+				$cadena_sql.="min_days MINIMUN, ";
+				$cadena_sql.="id_reservable_type IDTYPEROOM, ";
+        $cadena_sql.="DATEDIFF(FROM_UNIXTIME(".$variable['timeStampEnd']."),FROM_UNIXTIME(".$variable['timeStampStart'].")) NUMDAYS, ";
+				$cadena_sql.="id_season SEASON ";
+				$cadena_sql.="FROM ";
+				$cadena_sql.=$prefijo."reservable_type_season ";
+        $cadena_sql.="WHERE  ";
+				$cadena_sql.="`id_reservable_type` ='".$variable['groupRoom']."' ";
+				break;
 
 
 			case "dataBookingByID":

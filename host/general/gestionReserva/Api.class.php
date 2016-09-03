@@ -476,7 +476,8 @@ class ApigestionReserva{
 			//Inicio Validaciones Basicas
 			if(!isset($variable['groupRoom']) || $variable['groupRoom'] == ""){
 				$output['message'][] = "Error: Reservable no especificado ";
-				$output['status'] = "false"; return $output;
+				$output['status'] = "false"; 
+        return $output;
 			}else{
 				$variable["group"] = $variable["groupRoom"];
 			}
@@ -587,7 +588,6 @@ class ApigestionReserva{
 
 						$cadena_sql = $this->sql->cadena_sql("buscarReservablesOcupados",$variable);
 						$resultRooms = $this->miRecursoDB->ejecutarAcceso($cadena_sql,"busqueda");
-
 						if(is_array($resultRooms)){
 							$busyRooms=count($resultRooms); //total habitaciones ocupadas
 						}else{
@@ -601,13 +601,15 @@ class ApigestionReserva{
 
 						if($avalaibleRooms<=0){
 							$output['message'][] = "\n No tenemos disponibilidad para esta fecha";
-							$output['status'] = "false"; return $output;
+							$output['status'] = "false"; 
+              return $output;
 							exit;
 						}
 
 						if($avalaibleRooms<$variable['numRooms']){
 							$output['message'][] = "\n Solo tenemos {$avalaibleRooms} habitacion(es) disponible(s) para esta fecha";
-							$output['status'] = "false"; return $output;
+							$output['status'] = "false"; 
+              return $output;
 							exit;
 						}
 
@@ -615,7 +617,8 @@ class ApigestionReserva{
 
 						if($dataGroupReservable[0]['CAPACITY'] <= $variable['adults']){
 							$output['message'][] = "\n Capacidad Maxima";
-							$output['status'] = "false"; return $output;
+							$output['status'] = "false"; 
+              return $output;
 							exit;
 						}
 						//evaluar capacidad maxima
@@ -623,7 +626,20 @@ class ApigestionReserva{
 					}
 
 			//-------Fin Validacion Cruce--------//
-
+      
+      //-------Validación Adicionales Temporada-----//
+      
+      $resultExtra = $this->getExtraDataBySeason($variable);
+      if(!$resultExtra){
+        $output['message'][] = "\n Tu reserva no cumple con el minimo de dias";
+        $output['status'] = "false"; 
+        return $output;
+        exit;
+      }
+      
+      //-------Fin Validación Adicionales Temporada-----//
+      
+      
 			//E. Inserto reserva anonima
 
 			$variable['timeStampStart'] = $timeStampStart;
@@ -698,9 +714,8 @@ class ApigestionReserva{
 
 				$cadena_sql = $this->sql->cadena_sql("priceList",$variable);
 				$priceList = $this->miRecursoDB->ejecutarAcceso($cadena_sql,"busqueda");
-
 				$priceList = $this->orderArrayKeyBy($priceList,"SEASON","GUEST");
-
+        
 				//empezando con la fecha inicial voy buscando la temporada
 				//a la q corresponde cada dia si no la encuentro asumo temporada baja (1)
 
@@ -773,13 +788,50 @@ class ApigestionReserva{
 				}
 			}
 		}
-
 		$response->status = "true";
 		$response->rooms = $rooms;
 		$response->message = "true";
 		return $response;
 	}
 
+  private function getExtraDataBySeason($variable) {
+    //Consulto la relación entre tipo de habitación y temporada para encontrar variables adicionales
+    $cadena_sql = $this->sql->cadena_sql("getTypeRoomSeason",$variable);
+    $typeSeason = $this->miRecursoDB->ejecutarAcceso($cadena_sql,"busqueda"); 
+    $orderSeason = $this->orderArrayKeyBy($typeSeason,"SEASON");
+    
+    $numDaysBooking = 0;
+    if(is_array($typeSeason)) {
+      $numDaysBooking = $typeSeason[0]['NUMDAYS'];
+    }
+    
+    $d=0;
+    $min =0;
+    for($d;$d <= $numDaysBooking;$d++){
+
+      $variable['day']=($variable['timeStampStart'])+($d*86400);
+      $variable['commerce'] = $this->commerce;
+
+      $cadena_sql = $this->sql->cadena_sql("searchDay",$variable);
+      $seasonDay = $this->miRecursoDB->ejecutarAcceso($cadena_sql,"busqueda");
+
+      //si no existe una temporada se asume temporada baja
+      $sd  = is_array($seasonDay)?$seasonDay[0]['IDSEASON']:1;
+     
+      if($min == 0) {
+        $min = isset($orderSeason[$sd]['MINIMUN'])?$orderSeason[$sd]['MINIMUN']:1;
+      }else if( isset($orderSeason[$sd]['MINIMUN']) && $orderSeason[$sd]['MINIMUN'] > $min ) {  
+        $min = $orderSeason[$sd]['MINIMUN'];
+      }
+      
+      if(($numDaysBooking+1) < $min) { 
+        return FALSE;
+      }
+      
+    }
+     return TRUE; 
+  }
+  
 	private function getAdditionalFields($variable){
 		$response=new stdClass();
 		$variable["commerce"] = $this->commerce;

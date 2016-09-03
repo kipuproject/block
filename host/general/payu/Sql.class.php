@@ -188,13 +188,13 @@ class SqlPayu extends sql {
 				$cadena_sql.="FROM ";
 				$cadena_sql.=$prefijo."reservation r ";
 				$cadena_sql.="INNER JOIN ";
-				$cadena_sql.=$prefijo."reservation_room rr ";
+				$cadena_sql.=$prefijo."reservation_reservable rr ";
 				$cadena_sql.="ON ";
 				$cadena_sql.="rr.id_reserva = r.id_reserva ";
 				$cadena_sql.="INNER JOIN ";
-				$cadena_sql.=$prefijo."room_type rg ";
+				$cadena_sql.=$prefijo."reservable_type rg ";
 				$cadena_sql.="ON ";
-				$cadena_sql.="rr.id_reservable_grupo = rg.id_reservable_grupo ";
+				$cadena_sql.="rr.id_reservable_type = rg.id_reservable_type ";
 				$cadena_sql.="WHERE ";
 				$cadena_sql.="r.id_reserva ='".$variable."' ";
 			break;
@@ -203,7 +203,8 @@ class SqlPayu extends sql {
 				$cadena_sql="UPDATE ";
 				$cadena_sql.=$prefijo."payu_payment ";
 				$cadena_sql.="SET ";
-				$cadena_sql.="answer='".$variable['answer']."' ";
+				$cadena_sql.="answer='".$variable['answer']."', ";
+				$cadena_sql.="status='".$variable['status']."' ";
 				$cadena_sql.="WHERE id_payu_reference=".$variable['reference'];
 				break;
 

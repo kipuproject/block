@@ -7,7 +7,7 @@
 		ob_end_clean();
 
 		$email= $response->responsible['EMAIL'];
-		$email.= ','.$this->ruta=$this->miConfigurador->getVariableConfiguracion("correoAdministrador").' ';
+		$email.= ','.$response->commerce['EMAIL'].' ';
 
 		$asunto = "Confirmacion Reserva ".$response->commerce['NAME']." \n\n";
 		$cabeceras="From: reservas@kipu.co\r\n";

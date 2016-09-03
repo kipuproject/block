@@ -130,7 +130,7 @@ class ApiPayu{
        // $payData .= '<br/>Tipo de pago: '.$result['ANSWER']->lapPaymentMethodType;
         $payData .= '<br/>Valor: '.$result['ANSWER']->additionalValues->TX_VALUE->value;
         $payData .= '<br/>Moneda: '. $result['ANSWER']->additionalValues->TX_VALUE->currency;
-        $payData .= '<br/>Estado Actual: '.$result['ANSWER']->transactionResponse->pendingReason;
+        $payData .= '<br/>Estado Actual: '.$result['ANSWER']->transactionResponse->responseCode;
 
         $result['ANSWER'] = $payData;
 
@@ -262,7 +262,7 @@ class ApiPayu{
   private function getDataCommerce() {
     $response= new stdClass();
 
-    $string_sql = $this->sql->cadena_sql("dataCommerce",$this->commerce); 
+    $string_sql = $this->sql->cadena_sql("dataCommerce",$this->commerce);
     $result = $this->master_resource->ejecutarAcceso($string_sql,"busqueda");
 
     if(is_array($result)){
@@ -298,7 +298,7 @@ class ApiPayu{
   }
 
   private function getDataBooking($idbooking){
-    $response=new stdClass();
+    $response = new stdClass();
     $string_sql = $this->sql->cadena_sql("dataRoomBookingbyID",$idbooking);
     $result = $this->miRecursoDB->ejecutarAcceso($string_sql,"busqueda");
     if($result){
@@ -312,7 +312,16 @@ class ApiPayu{
 
 
   private function orderVerify($value) {
-
+    
+    $response = new stdClass();
+    
+    if(empty($value)){
+      $response->status = "Empty Value";
+      $response->status_code = 201;
+    }else{
+      $response->status_code = 202;
+    }
+    
     require_once 'plugin/payu_sdk/PayU.php';
 
     Environment::setPaymentsCustomUrl("https://api.payulatam.com/payments-api/4.0/service.cgi");
@@ -332,9 +341,9 @@ class ApiPayu{
     // Código de referencia de la orden.
     $parameters = array(PayUParameters::REFERENCE_CODE => $value);
 
-    $response = PayUReports::getOrderDetailByReferenceCode($parameters);
+    $response_payu = PayUReports::getOrderDetailByReferenceCode($parameters);
 
-    foreach ($response as $order) {
+    foreach ($response_payu as $order) {
       $order->accountId;
       $order->status;
       $order->referenceCode;
@@ -359,29 +368,30 @@ class ApiPayu{
         }
       }
     }
- 
+
     $result = $this->updateDataCommerceByReference($value,$transaction);
-    
-    $response = new stdClass();
+
     $response->answer = $transaction;
     $response->status_code = 200;
     $response->status = $result->status;
     return $response;
   }
-  
+
   private function updateDataCommerceByReference($value,$transaction) {
-  
+
     $data = array();
     $data["reference"] = $value;
     $data["answer"] = (string)json_encode($transaction);
+    $responseCode = $transaction->transactionResponse->responseCode;
+    $data["status"] = ($responseCode=="APPROVED")?"1":"0";
     $string_sql = $this->sql->cadena_sql("updateDataCommerceByReference",$data);
     $result = $this->miRecursoDB->ejecutarAcceso($string_sql,"");
-    
+ 
     $response = new stdClass();
     $response->status_code = 200;
     $response->status = "Información actualizada";
     return $response;
-    
+
   }
 
   private function getpolResponseCode($cod){
