@@ -117,6 +117,10 @@ class ApigestionReserva{
 				case 'sendEmail':
 					$result = $this->sendEmail($_REQUEST['id']);
 				break;
+				case 'allData':
+					header('Content-Type: application/json');
+					$result = $this->getAllBookingData($_REQUEST['id']);
+				break;
 			}
 
 			$json = json_encode($result);
@@ -131,7 +135,7 @@ class ApigestionReserva{
 	}
 
 	private function confirmBooking($variable){
-        
+
 		$response = $this->sessionValidate($variable);
 		if($response->status_code == 205){
 			return $response;
@@ -143,10 +147,10 @@ class ApigestionReserva{
 				$response->status = "false";
 				return $response;
 			}
-		} 
+		}
 		$cadena_sql = $this->sql->cadena_sql("dataBookingBySession",$variable['session']);
 		$book = $this->miRecursoDB->ejecutarAcceso($cadena_sql,"busqueda");
-   
+
 		$cadena_sql = $this->sql->cadena_sql("confirmBooking",$variable);
 		$result = $this->miRecursoDB->ejecutarAcceso($cadena_sql,"");
 
@@ -154,7 +158,7 @@ class ApigestionReserva{
 			$response->status_code = 200;
 			$response->status = "true";
       $response->id = $book[0]['IDBOOKING'];
-      $response->customer = $book[0]['CLIENT']; 
+      $response->customer = $book[0]['CLIENT'];
 			$this->sendEmail($response->id);
 		}else{
 			$response->message = "Sesión expirada";
@@ -236,17 +240,17 @@ class ApigestionReserva{
 		//commerce
 		$cadena_sql = $this->sql->cadena_sql("dataCommerceByID",$idcommerce);
 		$data = $this->master_resource->ejecutarAcceso($cadena_sql,"busqueda");
-		if(!is_array($data)){
+		if(!is_array($data)) {
 			$response->message = "Error de Datos (3). Prueba recargando la página ";
 			$response->status_code = 201;
 			$response->status = "false";
 			return $response;
-		}else{
+		}else {
 			$response->commerce = $data[0];
 		}
 
 		//room
-		$cadena_sql = $this->sql->cadena_sql("dataRoomBookingbyID",$idbooking);
+		$cadena_sql = $this->sql->cadena_sql("dataRoomTypeBookingbyID",$idbooking);
 		$data = $this->miRecursoDB->ejecutarAcceso($cadena_sql,"busqueda");
 		if(!is_array($data)){
 			$response->message = "Error de Datos (4). Prueba recargando la página ";
@@ -282,7 +286,7 @@ class ApigestionReserva{
   }
 
 	private function saveOthersGuest($variable){
-    
+
     $friends = array();
     foreach($variable as $key=>$value){
       $friend = explode("-",$key);
@@ -290,7 +294,7 @@ class ApigestionReserva{
     }
 
     foreach($friends as $key=>$value){
-  
+
         $cadena_sql = $this->sql->cadena_sql("dataBookingBySession",$variable['session']);
         $dataBooking = $this->miRecursoDB->ejecutarAcceso($cadena_sql,"busqueda");
         $dataBooking = $dataBooking[0];
@@ -349,7 +353,7 @@ class ApigestionReserva{
         $cadena_sql = $this->sql->cadena_sql("insertRole",$variable);
         $result = $this->master_resource->ejecutarAcceso($cadena_sql,"");
 			}
-       
+
       exit;
 		}
  		return true;
@@ -414,7 +418,7 @@ class ApigestionReserva{
 		}
 
 		//room
-		$cadena_sql = $this->sql->cadena_sql("dataRoomBookingbyID",$idbooking);
+		$cadena_sql = $this->sql->cadena_sql("dataRoomTypeBookingbyID",$idbooking);
 		$data = $this->miRecursoDB->ejecutarAcceso($cadena_sql,"busqueda");
 		if(!is_array($data)){
 			$response->message = "Error de Datos. Prueba recargando la página ";
@@ -456,7 +460,7 @@ class ApigestionReserva{
 
 	//groupRoom,commerce,checkin(YYYY/MM/DD),checkout(YYYY/MM/DD),numRooms
 	//user,session,adults,children,infants
-	private function validate($variable){
+	private function validate($variable) {
 
 			//Inicio Validaciones Sesion
 			if(!isset($variable['session']) || $variable['session'] == ""){
@@ -476,7 +480,7 @@ class ApigestionReserva{
 			//Inicio Validaciones Basicas
 			if(!isset($variable['groupRoom']) || $variable['groupRoom'] == ""){
 				$output['message'][] = "Error: Reservable no especificado ";
-				$output['status'] = "false"; 
+				$output['status'] = "false";
         return $output;
 			}else{
 				$variable["group"] = $variable["groupRoom"];
@@ -516,7 +520,7 @@ class ApigestionReserva{
 			}
 
 			$variable['idRoom'] = 0;
-      
+
 			if(isset($variable['room']) && $variable['room']<>""){
 				$variable['idRoom'] = $variable['room'];
 			}
@@ -601,14 +605,14 @@ class ApigestionReserva{
 
 						if($avalaibleRooms<=0){
 							$output['message'][] = "\n No tenemos disponibilidad para esta fecha";
-							$output['status'] = "false"; 
+							$output['status'] = "false";
               return $output;
 							exit;
 						}
 
 						if($avalaibleRooms<$variable['numRooms']){
 							$output['message'][] = "\n Solo tenemos {$avalaibleRooms} habitacion(es) disponible(s) para esta fecha";
-							$output['status'] = "false"; 
+							$output['status'] = "false";
               return $output;
 							exit;
 						}
@@ -617,7 +621,7 @@ class ApigestionReserva{
 
 						if($dataGroupReservable[0]['CAPACITY'] <= $variable['adults']){
 							$output['message'][] = "\n Capacidad Maxima";
-							$output['status'] = "false"; 
+							$output['status'] = "false";
               return $output;
 							exit;
 						}
@@ -626,20 +630,20 @@ class ApigestionReserva{
 					}
 
 			//-------Fin Validacion Cruce--------//
-      
+
       //-------Validación Adicionales Temporada-----//
-      
+
       $resultExtra = $this->getExtraDataBySeason($variable);
       if(!$resultExtra){
         $output['message'][] = "\n Tu reserva no cumple con el minimo de dias";
-        $output['status'] = "false"; 
+        $output['status'] = "false";
         return $output;
         exit;
       }
-      
+
       //-------Fin Validación Adicionales Temporada-----//
-      
-      
+
+
 			//E. Inserto reserva anonima
 
 			$variable['timeStampStart'] = $timeStampStart;
@@ -671,7 +675,7 @@ class ApigestionReserva{
 
 	}
 
-	private function calculateValue($idbooking){
+	private function calculateValue($idbooking) {
 
       $output=array();
       $variable["commerce"] = $this->commerce;
@@ -715,7 +719,7 @@ class ApigestionReserva{
 				$cadena_sql = $this->sql->cadena_sql("priceList",$variable);
 				$priceList = $this->miRecursoDB->ejecutarAcceso($cadena_sql,"busqueda");
 				$priceList = $this->orderArrayKeyBy($priceList,"SEASON","GUEST");
-        
+
 				//empezando con la fecha inicial voy buscando la temporada
 				//a la q corresponde cada dia si no la encuentro asumo temporada baja (1)
 
@@ -765,20 +769,20 @@ class ApigestionReserva{
 			return $output;
 	}
 
-	private function getRooms($variable){
+	private function getRooms($variable) {
 		$response=new stdClass();
 		$variable["commerce"] = $this->commerce;
 		$cadena_sql = $this->sql->cadena_sql("dataRoomAvailability",$variable);
 		$rooms = $this->miRecursoDB->ejecutarAcceso($cadena_sql,"busqueda");
 		$rooms = $this->orderArrayKeyBy($rooms,"IDGROUP");
-    
+
 		foreach($rooms as $key=>$value) {
 			unset($rooms[$key][0]);
 			unset($rooms[$key][1]);
 			unset($rooms[$key][2]);
 			unset($rooms[$key][3]);
 			unset($rooms[$key][4]);
-       
+
 			$folder = opendir($this->miConfigurador->getVariableConfiguracion("raizDocumento")."/".$this->commerce_folder."/".$key);
 			$images = array();
       $rooms[$key]['IMAGES'] = array();
@@ -797,14 +801,14 @@ class ApigestionReserva{
   private function getExtraDataBySeason($variable) {
     //Consulto la relación entre tipo de habitación y temporada para encontrar variables adicionales
     $cadena_sql = $this->sql->cadena_sql("getTypeRoomSeason",$variable);
-    $typeSeason = $this->miRecursoDB->ejecutarAcceso($cadena_sql,"busqueda"); 
+    $typeSeason = $this->miRecursoDB->ejecutarAcceso($cadena_sql,"busqueda");
     $orderSeason = $this->orderArrayKeyBy($typeSeason,"SEASON");
-    
+
     $numDaysBooking = 0;
     if(is_array($typeSeason)) {
       $numDaysBooking = $typeSeason[0]['NUMDAYS'];
     }
-    
+
     $d=0;
     $min =0;
     for($d;$d <= $numDaysBooking;$d++){
@@ -817,22 +821,22 @@ class ApigestionReserva{
 
       //si no existe una temporada se asume temporada baja
       $sd  = is_array($seasonDay)?$seasonDay[0]['IDSEASON']:1;
-     
+
       if($min == 0) {
         $min = isset($orderSeason[$sd]['MINIMUN'])?$orderSeason[$sd]['MINIMUN']:1;
-      }else if( isset($orderSeason[$sd]['MINIMUN']) && $orderSeason[$sd]['MINIMUN'] > $min ) {  
+      }else if( isset($orderSeason[$sd]['MINIMUN']) && $orderSeason[$sd]['MINIMUN'] > $min ) {
         $min = $orderSeason[$sd]['MINIMUN'];
       }
-      
-      if(($numDaysBooking+1) < $min) { 
+
+      if(($numDaysBooking+1) < $min) {
         return FALSE;
       }
-      
+
     }
-     return TRUE; 
+     return TRUE;
   }
-  
-	private function getAdditionalFields($variable){
+
+	private function getAdditionalFields($variable) {
 		$response=new stdClass();
 		$variable["commerce"] = $this->commerce;
 		$cadena_sql = $this->sql->cadena_sql("getAdditionalFields",$variable);
@@ -847,7 +851,7 @@ class ApigestionReserva{
 		return $response;
 	}
 
-	private function getListCommerces($variable){
+	private function getListCommerces($variable) {
 
 		$response=new stdClass();
 		$variable['all']='all';
@@ -875,7 +879,7 @@ class ApigestionReserva{
 		return $response;
 	}
 
-	private function saveGuest($variable){
+	private function saveGuest($variable) {
     $response = new stdClass();
     /* revisar campos adicionales */
     $this->saveOthersFields($variable);
@@ -888,7 +892,7 @@ class ApigestionReserva{
 				unset($variable[$key]);
 			}
 		}
- 
+
 		$cadena_sql = $this->sql->cadena_sql("getAllSession",$variable['session']);
 		$session = $this->master_resource->ejecutarAcceso($cadena_sql,"busqueda");
 		if(!is_array($session)){
@@ -926,6 +930,74 @@ class ApigestionReserva{
 		return $response;
 	}
 
+  private function getAllBookingData($variable) {
+
+    $response = new stdClass();
+
+   	$cadena_sql = $this->sql->cadena_sql("dataBasicBooking",$variable);
+		$data       = $this->miRecursoDB->ejecutarAcceso($cadena_sql,"busqueda");
+    $data       = $data[0];
+
+   	$cadena_sql = $this->sql->cadena_sql("dataRoomTypeBookingbyID",$variable);
+		$typeroom   = $this->miRecursoDB->ejecutarAcceso($cadena_sql,"busqueda");
+    $typeroom   = $typeroom[0];
+
+   	$cadena_sql = $this->sql->cadena_sql("dataRoomBookingbyID",$variable);
+		$room       = $this->miRecursoDB->ejecutarAcceso($cadena_sql,"busqueda");
+
+    if(is_array($room)) {
+      $room = $room[0];
+    } else {
+      $room["IDROOM"] = 0;
+      $room["NAME"]   = "";
+    }
+
+   	$cadena_sql = $this->sql->cadena_sql("paymentByBookingID",$variable);
+		$payment    = $this->miRecursoDB->ejecutarAcceso($cadena_sql,"busqueda");
+
+		if(is_array($payment)) {
+      $payment = $payment[0];
+    } else {
+      $payment["VALUE"] = 0;
+    }
+
+
+   /* echo "<pre>";
+     var_dump($room);
+    echo "</pre>";*/
+
+    $status         = array("1"=>"En proceso","2"=>"Confirmada","3"=>"Cancelada","6"=>"Pendiente");
+    $status_payment = array("1"=>"Pago Realizado","0"=>"No se reporta pago","2"=>"Pago Parcial");
+
+
+    $response->checkin         = $data["CHECKIN"];
+    $response->checkout        = $data["CHECKOUT"];
+    $response->status_code     = $data["STATUS_CODE"];
+    $response->status          = $status[$data["STATUS_CODE"]];
+    $response->room            = $room["NAME"];
+    $response->room_code       = $room["IDROOM"];
+    $response->origin          = $data["ORIGIN"];
+    $response->room_type       = $typeroom["NAME"];
+    $response->room_type_code  = $typeroom["IDTYPEROOM"];
+    $response->hotel_text      = $data["OBSERVATION_HOTEL"];
+    $response->client_text     = $data["OBSERVATION_CLIENT"];
+    $response->value           = $data["VALUE"];
+    $response->nights          = round((($data['CHECKOUT_UNIXTIME'])*1-($data['CHECKIN_UNIXTIME'])*1)/86400);
+    $response->value_per_night = round(($data['VALUE'])/(round((($data['CHECKOUT_UNIXTIME'])*1-($data['CHECKIN_UNIXTIME'])*1)/86400)));
+    $response->status_payment  = $status_payment[$data["STATUS_PÄYMENT_CODE"]];
+    $response->online_payment  = $payment["VALUE"];
+    $response->hotel_payment    = $data["HOTEL_PAYMENT"];
+    $response->pending_payment = $response->value - ( $response->online_payment + $response->hotel_payment ) ;
+    $response->hotel_payment   = $data["HOTEL_PAYMENT"];
+    $response->services        = "";
+    $response->client_code     = $data["CLIENT"];
+    $response->guests          = "";
+
+
+    $response->id = $variable;
+    return $response;
+
+  }
 	private function orderArrayKeyBy($array,$key,$second_key = ""){
 		$newArray = array();
 		if($second_key<>""){

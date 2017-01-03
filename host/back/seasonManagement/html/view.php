@@ -14,8 +14,9 @@
 </script>
 
 <select id="year">
-	<option <?=($year=="2014")?"selected":""?> value="2014" >2014</option>
-	<option <?=($year=="2015")?"selected":""?> value="2015" >2015</option>
+  <?php for($y=2014;$y<=2022;$y++): ?>
+    <option <?=($year==$y)?"selected":""?> value="<?=$y?>" ><?=$y?></option>
+  <?php endfor; ?>
 </select>
 	
 <br/>
